@@ -1,0 +1,39 @@
+hostname_additional_hosts:
+  - ip_address: 10.0.0.137
+    hostname: home-1007-vm-docker.skyline.lan
+    hostname_short: home-1007-vm-docker
+  - ip_address: 10.0.0.137
+    hostname: home-1007-vm-docker.home.sawadogo.xyz
+    hostname_short: home-1007-vm-docker
+  
+  #
+#virthost01.skyline.lan: 
+#ansible_connection: local # this will overwrite any other type of connections. its needed here.
+ansible_become_pass: '{{ localhost_become_pass }}'
+#
+### PRVS | CONFIG ###
+prvs_copy_home: yes                       # Copy default user's home files in place
+prvs_root_passwd: yes                     # update root passward
+#
+dkr_copy_def_files: no                   # Copy default docker files to target server
+#
+crntb_activate_cronjobs: no
+#
+#
+### APT | PACKAGES INSTALL ###
+instl_def_pckg: yes                       # Install complete packages. A 'no' will remove it from the host (apt_def_pckg_lst)
+instl_utl_pckg: yes                        # Install complete packages. A 'no' will remove it from the host (apt_util_lst)
+sysd_strt_srvc: yes                       # Start services
+instl_ansbl_pckg: no                      # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
+instl_docker_pckg: yes                    # Install Docker package (apt_docker_pckg_lst)
+apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
+  - nfs-common
+  - nfs-utils
+  - nfs4-acl-tools
+
+
+pip_host_pckg_lst:                        # Install Host Specific PIP Packages when ansible is also installed
+
+apt_hst_strt_srvc_lst:                        # Ensure Host Specific Services are running.
+
+#

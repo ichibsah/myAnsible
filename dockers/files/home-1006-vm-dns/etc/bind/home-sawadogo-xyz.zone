@@ -1,0 +1,32 @@
+$TTL 2d
+
+$ORIGIN home.sawadogo.xyz.
+
+@                   IN      SOA     ns.home.sawadogo.xyz. info.sawadogo.com (
+                                    2023081500      ; serial
+                                    12h             ; refresh
+                                    15m             ; retry
+                                    3w              ; expire
+                                    2h              ; minimum TTL
+                                    )
+
+                    IN      ns      ns.home.sawadogo.xyz.
+
+ns                  IN      A       10.0.0.136
+
+; -- add dns record below
+
+home-1001-NAS       IN      A       10.0.0.131
+mgmt-1001-NAS       IN      A       10.0.0.135
+home-1001-PVE       IN      A       10.1.0.135
+mgmt-1001-PVE       IN      A       10.1.0.105
+home-1003-DC        IN      A       10.1.0.110
+home-1004-DC        IN      A       10.0.0.110
+home-1005-GW        IN      A       10.1.0.254
+home-1004-Babs      IN      A       10.1.4.14
+home-1006-vm-dns    IN      A       10.0.0.136
+home-1007-vm-docker IN      A       10.0.0.137
+
+; -- add docker dns record below
+
+*                   IN      A       10.0.0.137

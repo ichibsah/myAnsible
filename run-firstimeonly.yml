@@ -1,0 +1,49 @@
+---
+- name: PROVISIONS | First time Initialisation
+  hosts: firstimeonly
+  ignore_errors: true
+  ignore_unreachable: true
+  #remote_user: root
+  remote_user: ibrahim
+  become: true
+  become_user: root
+  become_method: su
+
+  pre_tasks:
+    - name: PRE TASK | Install adm packages before starting roles
+      apt:
+        name:  
+          - python3
+          - sudo
+        state: present
+
+
+  roles:
+    - ssh
+    - provisions
+
+# - name: PROVISIONS | First time Initialisation - LOCALHOST
+#   hosts: local
+#   ignore_errors: true
+#   ignore_unreachable: true
+#   connection: local
+#   # remote_user: root
+#   remote_user: ibrahim
+#   become: true
+#   become_user: root
+#   roles:
+#     - provisions
+#     - ssh
+
+# - name: PROVISIONS | First time Initialisation - VMS
+#   hosts: vms
+#   #connection: local
+#   remote_user: vagrant
+#   #remote_user: ibrahim
+#   become: true
+#   become_user: root
+#   roles:
+#     - provisions
+#     - ssh
+
+# complete, tested and working

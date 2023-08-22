@@ -1,0 +1,206 @@
+# file: apt/tasks/main.yml
+#
+#- include_vars: pckg.yml # see global_var folder for update
+
+- name: Job 01 | Reset the sources list (/etc/apt/sources.list)
+  template:
+    src: etc_apt_sources.list.j2
+    dest: /etc/apt/sources.list
+    owner: root
+    group: root
+    mode: 0644
+  when: apt_reset_source_list
+
+- name: Job 02 | Update the apt cache
+  apt:
+    update_cache: yes
+    upgrade: safe #
+    force_apt_get: yes #
+    cache_valid_time: "{{apt_cache_valid_time}}"
+
+- name: Job 03 | Check for cached .deb files
+  shell: "ls /var/cache/apt/archives/*.deb 2&> /dev/null | wc -l"
+  register: apt_cache_check
+  changed_when: no
+  when: apt_clean
+
+- name: Job 04 | Update the general configuration (/etc/apt/apt.conf.d/10general)
+  template:
+    src: etc_apt_apt.conf.d_10general.j2
+    dest: /etc/apt/apt.conf.d/10general
+    owner: root
+    group: root
+    mode: 0644
+  when: apt_update_gen_conf
+
+# - name: APT | Make sure the required packages are installed 20.04 and above
+#   set_fact:
+#     apt_packages_list: "{{ apt_default_packages }} + {{ apt_default_packages_post20 }}"
+#   when: ansible_os_family == 'Ubuntu' and ansible_facts['distribution_version'] is version('20.04', '>=')
+
+# - name: APT | Make sure the required packages are installed 19.10 and below
+#   set_fact:
+#     apt_packages_list: "{{ apt_default_packages }} + {{ apt_default_packages_pre20 }}"
+#   when: ansible_os_family == 'Ubuntu' and ansible_facts['distribution_version'] is version('20.04', '<')
+
+- name: Job 05 | INSTALL default packages
+  apt:
+    update_cache: yes
+    pkg: "{{ item }}"
+    state: present
+  loop:
+    "{{apt_def_pckg_lst}}"
+  when: instl_def_pckg
+
+- name: Job 06 | REMOVE default packages # REMOVE #
+  apt:
+    autoremove: yes
+    autoclean: yes
+    pkg: "{{ apt_def_pckg_lst }}"
+    state: absent
+  when: not instl_def_pckg and not kill_remove
+
+- name: Job 07 | Import Docker-ce GPG Key
+  apt_key:
+    url: https://download.docker.com/linux/debian/gpg # not required. The URL to retrieve key from.
+    state: present # not required. choices: absent;present. Ensures that the key is present (added) or absent (revoked).
+    validate_certs: yes # not required. If C(no), SSL certificates for the target url will not be validated. This should only be used on personally controlled sites using self-signed certificates.
+
+- name: Job 08 | Install Host Specific Packages
+  apt:
+    pkg: "{{item}}"
+    state: present
+  loop:
+    "{{apt_host_pckg_lst}}"
+  when: apt_host_pckg_lst.0 is defined
+#
+- name: Job 09 | Install Utilities Packages
+  apt:
+    pkg: "{{item}}"
+    state: present
+  loop:
+    "{{apt_util_lst}}"  
+  when: instl_utl_pckg
+#
+- name: Job 10 | REMOVE Utilities Packages # REMOVE #
+  apt:
+    pkg: "{{apt_util_lst}}"
+    state: absent
+  when: not instl_utl_pckg and not kill_remove
+
+- name: Job 11 | Add Docker-ce Repo
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/debian bullseye stable" # TODO use facts variables
+    state: present # not required. choices: absent;present. A source string state.
+    mode: 0644 # not required. The octal mode for newly created files in sources.list.d
+    update_cache: yes # not required. Run the equivalent of C(apt-get update) when a change occurs.  Cache updates are run after making changes.
+    validate_certs: yes 
+
+- name: Job 14 | Install host "{{ansible_hostname}}" specific package using pip
+  pip:
+    name:  
+      "{{pip_host_pckg_lst}}"
+    state: present
+  when: instl_ansbl_pckg
+
+- name: Job 15 | REMOVE ansible package using pip # REMOVE #
+  pip:
+    name:  
+      "{{pip_ansbl_pckg_lst}}"
+    state: absent
+  when: not instl_ansbl_pckg and not kill_remove
+
+- name: Job 16 | REMOVE ansible package using apt # REMOVE #
+  apt:
+    name:  
+      "{{apt_ansbl_pckg_lst}}"
+    state: absent
+  when: not instl_ansbl_pckg and not kill_remove
+
+- name: Job 17 | Install Docker Package
+  apt:
+    pkg: "{{apt_docker_pckg_lst}}"
+    state: present
+  when: instl_docker_pckg
+
+- name: Job 18 | REMOVE Docker Package # REMOVE #
+  apt:
+    pkg: "{{apt_docker_pckg_lst}}"
+    state: absent
+  when: not instl_docker_pckg and not kill_remove
+
+# REMOVE #
+- name: Job 19 | Remove all cached .deb files
+  shell: apt-get -y clean
+  changed_when: apt_cache_check.stdout != "0"
+  when: apt_clean and apt_cache_check.stdout != "0"
+
+- name: Job 20 | Remove packages that are no longer needed for dependencies
+  apt:
+    autoremove: "yes"
+  when: apt_autoremove
+
+- name: Job 21 | Remove .deb files for packages no longer on your system
+  apt:
+    autoclean: "yes"
+  when: apt_autoclean
+
+- name: Job 21.1 | update user groups
+  group:
+    name: docker # required. Name of the group to manage.
+    gid:  # not required. Optional I(GID) to set for the group.
+    state: present # not required. choices: absent;present. Whether the group should be present or not on the remote host.
+
+- name: Job 21.2 | append user to new groups
+  user:
+    name: ibrahim # required. Name of the user to create, remove or modify.
+    groups: docker 
+    append: yes
+
+- name: Job 22 | Ensure Services are running.
+  systemd: 
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  with_items: 
+    "{{apt_strt_srvc_lst}}"
+  when: sysd_strt_srvc
+#
+- name: Job 23 | Ensure host specific Services are running.
+  systemd: 
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  with_items: 
+    "{{apt_hst_strt_srvc_lst}}"
+  when: apt_hst_strt_srvc_lst.0 is defined
+#
+- name: Job 24 | STOP running Services. # REMOVE #
+  systemd: 
+    name: "{{ item }}"
+    state: stopped
+    enabled: no
+  with_items: 
+    "{{apt_strt_srvc_lst}}"
+  when: not sysd_strt_srvc and not kill_remove
+
+- name: Job 25 | import task ansible
+  ansible.builtin.import_tasks:
+    file: ansible.yml
+  #when: apt_host_pckg_lst | contains bind9
+
+# REBOOT #
+- name: Job 26 | Check if a reboot is needed for Debian and Ubuntu boxes
+  register: reboot_required_file
+  stat: path=/var/run/reboot-required get_md5=no
+
+- name: Job 25.1 | Reboot the Debian or Ubuntu server
+  reboot:
+    msg: "Reboot initiated by Ansible due to kernel updates"
+    connect_timeout: 5
+    reboot_timeout: 300
+    pre_reboot_delay: 0
+    post_reboot_delay: 30
+    test_command: uptime
+  when: reboot_required_file.stat.exists
+

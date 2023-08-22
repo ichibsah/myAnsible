@@ -1,0 +1,15 @@
+---
+all:
+  children:
+    ionos:
+      hosts:
+      children:
+        allservers:
+          hosts: 
+#######
+####      
+    local:
+      hosts:
+        md-shop.lan:
+        #localhost: # having this enable will connect to the localhost twice, which will work but the hostname update for this 'localhost' will fail.
+

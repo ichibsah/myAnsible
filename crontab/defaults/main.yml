@@ -1,0 +1,16 @@
+---
+# defaults file for crontab
+#
+crntb_activate_cronjobs: no
+#
+crntb_actvt_crnjbs_vrnssg: no
+#
+crntb_actvt_crnjbs_mrym: no
+
+# OUTPUT #
+# # m h  dom mon dow   command
+# @reboot /root/gw.sh > /dev/null 2>&1
+# ##*/5 * * * * /root/gw.sh > /dev/null 2>&1
+# */1 * * * * /root/1min.sh > /dev/null 2>&1
+# 0 1 * * * /root/allBackups > /dev/null 2>&1
+# ##*/1 * * * * /root/allBackups > /dev/null 2>&1

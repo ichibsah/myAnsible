@@ -1,0 +1,29 @@
+---
+# # file: apt/defaults/main.yml
+include: pckg.yml
+
+apt_reset_source_list: no                 # reset the /etc/apt/sources.list to the default
+apt_mirror_url: http://archive.ubuntu.com # the mirror from where to install packages
+apt_cache_valid_time: 3600                # Time (in seconds) the apt cache stays valid
+apt_update_gen_conf: no                   # Update the general configuration (/etc/apt/apt.conf.d/10general)
+apt_install_recommends: no                # whether or not to install the "recommended" packages
+apt_install_suggests: no                  # whether or not to install the "suggested" packages
+apt_autoremove: yes                       # remove packages that are no longer needed for dependencies
+apt_clean: no                             # remove all cached .deb files
+apt_autoremove_recommends: no             # whether to automatically remove "recommended" packages
+apt_autoremove_suggests: no               # whether to automatically remove "suggested" packages
+apt_autoclean: yes                        # remove .deb files for packages no longer on your system
+kill_remove: yes                          # Temporaly "REMOVE" kill switch
+#
+#
+### APT | PACKAGES INSTALL ###
+instl_def_pckg: yes                       # Install complete packages. A 'no' will remove it from the host (apt_def_pckg_lst)
+instl_utl_pckg: no                        # Install complete packages. A 'no' will remove it from the host (apt_util_lst)
+sysd_strt_srvc: yes                       # Start services
+instl_ansbl_pckg: no                      # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
+instl_docker_pckg: yes                    # Install Docker package (apt_docker_pckg_lst)
+apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
+
+pip_host_pckg_lst:                        # Install Host Specific PIP Packages when ansible is also installed (keep this empty. use host_var to overwrite it)
+#
+apt_hst_strt_srvc_lst:                    # Ensure Host Specific Services are running.

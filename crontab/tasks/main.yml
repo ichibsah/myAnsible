@@ -1,0 +1,137 @@
+---
+# tasks file for crontab
+- name: Crontab | copy crontab files for root
+  copy:
+    src: "files/root/"
+    dest: "/root/"
+    owner: root
+    group: root
+    mode: 0750
+  when: crntb_activate_cronjobs
+
+- name: Crontab | copy crontab files others
+  copy:
+    src: "files/home/"
+    dest: "/home/"
+    owner: ibrahim
+    group: ibrahim
+    mode: 0755
+  when: crntb_activate_cronjobs or crntb_actvt_crnjbs_vrnssg
+
+- name: Crontab | cronjob 1min.sh
+  cron:
+    name: "Starting 1 minute job - 1min.sh"
+    user: root
+    job:  "/root/1min.sh > /dev/null 2>&1"
+    state: present
+    backup: False 
+    minute: "*/1" # Minute when the job should run ( 0-59, *, */2, etc )
+    hour: "*" # Hour when the job should run ( 0-23, *, */2, etc )
+    day: "*" # Day of the month the job should run ( 1-31, *, */2, etc )
+    month: "*" # Month of the year the job should run ( 1-12, *, */2, etc )
+    weekday: "*" # Day of the week that the job should run ( 0-6 for Sunday-Saturday, *, etc )
+    disabled: False # If the job should be disabled (commented out) in the crontab. Only has effect if C(state=present).
+  when: crntb_activate_cronjobs
+
+- name: Crontab | cronjob ansible.sh
+  cron:
+    name: "Starting CI/CD cronjob ansible.sh"
+    user: ibrahim
+    job: "bash /home/ibrahim/ansible.sh"
+    #job: "/root/ansible.sh > /dev/null 2>&1"
+    state: present
+    backup: False 
+    minute: "*/2" # Minute when the job should run ( 0-59, *, */2, etc )
+    hour: "*" # Hour when the job should run ( 0-23, *, */2, etc )
+    day: "*" # Day of the month the job should run ( 1-31, *, */2, etc )
+    month: "*" # Month of the year the job should run ( 1-12, *, */2, etc )
+    weekday: "*" # Day of the week that the job should run ( 0-6 for Sunday-Saturday, *, etc )
+    disabled: False # If the job should be disabled (commented out) in the crontab. Only has effect if C(state=present).
+  when: crntb_activate_cronjobs
+
+- name: Crontab | cronjob vernissage.sh
+  cron:
+    name: "Starting CI/CD cronjob vernissage.sh"
+    user: ibrahim
+    job: "python3 /home/ibrahim/vernissage.py"
+    state: present
+    backup: False 
+    minute: "*/2" # Minute when the job should run ( 0-59, *, */2, etc )
+    hour: "*" # Hour when the job should run ( 0-23, *, */2, etc )
+    day: "*" # Day of the month the job should run ( 1-31, *, */2, etc )
+    month: "*" # Month of the year the job should run ( 1-12, *, */2, etc )
+    weekday: "*" # Day of the week that the job should run ( 0-6 for Sunday-Saturday, *, etc )
+    disabled: False # If the job should be disabled (commented out) in the crontab. Only has effect if C(state=present).
+  when: crntb_actvt_crnjbs_vrnssg
+
+- name: Crontab | cronjob "{{ansible_hostname}}"
+  copy:
+    src: "files/{{item.fldr}}/crontab"
+    dest: "/opt/"
+    owner: ibrahim
+    group: ibrahim
+    mode: 0744
+  with_items:
+    "{{ crntb_fldr_lst }}"
+  when: crntb_fldr_lst.0 is defined
+
+- name: Crontab | cronjob "{{ansible_hostname}}"
+  cron:
+    name: "Starting CI/CD cronjob meryem"
+    user: ibrahim
+    job: "bash /opt/crontab/meryem.sh"
+    state: present
+    backup: False 
+    minute: "*/1" # Minute when the job should run ( 0-59, *, */2, etc )
+    hour: "*" # Hour when the job should run ( 0-23, *, */2, etc )
+    day: "*" # Day of the month the job should run ( 1-31, *, */2, etc )
+    month: "*" # Month of the year the job should run ( 1-12, *, */2, etc )
+    weekday: "*" # Day of the week that the job should run ( 0-6 for Sunday-Saturday, *, etc )
+    disabled: False # If the job should be disabled (commented out) in the crontab. Only has effect if C(state=present).
+  when: crntb_actvt_crnjbs_mrym
+
+- name: Crontab | /*REMOVE*/ cronjob "{{ansible_hostname}}"
+  cron:
+    name: "REMOVING CI/CD cronjob meryem"
+    user: ibrahim
+    job: "bash /opt/crontab/meryem.sh"
+    state: absent
+    backup: False 
+    minute: "*/1" # Minute when the job should run ( 0-59, *, */2, etc )
+    hour: "*" # Hour when the job should run ( 0-23, *, */2, etc )
+    day: "*" # Day of the month the job should run ( 1-31, *, */2, etc )
+    month: "*" # Month of the year the job should run ( 1-12, *, */2, etc )
+    weekday: "*" # Day of the week that the job should run ( 0-6 for Sunday-Saturday, *, etc )
+    disabled: False # If the job should be disabled (commented out) in the crontab. Only has effect if C(state=present).
+  when: not crntb_actvt_crnjbs_mrym
+
+- name: Crontab | /*REMOVE*/ cronjob vernissage.sh
+  cron:
+    name: "Starting CI/CD cronjob vernissage.sh"
+    user: ibrahim
+    job: "python3 /home/ibrahim/vernissage.py"
+    state: absent
+    backup: False 
+    minute: "*/2" # Minute when the job should run ( 0-59, *, */2, etc )
+    hour: "*" # Hour when the job should run ( 0-23, *, */2, etc )
+    day: "*" # Day of the month the job should run ( 1-31, *, */2, etc )
+    month: "*" # Month of the year the job should run ( 1-12, *, */2, etc )
+    weekday: "*" # Day of the week that the job should run ( 0-6 for Sunday-Saturday, *, etc )
+    disabled: False # If the job should be disabled (commented out) in the crontab. Only has effect if C(state=present).
+  when: not crntb_actvt_crnjbs_vrnssg
+
+
+
+# /****/
+
+# - name: 'Ensure an old job is no longer present. Removes any job that is prefixed by "#Ansible: an old job" from the crontab'
+#   cron:
+#     name: "an old job"
+#     state: absent
+
+# - name: Creates an entry like "@reboot /some/job.sh"
+#   cron:
+#     name: "a job for reboot"
+#     special_time: reboot
+#     job: "/some/job.sh"
+#

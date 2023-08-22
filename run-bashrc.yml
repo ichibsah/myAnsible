@@ -1,0 +1,19 @@
+---
+- name: BASHRC | Initialisation
+  hosts: allservers
+  ignore_errors: true
+  ignore_unreachable: true
+  remote_user: ibrahim
+  become: false
+  roles:
+    - bashrc
+
+# - name: BASHRC | Initialisation - LOCALHOST
+#   hosts: local
+#   ignore_errors: true
+#   ignore_unreachable: true
+#   connection: local
+#   remote_user: ibrahim
+#   become: false
+#   roles:
+#     - bashrc

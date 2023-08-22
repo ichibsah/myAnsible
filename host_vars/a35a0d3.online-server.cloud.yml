@@ -1,0 +1,27 @@
+hostname_additional_hosts:
+  - ip_address: 217.160.100.209
+    hostname: a35a0d3.online-server.cloud
+    hostname_short: "a35a0d3"
+  # - ip_address: 5.6.7.8
+  #   hostname: b.example.com
+  #   hostname_short: b 
+  #
+#
+### PRVS | CONFIG ###
+prvs_copy_home: yes                       # Copy default user's home files in place
+prvs_root_passwd: yes                     # update root passward
+#
+dkr_copy_def_files: yes                   # Copy default docker files to target server
+dkr_copy_etx_files: yes                   # # Copy extended docker files to target host
+
+crntb_activate_cronjobs: no
+#
+crntb_actvt_crnjbs_vrnssg: yes
+#
+### APT | PACKAGES INSTALL ###
+instl_def_pckg: yes                       # Install complete packages. A 'no' will remove it from the host (apt_def_pckg_lst)
+instl_utl_pckg: yes                        # Install complete packages. A 'no' will remove it from the host (apt_util_lst)
+sysd_strt_srvc: yes                       # Start services
+instl_ansbl_pckg: no                      # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
+instl_docker_pckg: yes                    # Install Docker package (apt_docker_pckg_lst)
+apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)

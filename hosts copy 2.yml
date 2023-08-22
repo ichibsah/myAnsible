@@ -1,0 +1,64 @@
+---
+all:
+  children:
+    hosts: 
+      - d86df44.online-server.cloud
+      - 112e275.online-server.cloud
+      - a35a0d3.online-server.cloud
+      - b0235ee.online-server.cloud
+      - 4a999ff.online-server.cloud
+      #4a999ff.online-server.cloud ansible_ssh_user=root ansible_user=root ansible_become_user=root ansible_become=no ansible_become_method=sudo ansible_ssh_pass='{{ a999ff_become_pass }}' ansible_become_pass='{{ a999ff_become_pass }}'
+      #b0235ee.online-server.cloud ansible_ssh_user=root ansible_user=root ansible_become_user=root ansible_become=yes ansible_become_method=su ansible_ssh_pass='{{ b0235ee_become_pass }}' ansible_become_pass='{{ b0235ee_become_pass }}'
+      #217.160.100.194 #ansible_user=root #d8
+      #217.160.144.31  
+      ##217.160.144.31  #ansible_user=root #11 <-- this line over rides the allserver group when its uncommented
+      #217.160.100.209 #ansible_user=root # a35a0d3.online-server.cloud
+    jumper:
+      ansible_port: 22
+      ansible_host: 4a999ff.online-server.cloud
+    vars:
+      ##ansible_user=root #11 <-- this line over rides the allserver group when its uncommented
+      ##ansible_ssh_user=root
+      ##ansible_ssh_private_key_file=~/.vagrant.d/insecure_private_key
+remote:
+  hosts:
+    - #155.42.88.199 ansible_connection=ssh ansible_user=remoteuser ansible_become_user=root ansible_become=yes ansible_ssh_private_key_file=<private_key_file_path>
+  local:
+    hosts:
+      - localhost ansible_user=ibrahim ansible_become_user=root ansible_become=yes ansible_become_method=sudo ansible_become_pass='{{ localhost_become_pass }}'
+  allservers:
+    hosts:
+      #217.160.100.194
+      #217.160.144.31
+      #217.160.100.209
+      #dummy.online-server.cloud ansible_host=san-francisco ansible_ssh_user=user ansible_become_pass='{{ sanfrancisco_become_pass }}'
+      - d86df44.online-server.cloud
+      - 112e275.online-server.cloud
+      - a35a0d3.online-server.cloud
+      - b0235ee.online-server.cloud
+      - 4a999ff.online-server.cloud
+      #4a999ff.online-server.cloud ansible_user=ibrahim ansible_become_user=ibrahim ansible_become=yes ansible_become_method=su ansible_become_pass='{{ a999ff_become_pass }}'
+      #192.168.14.32 #msvr ansible_user=manager ansible_become=yes ansible_become_method=su
+    vars:
+      ansible_ssh_common_args='-o ProxyCommand="ssh -p 22 -W %h:%p -q ibrahim@4a999ff.online-server.cloud"'
+      ansible_user=ibrahim
+      ansible_ssh_user=ibrahim
+      ansible_become=yes
+      ansible_ssh_private_key_file='~/.ssh/ibrahim@4a999ff.key'
+      ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+      #ansible_become_user=root # this will affect the root home user eg. .bashrc -> dont use it
+      #ansible_become=yes # this will set it globally, which afftect 4a999ff
+      #ansible_become_method=sudo
+      #ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+  cloud:
+    hosts:
+      - d86df44.online-server.cloud
+      - 112e275.online-server.cloud
+      - a35a0d3.online-server.cloud
+      - b0235ee.online-server.cloud
+      #d86df44.online-server.cloud (217.160.100.194)
+      #112e275.online-server.cloud (217.160.144.31)
+      #a35a0d3.online-server.cloud (217.160.100.209)
+    jumper:
+      ansible_port: 22
+      ansible_host: 4a999ff.online-server.cloud

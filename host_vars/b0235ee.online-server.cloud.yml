@@ -1,0 +1,9 @@
+hostname_additional_hosts:
+  - ip_address: 217.160.100.209
+    hostname: b0235ee.online-server.cloud
+    hostname_short: "b0235ee"
+  # - ip_address: 5.6.7.8
+  #   hostname: b.example.com
+  #   hostname_short: b
+    #
+apt_host_packages_list:                   # Install Host Specific Packages

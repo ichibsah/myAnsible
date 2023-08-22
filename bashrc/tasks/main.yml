@@ -1,0 +1,10 @@
+---
+# tasks file for bashrc
+- name: copy bashrc file
+  copy:
+    src: "files/home/ibrahim/"
+    dest: "~/"
+    owner: ibrahim
+    group: ibrahim
+    mode: 0744
+  when: ansible_os_family == 'Debian'

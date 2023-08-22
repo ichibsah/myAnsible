@@ -1,0 +1,25 @@
+$TTL 2d
+
+$ORIGIN md-shop.local.
+
+@                   IN      SOA     ns.md-shop.local. info.md-shop.local (
+                                    2023081500      ; serial
+                                    12h             ; refresh
+                                    15m             ; retry
+                                    3w              ; expire
+                                    2h              ; minimum TTL
+                                    )
+
+                    IN      ns      ns.md-shop.local.
+
+ns                  IN      A       10.3.0.254
+
+; -- add dns record below
+
+md-2002-NAS         IN      A       10.3.0.131
+md-2007-docker      IN      A       10.3.0.137
+md-2005-gw          IN      A       10.3.0.254
+
+; -- add docker dns record below
+
+*                   IN      A       10.3.0.137

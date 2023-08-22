@@ -1,0 +1,5 @@
+---
+- hosts: allservers
+  remote_user: root
+  roles:
+    - provisions

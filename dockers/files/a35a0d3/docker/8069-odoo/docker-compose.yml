@@ -1,0 +1,28 @@
+version: '3'
+services:
+  web:
+    image: odoo
+    container_name: Odoo
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - 8069:8069
+    volumes:
+    - ./docker/odoo/web-data:/var/lib/odoo
+    - ./docker/odoo/config:/etc/odoo
+    - ./docker/odoo/addons:/mnt/extra-addons
+  db:
+    image: postgres:latest
+    container_name: Odoo-DB
+    restart: always
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - ./docker/odoodb:/var/lib/postgresql/data/pgdata
+
+
+# https://mariushosting.com/how-to-install-odoo-on-your-synology-nas/

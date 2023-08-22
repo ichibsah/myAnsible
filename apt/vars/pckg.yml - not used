@@ -1,0 +1,84 @@
+apt_util_lst:                           # # Install utilities packages
+  - ack-grep
+  - command-not-found
+  - curl
+  - dstat
+  - debconf
+  - dmidecode
+  - ethtool
+  - htop
+  - iftop
+  - iotop
+  - iperf
+  - ltrace
+  - nmap
+  - mosh
+  - mtr
+  - multitail
+  - ncdu
+  - netcat
+  - pciutils
+  - pv
+  - smem
+  - socat
+  - sysstat
+  - tmux
+  - tree
+  - tshark
+  - whois
+  - iputils-tracepath
+  - lnav
+#
+apt_def_pckg_lst:                     # Install Default Packages on All Host
+- gpg
+- unattended-upgrades
+- chrony
+- curl
+- gnupg2
+- software-properties-common
+- ncdu
+- git
+- postfix
+- mailutils
+- tig
+- net-tools
+- bash-completion # https://github.com/cykerway/complete-alias
+#
+#apt_packages_list:
+#- python3-apt
+#
+apt_ansbl_pckg_lst:
+  - python3-apt
+  - python3-pip
+  - pip
+  - virtualenv
+  - python3-django
+#
+pip_ansbl_pckg_lst:                      # Install packages using PIP
+  - ansible
+  - passlib
+#
+apt_docker_pckg_lst:
+- rsync
+- docker-ce
+- docker-compose-plugin
+- apt-transport-https
+- ca-certificates
+#
+postfix_aliases:    # https://github.com/Oefenweb/ansible-postfix https://github.com/geerlingguy/ansible-role-postfix
+  - user: $USER
+    alias: $USER@$HOSTNAME
+#
+apt_strt_srvc_lst:                        # Ensure Services are running.
+  - chronyd
+  - docker
+#
+apt_default_packages_post20:
+  - python3-apt
+#
+apt_default_packages_pre20:
+  - python-apt
+#    
+apt_rmv_pckg_lst:                         # Remove APT package lists
+  - ansible
+#

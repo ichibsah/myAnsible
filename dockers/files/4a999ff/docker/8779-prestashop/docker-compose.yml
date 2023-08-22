@@ -1,0 +1,45 @@
+version: "3.9"
+services:
+  db:
+    image: mariadb:jammy 
+    container_name: PrestaShop-DB
+    hostname: prestashop-db
+    mem_limit: 1g
+    cpu_shares: 768
+    security_opt:
+      - no-new-privileges:true
+    user: 1000:100
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -u root -prootpass | grep 'mysqld is alive' || exit 1"]
+    volumes:
+      - ./docker/prestashop/db:/var/lib/mysql:rw
+    environment:
+      TZ: Europe/Berlin
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_USER: prestashopuser
+      MYSQL_PASSWORD: prestashoppass
+      MYSQL_DATABASE: prestashop
+    restart: on-failure:5
+
+  prestashop:
+    image: prestashop/prestashop:latest
+    container_name: PrestaShop
+    hostname: prestashop
+    mem_limit: 3g
+    cpu_shares: 1024
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - 8779:80
+    volumes:
+      - ./docker/prestashop/data:/var/www/html:rw
+    environment:
+      DB_SERVER: prestashop-db
+      DB_NAME: prestashop
+      DB_USER: prestashopuser
+      DB_PASSWD: prestashoppass
+      PS_DOMAIN: shop.sawadogo.xyz
+    restart: on-failure:5
+    depends_on:
+      db:
+        condition: service_started

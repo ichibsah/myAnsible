@@ -1,0 +1,25 @@
+---
+- name: CRONTAB | Initialisation
+  hosts: allservers
+  ignore_errors: true
+  ignore_unreachable: true
+  # remote_user: root
+  remote_user: ibrahim
+  become: true
+  become_user: root
+  roles:
+    - crontab
+
+# - name: CRONTAB | Initialisation - LOCALHOST
+#   hosts: local
+#   ignore_errors: true
+#   ignore_unreachable: true
+#   connection: local
+#   # remote_user: root
+#   remote_user: ibrahim
+#   become: true
+#   become_user: root
+#   roles:
+#     - crontab
+
+  # complete, tested and working

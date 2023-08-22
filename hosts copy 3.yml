@@ -1,0 +1,70 @@
+---
+all:
+  children:
+    ionos:
+      hosts:
+        d86df44.online-server.cloud:
+        112e275.online-server.cloud:
+        a35a0d3.online-server.cloud:
+        #b0235ee.online-server.cloud:
+        4a999ff.online-server.cloud:
+      children:
+        provision:
+          hosts: 
+            msvr02.skyline.lan:
+            d86df44.online-server.cloud:
+            112e275.online-server.cloud:
+            a35a0d3.online-server.cloud:
+            #b0235ee.online-server.cloud: 
+              #ansible_become_pass: '{{ b0235ee_become_pass }}'
+              #ansible_ssh_user: root
+            4a999ff.online-server.cloud:
+          vars:
+            #ansible_user: root
+            #ansible_ssh_user: root
+        cloud:
+          hosts:
+            d86df44.online-server.cloud:
+            112e275.online-server.cloud:
+            a35a0d3.online-server.cloud:
+            #b0235ee.online-server.cloud:
+        allservers:
+          hosts:
+            msvr02.skyline.lan:
+            d86df44.online-server.cloud:
+            112e275.online-server.cloud:
+            a35a0d3.online-server.cloud:
+            #b0235ee.online-server.cloud:
+          vars:
+            ansible_user: root
+            ansible_ssh_user: ibrahim
+        sandbox:
+          hosts:
+            112e275.online-server.cloud:
+            d86df44.online-server.cloud:
+            a35a0d3.online-server.cloud:
+            #b0235ee.online-server.cloud:
+            4a999ff.online-server.cloud:
+            #virthost01.skyline.lan:
+            #msvr02.skyline.lan:
+            #  #ansible_become_method: su
+            #  ansible_become_pass: '{{ localhost_become_pass }}'
+######
+      vars:
+        ansible_user: ibrahim
+        ansible_ssh_user: ibrahim
+        ansible_become: yes
+        ansible_become_method: sudo
+        #ansible_become_user=root # this will affect the root home user eg. .bashrc -> dont use it
+        #ansible_become=yes # this will set it globally, which afftect 4a999ff
+        #ansible_become_method=sudo
+####      
+    local:
+      hosts:
+        localhost 
+      vars:
+        ansible_user: ibrahim 
+        #ansible_become_user: ibrahim
+        ansible_become: yes
+        ansible_become_method: sudo
+        ansible_become_pass: '{{ localhost_become_pass }}'

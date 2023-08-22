@@ -1,0 +1,47 @@
+# #
+# - name: Job 01.3.1 | Update network configuration.
+#   interfaces_file:
+#     dest: /etc/network/interfaces
+#     iface:  "{{interfaces.iface}}"
+#     backup: yes
+#     state: present
+#     mode: 0644
+#     owner: root
+#     group: root
+#
+#- name: Job 01.3.1 | Update network configuration.
+  # lineinfile:
+  #   dest: /etc/network/interfaces
+  #   regexp: "{{ item.regexp }}"
+  #   line: "{{ item.line }}"
+  #   state: present
+  #   #validate: 'sshd -t -f %s'
+  # with_items:
+  #   - regexp: "^INTERFACESv4"
+  #     line: "{{dsbl_dhcpvsx}}"
+  #   # - regexp: "^PermitRootLogin"
+  #   #   line: "PermitRootLogin no"
+  #   # - regexp: "^Port"
+  #   #   line: "Port 22"
+  #   # - regexp: "^PubkeyAuthentication"
+  #   #   line: "PubkeyAuthentication yes"
+  #   # - regexp: "^ChallengeResponseAuthentication"
+  #   #   line: "ChallengeResponseAuthentication no"
+  #   # - regexp: "^PermitEmptyPasswords"
+  #   #   line: "PermitEmptyPasswords no"    
+  #   # - regexp: "^AllowAgentForwarding"
+  #   #   line: "AllowAgentForwarding yes"         
+  # notify: Restart dhcp
+  # when: dsbl_dhcpvsx
+  # #tags: test
+#
+- name: Job 01.7.3 | Copy network folder to target host that matches "ansible_hostname"
+  copy:
+    src: "files/{{ansible_hostname}}/etc/network"
+    dest: "/etc/"
+    owner: root
+    group: root
+    mode: 0644
+  when: ansible_hostname != 'virthost01'
+  notify: Restart networking
+  #tags: test

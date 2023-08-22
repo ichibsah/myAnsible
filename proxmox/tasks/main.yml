@@ -1,0 +1,227 @@
+---
+# tasks file for proxmox
+
+- name: Job-001 PCKG | Install ansible package using apt
+  apt:
+    name:  
+      - python3
+      - pip
+      - pipx
+      - python3-pip
+      - python3-proxmoxer
+      - python3-requests
+    state: present
+
+- name: Job-002 PIP | Install ansible package using pip
+  pip:
+    name: "{{item}}"
+    state: present
+  loop:
+    - proxmoxer
+    - requests
+
+- name: Job-003 | Create new container with minimal options
+  community.general.proxmox:
+    vmid: 101
+    node: pve01
+    api_user: root@pam
+    api_password: "{{ localhost_become_pass }}"
+    api_host: pve01.skyline.lan
+    password: "{{ localhost_become_pass }}"
+    hostname: test.skyline.lan
+    ostemplate: 'local:vmtmpl/debian-12.0.0-amd64-netist.iso'
+
+
+# - name: Create new container with hookscript and description
+#   community.general.proxmox:
+#     vmid: 100
+#     node: uk-mc02
+#     api_user: root@pam
+#     api_password: 1q2w3e
+#     api_host: node1
+#     password: 123456
+#     hostname: example.org
+#     ostemplate: 'local:vztmpl/ubuntu-14.04-x86_64.tar.gz'
+#     hookscript: 'local:snippets/vm_hook.sh'
+#     description: created with ansible
+
+# - name: Create new container automatically selecting the next available vmid.
+#   community.general.proxmox:
+#     node: 'uk-mc02'
+#     api_user: 'root@pam'
+#     api_password: '1q2w3e'
+#     api_host: 'node1'
+#     password: '123456'
+#     hostname: 'example.org'
+#     ostemplate: 'local:vztmpl/ubuntu-14.04-x86_64.tar.gz'
+
+# - name: Create new container with minimal options with force(it will rewrite existing container)
+#   community.general.proxmox:
+#     vmid: 100
+#     node: uk-mc02
+#     api_user: root@pam
+#     api_password: 1q2w3e
+#     api_host: node1
+#     password: 123456
+#     hostname: example.org
+#     ostemplate: 'local:vztmpl/ubuntu-14.04-x86_64.tar.gz'
+#     force: true
+
+# - name: Create new container with minimal options use environment PROXMOX_PASSWORD variable(you should export it before)
+#   community.general.proxmox:
+#     vmid: 100
+#     node: uk-mc02
+#     api_user: root@pam
+#     api_host: node1
+#     password: 123456
+#     hostname: example.org
+#     ostemplate: 'local:vztmpl/ubuntu-14.04-x86_64.tar.gz'
+
+# - name: Create new container with minimal options defining network interface with dhcp
+#   community.general.proxmox:
+#     vmid: 100
+#     node: uk-mc02
+#     api_user: root@pam
+#     api_password: 1q2w3e
+#     api_host: node1
+#     password: 123456
+#     hostname: example.org
+#     ostemplate: 'local:vztmpl/ubuntu-14.04-x86_64.tar.gz'
+#     netif: '{"net0":"name=eth0,ip=dhcp,ip6=dhcp,bridge=vmbr0"}'
+
+# - name: Create new container with minimal options defining network interface with static ip
+#   community.general.proxmox:
+#     vmid: 100
+#     node: uk-mc02
+#     api_user: root@pam
+#     api_password: 1q2w3e
+#     api_host: node1
+#     password: 123456
+#     hostname: example.org
+#     ostemplate: 'local:vztmpl/ubuntu-14.04-x86_64.tar.gz'
+#     netif: '{"net0":"name=eth0,gw=192.168.0.1,ip=192.168.0.2/24,bridge=vmbr0"}'
+
+# - name: Create new container with minimal options defining a mount with 8GB
+#   community.general.proxmox:
+#     vmid: 100
+#     node: uk-mc02
+#     api_user: root@pam
+#     api_password: 1q2w3e
+#     api_host: node1
+#     password: 123456
+#     hostname: example.org
+#     ostemplate: local:vztmpl/ubuntu-14.04-x86_64.tar.gz'
+#     mounts: '{"mp0":"local:8,mp=/mnt/test/"}'
+
+# - name: Create new container with minimal options defining a cpu core limit
+#   community.general.proxmox:
+#     vmid: 100
+#     node: uk-mc02
+#     api_user: root@pam
+#     api_password: 1q2w3e
+#     api_host: node1
+#     password: 123456
+#     hostname: example.org
+#     ostemplate: local:vztmpl/ubuntu-14.04-x86_64.tar.gz'
+#     cores: 2
+
+# - name: Create new container with minimal options and same timezone as proxmox host
+#   community.general.proxmox:
+#     vmid: 100
+#     node: uk-mc02
+#     api_user: root@pam
+#     api_password: 1q2w3e
+#     api_host: node1
+#     password: 123456
+#     hostname: example.org
+#     ostemplate: 'local:vztmpl/ubuntu-14.04-x86_64.tar.gz'
+#     timezone: host
+
+# - name: Create a new container with nesting enabled and allows the use of CIFS/NFS inside the container.
+#   community.general.proxmox:
+#     vmid: 100
+#     node: uk-mc02
+#     api_user: root@pam
+#     api_password: 1q2w3e
+#     api_host: node1
+#     password: 123456
+#     hostname: example.org
+#     ostemplate: local:vztmpl/ubuntu-14.04-x86_64.tar.gz'
+#     features:
+#      - nesting=1
+#      - mount=cifs,nfs
+
+# - name: >
+#     Create a linked clone of the template container with id 100. The newly created container with be a
+#     linked clone, because no storage parameter is defined
+#   community.general.proxmox:
+#     vmid: 201
+#     node: uk-mc02
+#     api_user: root@pam
+#     api_password: 1q2w3e
+#     api_host: node1
+#     clone: 100
+#     hostname: clone.example.org
+
+# - name: Create a full clone of the container with id 100
+#   community.general.proxmox:
+#     vmid: 201
+#     node: uk-mc02
+#     api_user: root@pam
+#     api_password: 1q2w3e
+#     api_host: node1
+#     clone: 100
+#     hostname: clone.example.org
+#     storage: local
+
+# - name: Start container
+#   community.general.proxmox:
+#     vmid: 100
+#     api_user: root@pam
+#     api_password: 1q2w3e
+#     api_host: node1
+#     state: started
+
+# - name: >
+#     Start container with mount. You should enter a 90-second timeout because servers
+#     with additional disks take longer to boot
+#   community.general.proxmox:
+#     vmid: 100
+#     api_user: root@pam
+#     api_password: 1q2w3e
+#     api_host: node1
+#     state: started
+#     timeout: 90
+
+# - name: Stop container
+#   community.general.proxmox:
+#     vmid: 100
+#     api_user: root@pam
+#     api_password: 1q2w3e
+#     api_host: node1
+#     state: stopped
+
+# - name: Stop container with force
+#   community.general.proxmox:
+#     vmid: 100
+#     api_user: root@pam
+#     api_password: 1q2w3e
+#     api_host: node1
+#     force: true
+#     state: stopped
+
+# - name: Restart container(stopped or mounted container you can't restart)
+#   community.general.proxmox:
+#     vmid: 100
+#     api_user: root@pam
+#     api_password: 1q2w3e
+#     api_host: node1
+#     state: restarted
+
+# - name: Remove container
+#   community.general.proxmox:
+#     vmid: 100
+#     api_user: root@pam
+#     api_password: 1q2w3e
+#     api_host: node1
+#     state: absent

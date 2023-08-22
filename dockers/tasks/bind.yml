@@ -1,0 +1,48 @@
+- name: Job 01.1.1 | Copy bind folder to target host that matches "ansible_hostname"
+  copy:
+    src: "files/{{ansible_hostname}}/etc/bind"
+    dest: "/etc/"
+    owner: root
+    group: bind
+    mode: 0644
+  when: ansible_hostname != 'virthost01'
+  notify: Restart bind9
+  #tags: test
+#
+- name: Job 01.1.2 | Copy dhcp folder to target host that matches "ansible_hostname"
+  copy:
+    src: "files/{{ansible_hostname}}/etc/dhcp"
+    dest: "/etc/"
+    owner: root
+    group: root
+    mode: 0644
+  when: ansible_hostname != 'virthost01'
+  notify: Restart dhcp
+  #tags: test
+#
+- name: Job 01.2.1 | Update dhcp configuration. Disable dhcpv6.
+  lineinfile:
+    dest: /etc/default/isc-dhcp-server
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    #validate: 'sshd -t -f %s'
+    validate: 'dhcpd -t -cf %s'
+  with_items:
+    - regexp: "^INTERFACESv4"
+      line: "{{dsbl_dhcpvsx}}"
+    # - regexp: "^PermitRootLogin"
+    #   line: "PermitRootLogin no"
+    # - regexp: "^Port"
+    #   line: "Port 22"
+    # - regexp: "^PubkeyAuthentication"
+    #   line: "PubkeyAuthentication yes"
+    # - regexp: "^ChallengeResponseAuthentication"
+    #   line: "ChallengeResponseAuthentication no"
+    # - regexp: "^PermitEmptyPasswords"
+    #   line: "PermitEmptyPasswords no"    
+    # - regexp: "^AllowAgentForwarding"
+    #   line: "AllowAgentForwarding yes"         
+  notify: Restart dhcp
+  when: dsbl_dhcpvsx
+  #tags: test

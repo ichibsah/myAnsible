@@ -1,0 +1,21 @@
+---
+#
+- hosts: local
+  connection: local
+  ignore_errors: true          # https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_error_handling.html
+  ansible_check_mode: false      # https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_checkmode.html
+  ignore_unreachable: true       # https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_error_handling.html
+
+  vars_files:
+  - ansible-vault.yml
+
+  roles:
+  - provisions
+  - ssh
+  - ansible
+  - apt-packages
+  - bashrc
+  - dockers
+  - update
+  #
+# complete and not tested.
