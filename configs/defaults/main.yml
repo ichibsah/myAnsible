@@ -1,2 +1,3 @@
 ---
 # defaults file for configs
+instl_anydesk: no                                   # Install AnyDesk

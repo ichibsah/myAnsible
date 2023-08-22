@@ -1,0 +1,29 @@
+version: '2.9'
+services:
+  mariadb:
+    container_name: Matomo-DB
+    image: mariadb
+    command: --max_allowed_packet=1073741824
+    restart: always
+    volumes:
+      - ./docker/matomodb:/var/lib/mysql
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=no
+      - MYSQL_DATABASE=v#6XJQ9pl9dtlM2S
+  matomo:
+    container_name: Matomo
+    environment:
+      - PUID=1000
+      - PGID=100
+      - TZ=Europe/Berlin
+    ports:
+      - 8597:80
+    links:
+      - mariadb
+    volumes:
+      - ./docker/matomo:/var/www/html
+    image: matomo
+    restart: always
+
+volumes:
+  mariadb: # matomo

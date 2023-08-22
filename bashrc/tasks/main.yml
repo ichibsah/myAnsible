@@ -1,10 +1,19 @@
 ---
 # tasks file for bashrc
-- name: copy bashrc file
+- name: Job 02 | copy bashrc file to ibrahim
   copy:
     src: "files/home/ibrahim/"
     dest: "~/"
     owner: ibrahim
     group: ibrahim
+    mode: 0744
+  when: ansible_os_family == 'Debian'
+#
+- name: Job 02 | copy bashrc file to root
+  copy:
+    src: "files/home/ibrahim/"
+    dest: "/root/"
+    owner: root
+    group: root
     mode: 0744
   when: ansible_os_family == 'Debian'

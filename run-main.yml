@@ -14,8 +14,8 @@
 - name: MAIN | Play run-apt.yml
   import_playbook: run-apt.yml
 
-- name: MAIN | Play run-anydesk.yml
-  import_playbook: run-anydesk.yml
+- name: MAIN | Play run-configs.yml
+  import_playbook: run-configs.yml
 
 - name: MAIN | Play run-hostname.yml
   import_playbook: run-hostname.yml

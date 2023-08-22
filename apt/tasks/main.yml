@@ -51,7 +51,7 @@
   loop:
     "{{apt_def_pckg_lst}}"
   when: instl_def_pckg
-
+#
 - name: Job 06 | REMOVE default packages # REMOVE #
   apt:
     autoremove: yes
@@ -74,13 +74,26 @@
     "{{apt_host_pckg_lst}}"
   when: apt_host_pckg_lst.0 is defined
 #
-- name: Job 09 | Install Utilities Packages
+- name: Job 09.1.1 | Install Utilities Packages (method once)
+  apt:
+    pkg: "{{apt_util_lst}}"  
+    state: present
+  register: result
+  failed_when:
+    result.stout ==0
+  when: instl_utl_pckg
+  tags: test
+#
+- name: Job 09.1.2 | Install Utilities Packages (method loop)
   apt:
     pkg: "{{item}}"
     state: present
   loop:
-    "{{apt_util_lst}}"  
+    "{{apt_util_lst}}"
+  failed_when:
+    result.stout !=0
   when: instl_utl_pckg
+  tags: test
 #
 - name: Job 10 | REMOVE Utilities Packages # REMOVE #
   apt:

@@ -37,37 +37,7 @@
     group: ibrahim
     mode: 0744
   when: ansible_hostname != 'virthost01'
-
-- name: Job 05 | Copy root folder to target host that matches "ansible_hostname"
-  copy:
-    src: "files/{{ansible_hostname}}/root"
-    dest: "/"
-    owner: root
-    group: root
-    mode: 0700
-  when: ansible_hostname != 'virthost01'
-
-- name: Job 06 | import task bind
-  ansible.builtin.import_tasks:
-    file: bind.yml
-  #when: apt_host_pckg_lst | contains bind9
-
-- name: Job 07 | import task interfaces
-  ansible.builtin.import_tasks:
-    file: interfaces.yml
-  #when: apt_host_pckg_lst | contains bind9
 #
-- name: Job 08 | import task watchtower
-  ansible.builtin.import_tasks:
-    file: 0000-watchtower.yml
-  #when: apt_host_pckg_lst | contains bind9
-#
-- name: Job 08 | import task dozzle
-  ansible.builtin.import_tasks:
-    file: 8892-dozzle.yml
-  #when: apt_host_pckg_lst | contains bind9
-#
-
 # command: touch "{{ item.item }}"
 #   with_items:
 #       - { item: "1" }

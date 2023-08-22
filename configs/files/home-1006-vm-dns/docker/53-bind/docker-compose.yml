@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+    bind9:
+      container_name: dns-bind9
+      image: ubuntu/bind9:latest
+      #image: internetsystemsconsortium/bind9:9.18
+      environment:
+        - BIND_USER=root
+        - TZ=Europe/Berlin
+      ports:
+        - "53:53/tcp"
+        - "53:53/udp"
+        - "127.0.0.1:953:953/tcp"
+      volumes:
+        - ./docker/config:/etc/bind:rw
+        - ./docker/cache:/var/cache/bind
+        - ./docker/records:/var/lib/bind
+        - ./docker/logs:/var/log/bind
+      restart: always

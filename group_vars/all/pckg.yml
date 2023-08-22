@@ -84,3 +84,5 @@ apt_default_packages_pre20:
 apt_rmv_pckg_lst:                         # Remove APT package lists
   - ansible
 #
+apt_anydsk_pckg_lst:
+  - anydesk

@@ -3,7 +3,7 @@
 - name: Job-00 | Set timezone to Europe/Berlin
   timezone:
     name: Europe/Berlin
-
+#
 - name: Job-01 | Create group
   group:
     name: "{{item}}"
@@ -79,8 +79,8 @@
   loop: "{{ users }}"
     #"{{ lookup('vars', 'somevar_' ~ other_var) }}"
   #tags: test
-
-- name: Job-06 | adding user's public keys to authorized_key
+#
+- name: Job-06 | add public keys to users's authorized_key
   authorized_key:
     user: "{{item.name}}"
     state: "{{item.state}}"
