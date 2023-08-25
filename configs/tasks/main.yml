@@ -23,13 +23,3 @@
     file: interfaces.yml
   #when: apt_host_pckg_lst | contains bind9
 #
-- name: Job 08 | import task watchtower
-  ansible.builtin.import_tasks:
-    file: 0000-watchtower.yml
-  #when: apt_host_pckg_lst | contains bind9
-#
-- name: Job 08 | import task dozzle
-  ansible.builtin.import_tasks:
-    file: 8892-dozzle.yml
-  #when: apt_host_pckg_lst | contains bind9
-#

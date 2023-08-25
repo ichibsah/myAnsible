@@ -1,0 +1,5 @@
+# Installing/Starting the image
+# To fetch/use these images, run the following:
+# docker pull ixsystems/truecommand
+# docker run --detach -v "[hostdirectory]:/data" -p [portnumber]:80 -p [sslportnumber]:443 ixsystems/truecommand
+# Where the “[hostdirectory]” should point to some persistent directory on the host to use as the long-lived data directory for the container.
