@@ -2,6 +2,8 @@
 #  community.docker.docker_volume:
 #    name: portainer-data
 #
+# TODO: add passwords to vault
+#       set folder permissions via ansible during installation
 # https://docs.ansible.com/ansible/latest/collections/community/docker/docker_compose_module.html
 - name: Job 00 | Deploy semaphore
   community.docker.docker_compose:
@@ -56,14 +58,14 @@
 - name: Show results
   ansible.builtin.debug:
     var: output
-  tags: test
+  #tags: test
   #
 - name: Verify that semaphore and db services are running
   ansible.builtin.assert:
     that:
       - "output.services.semaphore.ansiblesemaphore.state.running"
       - "output.services.mysql.ansiblemysql.state.running"
-  tags: test
+  #tags: test
 
 # # https://mariushosting.com/docker/
 

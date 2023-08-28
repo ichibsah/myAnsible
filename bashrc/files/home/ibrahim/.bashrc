@@ -205,7 +205,7 @@ export KUBECTX_CURRENT_BGCOLOR=$(tput setab 7) # white background
 #
 export LC_ALL=C.UTF-8
 export LANG=C.UTF-8
-export PATH=/sbin:/usr/sbin:$PATH
+export PATH=/sbin:/usr/sbin:/usr/local/bin:$PATH
 export PATH=/home/isawadogo/opt/kubectx:$PATH
 export PATH=$PATH:$HOME/.local/bin:$HOME/bin:/snap/fluxctl/162/bin
 export EDITOR=nano

@@ -56,16 +56,28 @@ pip_ansbl_pckg_lst:                      # Install packages using PIP for Ansibl
   - ansible
   - passlib
 #
-pip_dckr_pckg_lst:                      # Install packages using PIP for Docker
+apt_docker_pckg_lst:                      # Install packages using apt for Docker
+  - rsync
+  - docker-ce
+  - docker-ce-cli 
+  - containerd.io
   - docker-compose
+  - docker-compose-plugin
+  - apt-transport-https
+  - ca-certificates
+  - python3-docker
+  - lsb-release
+  - gnupg2
+  - curl
+  - software-properties-common
 #
-apt_docker_pckg_lst:
-- rsync
-- docker-ce
-- docker-compose-plugin
-- apt-transport-https
-- ca-certificates
-- python3-docker
+deb_architecture: {
+  "aarch64": "arm64",
+  "x86_64": "amd64"
+  }
+# 
+pip_dckr_pckg_lst:                        # Install packages using PIP for Docker
+  - docker-compose
 #
 postfix_aliases:    # https://github.com/Oefenweb/ansible-postfix https://github.com/geerlingguy/ansible-role-postfix
   - user: $USER
