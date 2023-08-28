@@ -16,7 +16,7 @@ ns                  IN      A       10.3.0.254
 
 ; -- add dns record below
 
-md-2002-NAS         IN      A       10.3.0.131
+md-2002-pve         IN      A       10.3.0.131
 md-2007-docker      IN      A       10.3.0.137
 md-2005-gw          IN      A       10.3.0.254
 

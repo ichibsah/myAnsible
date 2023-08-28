@@ -12,4 +12,6 @@ dsbl_dhcpvsx: no                             # Disable dhcp v6
 # /*******/
 # docker containers
 dckr_dpl_pihole: no
-  - 
+dckr_dpl_iSpy: no
+dckr_dpl_semaphore: no
+

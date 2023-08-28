@@ -32,3 +32,14 @@
   loop:
     "{{apt_anydsk_pckg_lst}}"
   when: not instl_anydesk
+#
+# https://www.anyviewer.com/how-to/anydesk-display-server-not-supported-2578.html
+# https://medium.com/@Dylan.Wang/how-to-fix-anydesk-of-display-server-not-supported-error-for-ubuntu-22-04-c98c44de89c0
+#
+# sudo anydesk --admin-settings
+# https://support.anydesk.com/knowledge/command-line-interface-for-linux
+#
+# rsync -vr --progress --remove-source-files /mnt/Pool01-VMs/mytmp/telegram/ /mnt/Pool03-Data/telegram/
+#
+# TO DO:
+# edit: sudo nano /etc/gdm3/deamon.conf for bookworm (custom.conf for ubuntu) see page above for what needs editing

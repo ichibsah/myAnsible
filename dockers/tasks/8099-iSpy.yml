@@ -1,0 +1,23 @@
+#- name: create new volume
+#  community.docker.docker_volume:
+#    name: portainer-data
+#
+- name: Job 00 | Deploy Ispy
+  community.docker.docker_container:
+    working_dir: "/opt/docker/iSpy-8099/"
+    name: Ispy
+    image: "doitandbedone/ispyagentdvr:latest"
+    ports:
+      - 8099:8090
+      - 3478:3478/udp
+      - 50000-50010:50000-50010/udp
+    volumes:
+      - /opt/docker/iSpy-8099/media:/agent/Media/XML/
+      - /opt/docker/iSpy-8099/storage:/agent/Media/WebServerRoot/Media/
+      - /opt/docker/iSpy-8099/commands:/agent/Commands/
+      - /etc/localtime:/etc/localtime:ro
+    env:
+      TZ: Europe/Berlin
+    restart_policy: always
+  when: instl_docker_pckg and dckr_dpl_iSpy
+  #tags: test

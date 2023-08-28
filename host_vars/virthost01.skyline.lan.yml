@@ -48,3 +48,9 @@ pip_host_pckg_lst:                        # Install Host Specific PIP Packages w
 - azure.mgmt.recoveryservicesbackup
 - pip-review
 - 'ansible[azure]'
+#
+#
+# docker containers
+dckr_dpl_pihole: no
+dckr_dpl_iSpy: no
+dckr_dpl_semaphore: yes

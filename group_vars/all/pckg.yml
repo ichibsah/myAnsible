@@ -48,17 +48,16 @@ apt_def_pckg_lst:                     # Install Default Packages on All Host
 #- python3-apt
 #
 apt_ansbl_pckg_lst:
-  - python3-apt
-  - python3-pip
-  - python3
-  - pip
   - virtualenv
   - python3-django
   - python3-full
 #
-pip_ansbl_pckg_lst:                      # Install packages using PIP
+pip_ansbl_pckg_lst:                      # Install packages using PIP for Ansible
   - ansible
   - passlib
+#
+pip_dckr_pckg_lst:                      # Install packages using PIP for Docker
+  - docker-compose
 #
 apt_docker_pckg_lst:
 - rsync
@@ -66,6 +65,7 @@ apt_docker_pckg_lst:
 - docker-compose-plugin
 - apt-transport-https
 - ca-certificates
+- python3-docker
 #
 postfix_aliases:    # https://github.com/Oefenweb/ansible-postfix https://github.com/geerlingguy/ansible-role-postfix
   - user: $USER

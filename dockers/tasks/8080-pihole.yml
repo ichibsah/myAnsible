@@ -23,7 +23,7 @@
         - 1.1.1.1
     hostname: pihole.zertiahmef.com
     image: 'pihole/pihole:latest'
-  when: dkr_copy_def_files and dckr_dpl_pihole
+  when: instl_docker_pckg and dckr_dpl_pihole
   tags: test
 
   

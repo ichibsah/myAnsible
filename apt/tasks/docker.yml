@@ -1,0 +1,65 @@
+---
+# --break-system-packages
+- name: Job 17 | Global Install - Python3 and pip
+  apt:
+    pkg: "{{item}}"
+    state: latest
+  loop:
+  - python3
+  - pip
+  - python3-apt
+  - python3-pip
+  - python3-full
+  #when: instl_docker_pckg
+  # tags: test #TODO
+#
+- name: Job 17 | Install Docker Package
+  apt:
+    pkg: "{{apt_docker_pckg_lst}}"
+    state: present
+  when: instl_docker_pckg
+#
+- name: Job 17.1 | Install Docker Module in Python
+  pip:
+    name: "{{pip_dckr_pckg_lst}}"
+    state: latest
+    #extra_args: --break-system-packages
+  when: instl_docker_pckg and (ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] <= "11") #bullseye
+  # tags: test #TODO
+#
+- name: Job 17.1 | Install Docker Module in Python
+  pip:
+    name: "{{pip_dckr_pckg_lst}}"
+    state: latest
+    extra_args: --break-system-packages
+  when: instl_docker_pckg and (ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] == "12") #bookworm
+  # tags: test #TODO
+#
+- name: Job 18 | REMOVE Docker Package # REMOVE #
+  apt:
+    pkg: "{{apt_docker_pckg_lst}}"
+    state: absent
+  when: not instl_docker_pckg and not kill_remove
+#
+- name: Job 18.1 | REMOVE Docker Package # REMOVE #
+  pip:
+    name: "{{pip_dckr_pckg_lst}}"
+    state: absent
+  when: not instl_docker_pckg and not kill_remove
+
+
+#
+# pip:
+#   name:  # not required. The name of a Python library to install or the url(bzr+,hg+,git+,svn+) of the remote package. This can be a list (since 2.2) and contain version specifiers (since 2.7).
+#   version:  # not required. The version number to install of the Python library specified in the I(name) parameter.
+#   requirements:  # not required. The path to a pip requirements file, which should be local to the remote system. File can be specified as a relative path if using the chdir option.
+#   virtualenv:  # not required. An optional path to a I(virtualenv) directory to install into. It cannot be specified together with the 'executable' parameter (added in 2.1). If the virtualenv does not exist, it will be created before installing packages. The optional virtualenv_site_packages, virtualenv_command, and virtualenv_python options affect the creation of the virtualenv.
+#   virtualenv_site_packages: no # not required. Whether the virtual environment will inherit packages from the global site-packages directory.  Note that if this setting is changed on an already existing virtual environment it will not have any effect, the environment must be deleted and newly created.
+#   virtualenv_command: virtualenv # not required. The command or a pathname to the command to create the virtual environment with. For example C(pyvenv), C(virtualenv), C(virtualenv2), C(~/bin/virtualenv), C(/usr/local/bin/virtualenv).
+#   virtualenv_python:  # not required. The Python executable used for creating the virtual environment. For example C(python3.5), C(python2.7). When not specified, the Python version used to run the ansible module is used. This parameter should not be used when C(virtualenv_command) is using C(pyvenv) or the C(-m venv) module.
+#   state: absent # not required. choices: absent;forcereinstall;latest;present. The state of module The 'forcereinstall' option is only available in Ansible 2.1 and above.
+#   extra_args:  # not required. Extra arguments passed to pip.
+#   editable: no # not required. Pass the editable flag.
+#   chdir:  # not required. cd into this directory before running the command
+#   executable:  # not required. The explicit executable or pathname for the pip executable, if different from the Ansible Python interpreter. For example C(pip3.3), if there are both Python 2.7 and 3.3 installations in the system and you want to run pip for the Python 3.3 installation. Mutually exclusive with I(virtualenv) (added in 2.1). Does not affect the Ansible Python interpreter. The setuptools package must be installed for both the Ansible Python interpreter and for the version of Python specified by this option.
+#   umask:  # not required. The system umask to apply before installing the pip package. This is useful, for example, when installing on systems that have a very restrictive umask by default (e.g., "0077") and you want to pip install packages which are to be used by all users. Note that this requires you to specify desired umask mode as an octal string, (e.g., "0022").

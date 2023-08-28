@@ -128,19 +128,7 @@
       "{{apt_ansbl_pckg_lst}}"
     state: absent
   when: not instl_ansbl_pckg and not kill_remove
-
-- name: Job 17 | Install Docker Package
-  apt:
-    pkg: "{{apt_docker_pckg_lst}}"
-    state: present
-  when: instl_docker_pckg
-
-- name: Job 18 | REMOVE Docker Package # REMOVE #
-  apt:
-    pkg: "{{apt_docker_pckg_lst}}"
-    state: absent
-  when: not instl_docker_pckg and not kill_remove
-
+#
 # REMOVE #
 - name: Job 19 | Remove all cached .deb files
   shell: apt-get -y clean
@@ -195,8 +183,13 @@
   with_items: 
     "{{apt_strt_srvc_lst}}"
   when: not sysd_strt_srvc and not kill_remove
-
-- name: Job 25 | import task ansible
+#
+- name: Job 25 | import task docker
+  ansible.builtin.import_tasks:
+    file: docker.yml
+  #when: apt_host_pckg_lst | contains bind9
+#
+- name: Job 26 | import task ansible
   ansible.builtin.import_tasks:
     file: ansible.yml
   #when: apt_host_pckg_lst | contains bind9

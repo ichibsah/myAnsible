@@ -13,7 +13,7 @@
       - /var/run/docker.sock:/var/run/docker.sock
       - /etc/localtime:/etc/localtime:ro
     restart_policy: always
-  when: dkr_copy_def_files
+  when: instl_docker_pckg
   #tags: test
 
 # docker run -d --name=dozzle \

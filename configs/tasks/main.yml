@@ -23,3 +23,8 @@
     file: interfaces.yml
   #when: apt_host_pckg_lst | contains bind9
 #
+- name: Job 08 | import task symlink
+  ansible.builtin.import_tasks:
+    file: symlink.yml
+  #when: apt_host_pckg_lst | contains bind9
+#

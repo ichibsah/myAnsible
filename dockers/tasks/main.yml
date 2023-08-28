@@ -43,11 +43,21 @@
     file: 0000-watchtower.yml
   #when: apt_host_pckg_lst | contains bind9
 #
-- name: Job 08 | import task dozzle
+- name: Job 09 | import task dozzle
   ansible.builtin.import_tasks:
     file: 8892-dozzle.yml
   #when: apt_host_pckg_lst | contains bind9
 #
+- name: Job 10 | import task iSpy
+  ansible.builtin.import_tasks:
+    file: 8099-iSpy.yml
+  #when: apt_host_pckg_lst | contains bind9
+#
+- name: Job 11 | import task semaphore
+  ansible.builtin.import_tasks:
+    file: 3002-semaphore.yml
+  #when: apt_host_pckg_lst | contains bind9
+
 # command: touch "{{ item.item }}"
 #   with_items:
 #       - { item: "1" }
