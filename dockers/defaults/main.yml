@@ -14,4 +14,6 @@ dsbl_dhcpvsx: no                             # Disable dhcp v6
 dckr_dpl_pihole: no
 dckr_dpl_iSpy: no
 dckr_dpl_semaphore: no
+dckr_dpl_npxymgmt: no
+dckr_dpl_trcmmnd: no
 

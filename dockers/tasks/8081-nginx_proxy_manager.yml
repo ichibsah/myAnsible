@@ -1,0 +1,55 @@
+#- name: create new volume
+#  community.docker.docker_volume:
+#    name: portainer-data
+#
+- name: Job 00 | Deploy nginx_proxy_manager
+  community.docker.docker_container:
+    working_dir: "/opt/docker/nginx_proxy_manager-8081/"
+    name: nginx_proxy_manager
+    image: "jc21/nginx-proxy-manager:latest"
+    ports:
+      - 8081:81
+      - 80:80
+      - 443:443
+    volumes:
+      - /opt/docker/nginx_proxy_manager-8081/data:/data:rw
+      - /opt/docker/nginx_proxy_manager-8081/letsencrypt:/etc/letsencrypt
+      - /etc/localtime:/etc/localtime:ro
+    env:
+      TZ: Europe/Berlin
+    restart_policy: always
+  when: instl_docker_pckg and dckr_dpl_npxymgmt
+  tags: test
+
+
+# http://10.3.0.137:8081
+# #touch $(pwd)/docker/npm/config.json
+# docker run -d --name=nginx_proxy_manager \
+# -p 8081:81 \
+# -p 80:80 \
+# -p 443:443 \
+# -e PUID=1000 \
+# -e PGID=1000 \
+# -e TZ=Europe/Berlin \
+# -v $(pwd)/docker/npm/config.json:/app/config/production.json:rw \
+# -v $(pwd)/docker/npm/data:/data \
+# -v $(pwd)/docker/npm/letsencrypt:/etc/letsencrypt \
+# --restart always \
+# jc21/nginx-proxy-manager
+
+
+# Email:    admin@example.com
+# Password: changeme
+
+# version: '3.8'
+# services:
+#   app:
+#     image: 'jc21/nginx-proxy-manager:latest'
+#     restart: unless-stopped
+#     ports:
+#       - '80:80'
+#       - '81:81'
+#       - '443:443'
+#     volumes:
+#       - ./data:/data
+#       - ./letsencrypt:/etc/letsencrypt

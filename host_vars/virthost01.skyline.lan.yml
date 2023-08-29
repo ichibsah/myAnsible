@@ -54,3 +54,4 @@ pip_host_pckg_lst:                        # Install Host Specific PIP Packages w
 dckr_dpl_pihole: no
 dckr_dpl_iSpy: no
 dckr_dpl_semaphore: yes
+dckr_dpl_trcmmnd: yes

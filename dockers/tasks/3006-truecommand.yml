@@ -1,0 +1,32 @@
+# Installing/Starting the image
+# To fetch/use these images, run the following:
+# docker pull ixsystems/truecommand
+# docker run --detach -v "[hostdirectory]:/data" -p [portnumber]:80 -p [sslportnumber]:443 ixsystems/truecommand
+# Where the “[hostdirectory]” should point to some persistent directory on the host to use as the long-lived data directory for the container.
+
+# docker pull ixsystems/truecommand
+# docker run --detach -v "[hostdirectory]:/data" -p [portnumber]:80 -p [sslportnumber]:443 ixsystems/truecommand
+
+
+#- name: create new volume
+#  community.docker.docker_volume:
+#    name: portainer-data
+#
+- name: Job 00 | Deploy truecommand
+  community.docker.docker_container:
+    working_dir: "/opt/docker/truecommand-3006/"
+    name: truecommand
+    image: "ixsystems/truecommand:latest"
+    ports:
+      - 3006:80
+      - 3007:443
+    volumes:
+      - /opt/docker/truecommand-3006/data:/data
+      - /etc/localtime:/etc/localtime:ro
+    env:
+      TZ: Europe/Berlin
+    restart_policy: always
+  when: instl_docker_pckg and dckr_dpl_trcmmnd
+  tags: test
+
+

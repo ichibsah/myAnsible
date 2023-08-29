@@ -49,7 +49,8 @@ apt_hst_strt_srvc_lst:                    # Ensure Host Specific Services are ru
 # /*******/
 # docker containers
 dckr_dpl_pihole: no
-  - 
+dckr_dpl_npxymgmt: no
+dckr_dpl_trcmmnd: no
 
 # /*******/
 hostname_hostname: "{{ inventory_hostname }}"

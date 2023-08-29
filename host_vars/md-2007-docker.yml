@@ -36,3 +36,4 @@ apt_hst_strt_srvc_lst:                        # Ensure Host Specific Services ar
 dckr_dpl_pihole: no
 dckr_dpl_iSpy: yes
 dckr_dpl_semaphore: yes
+dckr_dpl_npxymgmt: yes

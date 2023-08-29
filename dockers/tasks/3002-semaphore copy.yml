@@ -38,7 +38,7 @@
             - SEMAPHORE_DB_DIALECT=mysql
             - SEMAPHORE_DB=semaphore
             - SEMAPHORE_PLAYBOOK_PATH=/tmp/semaphore/
-            - SEMAPHORE_ADMIN_PASSWORD={{ansible_become_pass}}  # change!
+            - SEMAPHORE_ADMIN_PASSWORD="{{ansible_become_pass}}"  # change!
             - SEMAPHORE_ADMIN_NAME=admin
             - SEMAPHORE_ADMIN_EMAIL=admin@localhost
             - SEMAPHORE_ADMIN=admin
@@ -53,7 +53,7 @@
             - mysql
   when: instl_docker_pckg and dckr_dpl_semaphore
   register: output
-  tags: test
+  #tags: test
   #
 - name: Show results
   ansible.builtin.debug:
@@ -65,7 +65,7 @@
     that:
       - "output.services.semaphore.ansiblesemaphore.state.running"
       - "output.services.mysql.ansiblemysql.state.running"
-  tags: test
+  #tags: test
 
 # # https://mariushosting.com/docker/
 

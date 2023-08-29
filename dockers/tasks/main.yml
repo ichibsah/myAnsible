@@ -57,7 +57,17 @@
   ansible.builtin.import_tasks:
     file: 3002-semaphore.yml
   #when: apt_host_pckg_lst | contains bind9
-
+#
+- name: Job 12 | import task semaphore
+  ansible.builtin.import_tasks:
+    file: 8081-nginx_proxy_manager.yml
+  #when: apt_host_pckg_lst | contains bind9
+#
+- name: Job 13 | import task truecommand
+  ansible.builtin.import_tasks:
+    file: 3006-truecommand.yml
+  #when: apt_host_pckg_lst | contains bind9
+#
 # command: touch "{{ item.item }}"
 #   with_items:
 #       - { item: "1" }
