@@ -10,8 +10,9 @@ allow-hotplug ens18
 iface ens18 inet static
  address 10.3.0.254
  netmask 255.252.0.0
- gateway 10.3.0.254
- dns-servers 10.3.0.254 10.1.0.254
+ #gateway 10.3.0.254
+ gateway 192.168.77.253
+ dns-servers 10.3.0.254
 #
 #allow-hotplug ens19
 #iface ens19 inet static
@@ -21,4 +22,11 @@ iface ens18 inet static
 # dns-servers 10.3.0.254
 #
 allow-hotplug ens19
-iface ens19 inet dhcp
+iface ens19 inet static
+ address 192.168.77.253
+ netmask 255.255.255.0
+ gateway 192.168.77.254
+ dns-servers 10.3.0.254
+#
+#allow-hotplug ens19
+#iface ens19 inet dhcp
