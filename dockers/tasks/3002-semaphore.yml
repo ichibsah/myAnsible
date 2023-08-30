@@ -53,7 +53,7 @@
             - mysql
   when: instl_docker_pckg and dckr_dpl_semaphore
   register: output
-  tags: test
+  #tags: test
   #
   # for debug purpose only - disabled in the meantime
 # - name: Show results
@@ -66,7 +66,7 @@
     that:
       - "output.services.semaphore.ansiblesemaphore.state.running"
       - "output.services.mysql.ansiblemysql.state.running"
-  tags: test
+  #tags: test
 
 # # https://mariushosting.com/docker/
 

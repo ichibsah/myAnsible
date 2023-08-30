@@ -6,4 +6,4 @@ clear
 #
 ansible-inventory -y --list
 #
-ansible-playbook run-main.yml # works
+ansible-playbook -v run-main.yml # works
