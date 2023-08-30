@@ -1,3 +1,6 @@
 ---
 # defaults file for configs
 instl_anydesk: no                                   # Install AnyDesk
+#
+dsbl_dhcpvsx: no                                    # Disable dhcp v6
+dsbl_dhcpvsx_regx:                                  # text that should change goes here eg. INTERFACESv4='ens18'

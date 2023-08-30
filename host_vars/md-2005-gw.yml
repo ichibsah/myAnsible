@@ -44,7 +44,8 @@ apt_hst_strt_srvc_lst:                        # Ensure Host Specific Services ar
 #
 instl_anydesk: yes                        # install AnyDesk in this client
 #
-dsbl_dhcpvsx: INTERFACESv4='ens18'        # Disable dhcp v6
+dsbl_dhcpvsx: yes
+dsbl_dhcpvsx_regx: INTERFACESv4='ens18'        # Disable dhcp v6
 
 
 interfaces:

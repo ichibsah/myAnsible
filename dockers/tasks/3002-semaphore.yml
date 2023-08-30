@@ -55,10 +55,11 @@
   register: output
   tags: test
   #
-- name: Show results
-  ansible.builtin.debug:
-    var: output
-  #tags: test
+  # for debug purpose only - disabled in the meantime
+# - name: Show results
+#   ansible.builtin.debug:
+#     var: output
+#   #tags: test
   #
 - name: Verify that semaphore and db services are running
   ansible.builtin.assert:

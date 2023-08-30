@@ -1,7 +1,7 @@
 # file: apt/tasks/main.yml
 #
 #- include_vars: pckg.yml # see global_var folder for update
-
+# TODO: challenge - make this dynamic - disabled in the meantime
 - name: Job 01 | Reset the sources list (/etc/apt/sources.list)
   template:
     src: etc_apt_sources.list.j2
@@ -10,29 +10,31 @@
     group: root
     mode: 0644
   when: apt_reset_source_list
-
+#
 - name: Job 02 | Update the apt cache
   apt:
     update_cache: yes
     upgrade: safe #
     force_apt_get: yes #
     cache_valid_time: "{{apt_cache_valid_time}}"
-
-- name: Job 03 | Check for cached .deb files
-  shell: "ls /var/cache/apt/archives/*.deb 2&> /dev/null | wc -l"
-  register: apt_cache_check
-  changed_when: no
-  when: apt_clean
-
-- name: Job 04 | Update the general configuration (/etc/apt/apt.conf.d/10general)
-  template:
-    src: etc_apt_apt.conf.d_10general.j2
-    dest: /etc/apt/apt.conf.d/10general
-    owner: root
-    group: root
-    mode: 0644
-  when: apt_update_gen_conf
-
+#
+# TODO: avoid using shell here - disabled in the meantime
+# - name: Job 03 | Check for cached .deb files
+#   shell: "ls /var/cache/apt/archives/*.deb 2&> /dev/null | wc -l"
+#   register: apt_cache_check
+#   changed_when: no
+#   when: apt_clean
+#
+# TODO: needs revision - disabled in the meantime
+# - name: Job 04 | Update the general configuration (/etc/apt/apt.conf.d/10general)
+#   template:
+#     src: etc_apt_apt.conf.d_10general.j2
+#     dest: /etc/apt/apt.conf.d/10general
+#     owner: root
+#     group: root
+#     mode: 0644
+#   when: apt_update_gen_conf
+#
 # - name: APT | Make sure the required packages are installed 20.04 and above
 #   set_fact:
 #     apt_packages_list: "{{ apt_default_packages }} + {{ apt_default_packages_post20 }}"

@@ -30,8 +30,10 @@
     validate: 'dhcpd -t -cf %s'
   with_items:
     - regexp: "^INTERFACESv4"
-      line: "{{dsbl_dhcpvsx}}"
+      line: "{{dsbl_dhcpvsx_regx}}"
     # - regexp: "^PermitRootLogin"
+    # dsbl_dhcpvsx: yes
+    # dsbl_dhcpvsx_regx: INTERFACESv4='ens18'        # Disable dhcp v6
     #   line: "PermitRootLogin no"
     # - regexp: "^Port"
     #   line: "Port 22"

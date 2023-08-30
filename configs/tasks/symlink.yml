@@ -2,12 +2,14 @@
 # tasks file for symlink
 # https://docs.ansible.com/ansible/latest/collections/ansible/builtin/file_module.html
 #
-- name: Job 00 | Create soft links
+- name: Job 00 | symlink | Create soft links
   ansible.builtin.file:
     src: '{{ item.src }}'
     dest: '{{ item.dest }}'
     owner: ibrahim
     group: ibrahim
+    force: yes
+    follow: false
     state: link
   loop:
     - { src: /mnt, dest: /home/ibrahim/mnt }
