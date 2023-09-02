@@ -33,7 +33,8 @@ instl_ansbl_pckg: yes                      # Install ansible using PIP (pip_ansb
 instl_docker_pckg: yes                    # Install Docker package (apt_docker_pckg_lst)
 apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
   - cifs-utils
-  
+#
+
 pip_host_pckg_lst:                        # Install Host Specific PIP Packages when ansible is also installed
 #- azure
 - azure.cli
