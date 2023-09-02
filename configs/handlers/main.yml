@@ -5,5 +5,33 @@
   ansible.builtin.service:
     name: docker
     state: restarted
+#
+- name: restart sensu-services
+  service:
+    name: "{{ item }}"
+    state: restarted
+  with_items:
+    - sensu-api
+    - sensu-client
+    - sensu-server
+#
+# https://serverfault.com/questions/796067/is-it-possible-to-notify-a-group-of-services-instead-of-individual-in-ansible
+# notify:
+#   - "restart sensu-services"
 
 
+# handlers:
+# - name: restart sensu api
+#   listen: "restart sensu-services"
+#   service: name=sensu-api state=restarted
+#   ignore_errors: true
+
+# - name: restart sensu service
+#   listen: "restart sensu-services"
+#   service: name=sensu-service state=restarted
+#   ignore_errors: true
+
+# - name: restart sensu client
+#   listen: "restart sensu-services"
+#   service: name=sensu-client state=restarted
+#   ignore_errors: true

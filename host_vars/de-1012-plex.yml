@@ -1,9 +1,10 @@
 hostname_additional_hosts:
-  - ip_address: 192.168.14.32
-    hostname: msrv02.skyline.lan
-    hostname_short: msrv02
+  - ip_address: 10.1.0.132
+    hostname: de-1012-plex.skyline.lan
+    hostname_short: de-1012-plex
   #
 #
+ansible_become_pass: '{{ localhost_become_pass }}'
 ### PRVS | CONFIG ###
 prvs_copy_home: no                       # Copy default user's home files in place
 prvs_root_passwd: yes                    # update root passward

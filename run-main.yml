@@ -5,8 +5,8 @@
 - name: MAIN | Play run-dockers.yml
   import_playbook: run-dockers.yml
 
-- name: MAIN | Play run-bashrc.yml
-  import_playbook: run-bashrc.yml
+# - name: MAIN | Play run-bashrc.yml
+#   import_playbook: run-bashrc.yml
 
 - name: MAIN | Play run-crontab.yml
   import_playbook: run-crontab.yml

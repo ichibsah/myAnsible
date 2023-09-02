@@ -1,10 +1,10 @@
 ---
 # tasks file for provisions
-- name: Job-00 | Set timezone to Europe/Berlin
+- name: Job 00 | Set timezone to Europe/Berlin
   timezone:
     name: Europe/Berlin
 #
-- name: Job-01 | Create group
+- name: Job 01 | Create group
   group:
     name: "{{item}}"
     state: present
@@ -35,9 +35,9 @@
 #     password: "{{ localhost_become_pass | password_hash('sha512') }}"
 #     create_home: True
 #     state: present # not required. choices: absent;present. Whether the account should exist or not, taking action if the state is different from what is stated.
-
+#
 # Disable root login and use `sudo`.
-- name: Job-1002 | Add sudo rights for deployment user.
+- name: Job 02 | Add sudo rights for deployment user.
   lineinfile:
     dest: /etc/sudoers
     regexp: '^ibrahim'
@@ -45,7 +45,7 @@
     state: present
     validate: 'visudo -cf %s'
   when: ansible_os_family == 'Debian' and ansible_hostname != 'virthost01'
-
+#
 # - name: Job-1003 | Copy deployment user's home files in place.
 #   copy:
 #     src: "files/home/ibrahim"
@@ -65,7 +65,7 @@
 #     state: present
 #   when: prvs_root_passwd
 
-- name: Job-05 | creating users and groups
+- name: Job 03 | creating users and groups
   user:
     name: "{{item.name}}"
     update_password: always
@@ -80,7 +80,7 @@
     #"{{ lookup('vars', 'somevar_' ~ other_var) }}"
   #tags: test
 #
-- name: Job-06 | add public keys to users's authorized_key
+- name: Job 04 | add public keys to users's authorized_key
   authorized_key:
     user: "{{item.name}}"
     state: "{{item.state}}"

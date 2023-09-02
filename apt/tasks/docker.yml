@@ -20,7 +20,8 @@
     update_cache: yes # not required. Run the equivalent of C(apt-get update) when a change occurs.  Cache updates are run after making changes.
     validate_certs: yes
   # the when here is no longer requred.  
-  #when: instl_docker_pckg and (ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] <= "11") #bullseye    
+  #when: instl_docker_pckg and (ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] < "12") #bullseye    
+  #when: instl_docker_pckg and (ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] < "12") #bullseye    
   #tags: test
 #
 # this has been disabled after finding a universal repo: for all releases.
@@ -33,7 +34,7 @@
 #     mode: 0644 # not required. The octal mode for newly created files in sources.list.d
 #     update_cache: yes # not required. Run the equivalent of C(apt-get update) when a change occurs.  Cache updates are run after making changes.
 #     validate_certs: yes
-#   when: instl_docker_pckg and (ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] == "12") #bookworm
+#   when: instl_docker_pckg and (ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] >= "12") #bookworm
 #   tags: test
 # 
 # --break-system-packages

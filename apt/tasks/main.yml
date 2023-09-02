@@ -9,7 +9,7 @@
     owner: root
     group: root
     mode: 0644
-  when: apt_reset_source_list
+  when: apt_reset_source_list and ansible_os_family == 'Ubuntu' and ansible_facts['distribution_version'] is version('20.04', '<')
 #
 - name: Job 02 | Update the apt cache
   apt:
