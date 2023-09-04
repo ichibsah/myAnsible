@@ -46,4 +46,4 @@
   notify: 
     - Restart networking
     - Restart docker
-  tags: test
+  #tags: test

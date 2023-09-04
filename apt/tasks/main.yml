@@ -91,7 +91,7 @@
     state: present
   register: result
   #failed_when: "'FAILED' in result"
-  failed_when: "'no package' in result"
+  #failed_when: "'no package' in result"
   #when: result is succeeded and instl_utl_pckg
   #tags: test
 #
@@ -101,7 +101,7 @@
     state: present
   loop:
     "{{apt_util_lst}}"
-  when: result is failed and instl_utl_pckg
+  when: result is failed
   #tags: test
 #
 - name: Job 10 | REMOVE Utilities Packages # REMOVE #

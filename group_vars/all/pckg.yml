@@ -28,6 +28,7 @@ apt_util_lst:                           # # Install utilities packages
   - whois
   - iputils-tracepath
   - lnav
+  - bat
 #
 apt_def_pckg_lst:                     # Install Default Packages on All Host
 - gpg
