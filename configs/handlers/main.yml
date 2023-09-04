@@ -6,6 +6,11 @@
     name: docker
     state: restarted
 #
+- name: Restart networking
+  ansible.builtin.service:
+    name: networking
+    state: restarted
+#
 - name: restart sensu-services
   service:
     name: "{{ item }}"
