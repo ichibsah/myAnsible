@@ -2,36 +2,44 @@
 # tasks file for bashrc
 - name: Job 01 | copy .bashrc file to ibrahim
   copy:
-    src: "files/home/ibrahim/"
-    dest: "~/"
+    src: "files/home/ibrahim/.bashrc"
+    dest: "/home/ibrahim/"
     owner: ibrahim
     group: ibrahim
     mode: 0744
   when: ansible_os_family == 'Debian'
+  tags:
+    - #test
 #
 - name: Job 02 | copy .ssh/config file to ibrahim
   copy:
     src: "files/home/.ssh/config"
-    dest: "~/.ssh/"
+    dest: "/home/ibrahim/.ssh/"
     owner: ibrahim
     group: ibrahim
     mode: 0644
   when: ansible_os_family == 'Debian'
+  tags:
+    - #test
 #
 - name: Job 03 | copy .bashrc file to root
   copy:
-    src: "files/home/ibrahim/"
+    src: "files/home/ibrahim/.bashrc"
     dest: "/root/"
     owner: root
     group: root
     mode: 0744
   when: ansible_os_family == 'Debian'
+  tags:
+    - #test
 #
 - name: Job 04 | copy .ssh/config file to root
   copy:
     src: "files/home/.ssh/config"
-    dest: "~/.ssh/"
+    dest: "/root/.ssh/"
     owner: root
     group: root
     mode: 0644
   when: ansible_os_family == 'Debian'
+  tags:
+    - #test

@@ -42,6 +42,7 @@ apt_def_pckg_lst:                     # Install Default Packages on All Host
 - mailutils
 - tig
 - net-tools
+- rsync
 - bash-completion # https://github.com/cykerway/complete-alias
 #
 #apt_packages_list:

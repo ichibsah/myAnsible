@@ -178,6 +178,7 @@ alias fs="ncdu"
 alias ari='ansible-galaxy role init'
 alias vulscan='nmap -sV --script vulscan'
 alias rmv='rsync -avz --remove-source-files'
+alias prune='docker volume prune && docker system prune -a && docker system prune -a --volumes && docker network prune && docker image prune -a && docker container prune && docker system prune -af'
 alias update='sudo apt update && sudo apt upgrade -y && docker system prune -af && pip-review --auto && python3 -m pip install --upgrade pip ansible'
 alias ift='sudo iftop -PFG -i eno1'
 alias tig='tig'

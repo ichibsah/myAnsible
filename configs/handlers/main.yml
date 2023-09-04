@@ -11,6 +11,11 @@
     name: networking
     state: restarted
 #
+- name: Restart dhcp
+  ansible.builtin.service:
+    name: isc-dhcp-server
+    state: restarted
+#
 - name: restart sensu-services
   service:
     name: "{{ item }}"

@@ -1,0 +1,36 @@
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+source /etc/network/interfaces.d/*
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+allow-hotplug eno1
+iface eno1 inet static
+ address 10.1.0.253
+ netmask 255.252.0.0
+ gateway 192.168.0.80
+ dns-servers 10.0.0.110 10.1.0.110
+#
+# allow-hotplug eno1:1
+# iface eno1:1 inet static
+#  address 192.168.14.254
+#  netmask 255.255.255.0
+#  gateway 192.168.0.80
+#  dns-servers 192.168.14.64 192.168.14.254
+#
+allow-hotplug eno2
+iface eno2 inet static
+ address 192.168.77.254
+ netmask 255.255.255.0
+ gateway 192.168.0.80
+ dns-servers 10.0.0.110 10.1.0.110 192.168.77.254
+#
+allow-hotplug eno3
+iface eno3 inet static
+ address 192.168.0.80
+ netmask 255.255.255.0
+ gateway 192.168.0.1
+ dns-servers 10.0.0.110 10.1.0.110
+#

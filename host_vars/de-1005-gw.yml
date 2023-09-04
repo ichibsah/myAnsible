@@ -1,0 +1,42 @@
+hostname_additional_hosts:
+  - ip_address: 10.1.0.254
+    hostname: de-1005-gw.skyline.lan
+    hostname_short: de-1005-gw
+  - ip_address: 192.168.77.254
+    hostname: de-1005-gw.skyline.lan
+    hostname_short: de-1005-gw
+  - ip_address: 192.168.0.80
+    hostname: de-1005-gw.skyline.lan
+    hostname_short: de-1005-gw
+  #
+#virthost01.skyline.lan: 
+#ansible_connection: local # this will overwrite any other type of connections. its needed here.
+ansible_become_pass: '{{ localhost_become_pass }}'
+#
+### PRVS | CONFIG ###
+prvs_copy_home: no                       # Copy default user's home files in place
+prvs_root_passwd: no                     # update root passward
+#
+dkr_copy_def_files: no                   # Copy default docker files to target server
+#
+crntb_activate_cronjobs: no
+#
+#
+### APT | PACKAGES INSTALL ###
+instl_def_pckg: yes                       # Install complete packages. A 'no' will remove it from the host (apt_def_pckg_lst)
+instl_utl_pckg: yes                        # Install complete packages. A 'no' will remove it from the host (apt_util_lst)
+sysd_strt_srvc: yes                       # Start services
+instl_ansbl_pckg: no                      # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
+instl_docker_pckg: no                    # Install Docker package (apt_docker_pckg_lst)
+apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
+  - cifs-utils
+#
+
+pip_host_pckg_lst:                        # Install Host Specific PIP Packages when ansible is also installed
+#
+#
+# docker containers
+dckr_dpl_pihole: no
+dckr_dpl_iSpy: no
+dckr_dpl_semaphore: no
+dckr_dpl_trcmmnd: no

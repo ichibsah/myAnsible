@@ -27,6 +27,6 @@
       TZ: Europe/Berlin
     restart_policy: always
   when: instl_docker_pckg and dckr_dpl_trcmmnd
-  tags: test
+  #tags: test
 
 
