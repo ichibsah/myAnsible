@@ -68,6 +68,11 @@
     file: 3006-truecommand.yml
   #when: apt_host_pckg_lst | contains bind9
 #
+- name: Job 14 | import task pihole
+  ansible.builtin.import_tasks:
+    file: 8080-pihole.yml
+  #when: apt_host_pckg_lst | contains bind9
+#
 #
 #
 # keep this last
@@ -76,7 +81,7 @@
     file: prune.yml
   when: instl_docker_pckg
   tags:
-    - test
+    - #test
 #
 # command: touch "{{ item.item }}"
 #   with_items:
