@@ -19,7 +19,7 @@
       TZ: Europe/Berlin
     restart_policy: always
   when: instl_docker_pckg and dckr_dpl_npxymgmt
-  tags: test
+  #tags: test
 
 
 # http://10.3.0.137:8081

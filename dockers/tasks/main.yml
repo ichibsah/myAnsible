@@ -68,6 +68,16 @@
     file: 3006-truecommand.yml
   #when: apt_host_pckg_lst | contains bind9
 #
+#
+#
+# keep this last
+- name: Job 99 | import task prune
+  ansible.builtin.import_tasks:
+    file: prune.yml
+  when: instl_docker_pckg
+  tags:
+    - test
+#
 # command: touch "{{ item.item }}"
 #   with_items:
 #       - { item: "1" }

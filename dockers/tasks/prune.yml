@@ -1,0 +1,24 @@
+- name: Job 99.1 | Prune containers older than 24h
+  community.docker.docker_prune:
+    containers: yes
+    containers_filters:
+      # only consider containers created more than 24 hours ago
+      until: 24h
+#
+- name: Job 99.2 | Prune everything
+  community.docker.docker_prune:
+    containers: yes
+    images: yes
+    networks: yes
+    volumes: yes
+    builder_cache: yes
+#
+- name: Job 99.3 | Prune everything (including non-dangling images)
+  community.docker.docker_prune:
+    containers: yes
+    images: yes
+    images_filters:
+      dangling: false
+    networks: yes
+    volumes: yes
+    builder_cache: yes
