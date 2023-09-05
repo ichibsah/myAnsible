@@ -30,9 +30,11 @@ sysd_strt_srvc: yes                       # Start services
 instl_ansbl_pckg: no                      # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
 instl_docker_pckg: yes                    # Install Docker package (apt_docker_pckg_lst)
 apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
-  - cifs-utils
+- cifs-utils
+- isc-dhcp-common
+- isc-dhcp-server
 #
-
+#
 pip_host_pckg_lst:                        # Install Host Specific PIP Packages when ansible is also installed
 #
 #
@@ -42,3 +44,15 @@ dckr_dpl_iSpy: no
 dckr_dpl_semaphore: yes
 dckr_dpl_trcmmnd: no
 dckr_dpl_npxymgmt: yes
+#
+apt_hst_strt_srvc_lst:                          # Ensure Host Specific Services are running.
+  - isc-dhcp-server
+#
+#
+#
+dsbl_dhcpvsx: no                               # Disable dhcp v6 in BIND9
+dsbl_dhcpvsx_regx: INTERFACESv4='eno1'          # text that should change goes here eg. INTERFACESv4='ens18'
+#
+#
+# interfaces:
+#   - iface: eth1

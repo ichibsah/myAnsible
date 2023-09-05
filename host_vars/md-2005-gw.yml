@@ -36,18 +36,18 @@ apt_host_pckg_lst:                        # Install Host Specific Packages (keep
 - qemu-guest-agent
 #- qemu-system
 #- qemu-user-static
-pip_host_pckg_lst:                        # Install Host Specific PIP Packages when ansible is also installed
+pip_host_pckg_lst:                              # Install Host Specific PIP Packages when ansible is also installed
 
-apt_hst_strt_srvc_lst:                        # Ensure Host Specific Services are running.
+apt_hst_strt_srvc_lst:                          # Ensure Host Specific Services are running.
   - bind9
   - isc-dhcp-server
 #
-instl_anydesk: yes                        # install AnyDesk in this client
+instl_anydesk: yes                              # install AnyDesk in this client
 #
-dsbl_dhcpvsx: yes
-dsbl_dhcpvsx_regx: INTERFACESv4='ens18'        # Disable dhcp v6
-
-
+dsbl_dhcpvsx: yes                               # Disable dhcp v6 in BIND9
+dsbl_dhcpvsx_regx: INTERFACESv4='ens18'         # text that should change goes here eg. INTERFACESv4='ens18'
+#
+#
 interfaces:
   - iface: eth1
   
