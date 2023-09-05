@@ -6,7 +6,7 @@ hostname_additional_hosts:
     hostname: home-1007-vm-docker.home.sawadogo.xyz
     hostname_short: home-1007-vm-docker
   
-  #
+  ##
 #virthost01.skyline.lan: 
 #ansible_connection: local # this will overwrite any other type of connections. its needed here.
 ansible_become_pass: '{{ localhost_become_pass }}'

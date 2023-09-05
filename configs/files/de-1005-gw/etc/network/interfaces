@@ -13,13 +13,6 @@ iface eno1 inet static
  gateway 192.168.0.80
  dns-servers 10.0.0.110 10.1.0.110
 #
-# allow-hotplug eno1:1
-# iface eno1:1 inet static
-#  address 192.168.14.254
-#  netmask 255.255.255.0
-#  gateway 192.168.0.80
-#  dns-servers 192.168.14.64 192.168.14.254
-#
 allow-hotplug eno2
 iface eno2 inet static
  address 192.168.77.254
@@ -27,10 +20,17 @@ iface eno2 inet static
  gateway 192.168.0.80
  dns-servers 10.0.0.110 10.1.0.110 192.168.77.254
 #
-allow-hotplug eno3
-iface eno3 inet static
+allow-hotplug enp1s0f0
+iface enp1s0f0 inet static
  address 192.168.0.80
  netmask 255.255.255.0
  gateway 192.168.0.1
+ dns-servers 10.0.0.110 10.1.0.110
+#
+allow-hotplug enp1s0f1
+iface enp1s0f1 inet static
+ address 192.168.8.254
+ netmask 255.255.255.0
+ gateway 192.168.0.80
  dns-servers 10.0.0.110 10.1.0.110
 #

@@ -9,6 +9,7 @@ hostname_additional_hosts:
     hostname: de-1005-gw.skyline.lan
     hostname_short: de-1005-gw
   #
+dckr_dmain_nme_pstfx: home.sawadogo.xyz
 #virthost01.skyline.lan: 
 #ansible_connection: local # this will overwrite any other type of connections. its needed here.
 ansible_become_pass: '{{ localhost_become_pass }}'
@@ -27,7 +28,7 @@ instl_def_pckg: yes                       # Install complete packages. A 'no' wi
 instl_utl_pckg: yes                        # Install complete packages. A 'no' will remove it from the host (apt_util_lst)
 sysd_strt_srvc: yes                       # Start services
 instl_ansbl_pckg: no                      # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
-instl_docker_pckg: no                    # Install Docker package (apt_docker_pckg_lst)
+instl_docker_pckg: yes                    # Install Docker package (apt_docker_pckg_lst)
 apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
   - cifs-utils
 #
@@ -36,7 +37,7 @@ pip_host_pckg_lst:                        # Install Host Specific PIP Packages w
 #
 #
 # docker containers
-dckr_dpl_pihole: no
+dckr_dpl_pihole: yes
 dckr_dpl_iSpy: no
-dckr_dpl_semaphore: no
+dckr_dpl_semaphore: yes
 dckr_dpl_trcmmnd: no

@@ -22,7 +22,7 @@
             - MYSQL_RANDOM_ROOT_PASSWORD=yes
             - MYSQL_DATABASE=semaphore
             - MYSQL_USER=semaphore
-            - MYSQL_PASSWORD=GnM7Ojr5/XmFQk6NbV6ubVK191kjCq1fJ8DT3LrKGBY=  # change!
+            - MYSQL_PASSWORD={{ansible_become_pass}}  # change!
           restart: always
         semaphore:
           container_name: ansiblesemaphore
@@ -32,7 +32,7 @@
             - 3002:3000
           environment:
             - SEMAPHORE_DB_USER=semaphore
-            - SEMAPHORE_DB_PASS=GnM7Ojr5/XmFQk6NbV6ubVK191kjCq1fJ8DT3LrKGBY=  # change!
+            - SEMAPHORE_DB_PASS={{ansible_become_pass}}  # change!
             - SEMAPHORE_DB_HOST=mysql
             - SEMAPHORE_DB_PORT=3306
             - SEMAPHORE_DB_DIALECT=mysql

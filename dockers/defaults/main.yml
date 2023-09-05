@@ -10,6 +10,7 @@ dckr_fldr_lst:                            # Docker folder list that will be copi
 dsbl_dhcpvsx: no                             # Disable dhcp v6  
 
 # /*******/
+dckr_dmain_nme_pstfx: home.sawadogo.xyz
 # docker containers
 dckr_dpl_pihole: no
 dckr_dpl_iSpy: no

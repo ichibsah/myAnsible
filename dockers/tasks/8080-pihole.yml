@@ -13,15 +13,15 @@
     restart: always
     environment:
         - TZ=Europe/Berlin
-        - VIRTUAL_HOST=pihole.zertiahmef.com
-        - PROXY_LOCATION=pihole.zertiahmef.com
-        - ServerIP=217.160.100.209
+        - VIRTUAL_HOST=pihole.{{dckr_dmain_nme_pstfx}}
+        - PROXY_LOCATION=pihole.{{dckr_dmain_nme_pstfx}}
+        - ServerIP={{hostname_additional_hosts[0].ip_address}}
     volumes:
-        - './docker/etc:/etc/pihole'
-        - './docker/dnsmasq:/etc/dnsmasq.d'
+        - '/opt/docker/pihole-8080/etc:/etc/pihole'
+        - '/opt/docker/pihole-8080/dnsmasq:/etc/dnsmasq.d'
     dns:
         - 1.1.1.1
-    hostname: pihole.zertiahmef.com
+    hostname: '{{hostname_additional_hosts[0].hostname}}'
     image: 'pihole/pihole:latest'
   when: instl_docker_pckg and dckr_dpl_pihole
   tags: test
