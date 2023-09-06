@@ -50,7 +50,7 @@ apt_hst_strt_srvc_lst:                          # Ensure Host Specific Services 
 #
 #
 #
-dsbl_dhcpvsx: yes                               # Disable dhcp v6 in BIND9
+dsbl_dhcpvsx: yes                               # Disable dhcp v6 in DHCP
 dsbl_dhcpvsx_regx: INTERFACESv4='eno1'          # text that should change goes here eg. INTERFACESv4='ens18'
 #
 #
