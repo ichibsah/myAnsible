@@ -44,6 +44,7 @@ apt_def_pckg_lst:                     # Install Default Packages on All Host
 - tig
 - net-tools
 - rsync
+- resolvconf
 - bash-completion # https://github.com/cykerway/complete-alias
 #
 #apt_packages_list:
