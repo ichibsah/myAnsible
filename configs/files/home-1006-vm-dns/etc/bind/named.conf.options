@@ -2,8 +2,6 @@ options {
 	directory "/var/cache/bind";
     	forwarders {
         	10.1.0.254;
-		192.168.14.64;
-	        192.168.14.254;
     	};
 
 	// If there is a firewall between you and nameservers you want
