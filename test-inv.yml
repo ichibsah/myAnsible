@@ -12,8 +12,8 @@ all:
       children:
         allservers:
           hosts: 
-            de-1012-plex.skyline.lan:
-              ansible_host: 10.1.0.132
+            de-1005-gw:
+              ansible_host: localhost
               #ansible_host: 10.3.0.203
             #d86df44.online-server.cloud:
             #112e275.online-server.cloud:

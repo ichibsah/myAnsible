@@ -44,7 +44,8 @@
     - configuration
     - hostname
     - hostname-update-hosts-file
-
+#
+#TODO:  here too fails ( The task includes an option with an undefined variable. The error was: list object has no element 1. list object has no element )
 - name: update the hostname/domain facts
   ansible.builtin.set_fact:
     ansible_domain: "{{ hostname_hostname.split('.', 1)[1] }}"

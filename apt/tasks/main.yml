@@ -45,6 +45,7 @@
 #     apt_packages_list: "{{ apt_default_packages }} + {{ apt_default_packages_pre20 }}"
 #   when: ansible_os_family == 'Ubuntu' and ansible_facts['distribution_version'] is version('20.04', '<')
 #
+#TODO: find out why others fail here (d86df44 deb1201 deb1202 112e275)
 - name: Job 05 | INSTALL default packages
   apt:
     update_cache: yes
@@ -74,8 +75,9 @@
   apt_key:
     url: https://download.docker.com/linux/debian/gpg # not required. The URL to retrieve key from.
     state: present # not required. choices: absent;present. Ensures that the key is present (added) or absent (revoked).
-    validate_certs: yes # not required. If C(no), SSL certificates for the target url will not be validated. This should only be used on personally controlled sites using self-signed certificates.
-
+    validate_certs: no # not required. If C(no), SSL certificates for the target url will not be validated. This should only be used on personally controlled sites using self-signed certificates.
+#
+# Todo: Invalid data passed to ''loop'', it requires a list, got this instead: None.
 - name: Job 08 | Install Host Specific Packages
   apt:
     pkg: "{{item}}"

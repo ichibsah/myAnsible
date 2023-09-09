@@ -28,7 +28,8 @@
   with_items:
     "{{ dckr_fldr_lst }}"
   when: dckr_fldr_lst.0 is defined
-
+#
+#TODO: find a way to imporve the copy
 - name: Job 04 | Copy docker folder(s) to target host that matches "ansible_hostname"
   copy:
     src: "files/{{ansible_hostname}}/docker"
@@ -36,7 +37,7 @@
     owner: ibrahim
     group: ibrahim
     mode: 0744
-  when: ansible_hostname != 'virthost01'
+  #when: ansible_hostname != 'virthost01'
 #
 - name: Job 08 | import task watchtower
   ansible.builtin.import_tasks:
