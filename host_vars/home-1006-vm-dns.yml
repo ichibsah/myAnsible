@@ -33,3 +33,4 @@ pip_host_pckg_lst:                        # Install Host Specific PIP Packages w
 apt_hst_strt_srvc_lst:                        # Ensure Host Specific Services are running.
   - bind9
 #
+instl_dhcp_srvc: no                       # Install DHCP Service

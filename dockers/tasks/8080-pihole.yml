@@ -23,7 +23,8 @@
     hostname: '{{hostname_additional_hosts[0].hostname}}'
     image: 'pihole/pihole:latest'
   when: instl_docker_pckg and dckr_dpl_pihole
-  tags: test
+  tags: 
+    - #test
 
   
   # docker_container:

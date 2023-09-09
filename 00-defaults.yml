@@ -15,7 +15,8 @@ dkr_copy_etx_files: no                    # Copy extended docker files to target
 dckr_fldr_lst:                            # Docker folder list that will be copied when set in the host variable
 #
 dsbl_dhcpvsx: no                          # Disable dhcp v6  
-
+#
+instl_dhcp_srvc: no                       # Install DHCP Service
 # /*******/
 ---
 # # file: apt/defaults/main.yml

@@ -50,10 +50,14 @@ apt_def_pckg_lst:                     # Install Default Packages on All Host
 #apt_packages_list:
 #- python3-apt
 #
+# TODO: move this 3 elsewhere
 apt_ansbl_pckg_lst:
-  - virtualenv
-  - python3-django
-  - python3-full
+  #- virtualenv 
+  #- python3-django
+  #- python3-full
+  - ansible
+  - sshpass
+
 #
 pip_ansbl_pckg_lst:                      # Install packages using PIP for Ansible
   - ansible

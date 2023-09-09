@@ -1,27 +1,27 @@
-host reddot {
-         #hardware ethernet 00:f0:m4:6y:89:0g;
-         fixed-address 192.168.14.64;
- }
+# host reddot {
+#          #hardware ethernet 00:f0:m4:6y:89:0g;
+#          fixed-address 192.168.14.64;
+#  }
 
 host Babs {
          hardware ethernet 08:62:66:80:99:1C;
-         fixed-address 192.168.77.6;
+         fixed-address 10.1.4.14;
  }
 
-host msvr02 {
-         hardware ethernet D4:AE:52:C9:9D:0A;
-         fixed-address 192.168.14.32;
- }
+# host msvr02 {
+#          hardware ethernet D4:AE:52:C9:9D:0A;
+#          fixed-address 192.168.14.32;
+#  }
 
-host firewall {
-         hardware ethernet 00:E0:4C:87:05:95;
-         fixed-address 192.168.14.254;
- }
+# host firewall {
+#          hardware ethernet 00:E0:4C:87:05:95;
+#          fixed-address 192.168.14.254;
+#  }
 
-host My-PC {
-         hardware ethernet 08:62:66:80:9d:f4;
-         fixed-address 192.168.14.6;
- }
+# host My-PC {
+#          hardware ethernet 08:62:66:80:9d:f4;
+#          fixed-address 192.168.14.6;
+#  }
 
 host NPI7F9525 {
          hardware ethernet 3c:77:e6:88:25:ac;
@@ -42,35 +42,35 @@ host Ladys-PC {
 
 host TL-SG1016DE {
          hardware ethernet 1C:3B:F3:6C:17:49;
-         fixed-address 192.168.14.100;
+         fixed-address 10.1.0.1;
  }
 
 host RT-AC68U-123 {
          hardware ethernet 1C:87:2C:4A:94:00;
-         fixed-address 192.168.77.123;
+         fixed-address 192.168.77.161;
  }
 
 host RT-AC68U-124 {
          hardware ethernet 38:D5:47:1F:89:30;
-         fixed-address 192.168.77.124;
+         fixed-address 192.168.77.164;
  }
 
 host RT-AC3200 {
          hardware ethernet 14:DD:A9:71:8D:20;
-         fixed-address 192.168.77.125;
+         fixed-address 192.168.77.163;
  }
 
-host gateway {
-         hardware ethernet b8:ac:6f:82:bd:78;
-         fixed-address 192.168.77.199;
- }
+# host gateway {
+#          hardware ethernet b8:ac:6f:82:bd:78;
+#          fixed-address 192.168.77.199;
+#  }
 
-host MV45169371 {
-         hardware ethernet 10:9a:02:b1:3a:db;
-         fixed-address 192.168.77.219;
- }
+# host MV45169371 {
+#          hardware ethernet 10:9a:02:b1:3a:db;
+#          fixed-address 192.168.77.219;
+#  }
 
 host lenovo {
 	hardware ethernet 50:7b:9d:cc:27:9b;
-	fixed-address 192.168.77.222;
+	fixed-address 192.168.77.16;
 }

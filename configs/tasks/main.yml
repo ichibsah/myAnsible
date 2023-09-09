@@ -33,3 +33,7 @@
     file: bashrc.yml
   #when: apt_host_pckg_lst | contains bind9
 #
+- name: Job 10 | import task dhcp
+  ansible.builtin.import_tasks:
+    file: dhcp.yml
+  #when: apt_host_pckg_lst | contains bind9
