@@ -9,7 +9,7 @@
   when: instl_dhcp_srvc
   notify: Restart dhcp
   tags:
-    - #test
+    - test
 #
 - name: Job 01.2.1 | Update dhcp configuration. Disable dhcpv6.
   lineinfile:

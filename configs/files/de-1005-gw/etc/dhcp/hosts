@@ -27,7 +27,12 @@ host NPI7F9525 {
          hardware ethernet 3c:77:e6:88:25:ac;
          fixed-address 192.168.77.14;
  }
-
+#
+host de-1015-hpPTR {
+         hardware ethernet a0:d3:c1:7f:95:25;
+         fixed-address 10.1.5.1;
+ }
+#
 host andy-PC {
          hardware ethernet 00:0f:00:35:ad:df;
          fixed-address 192.168.77.18;
