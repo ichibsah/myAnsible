@@ -9,7 +9,8 @@ ansible-inventory -y --list
 #ansible-playbook -v run-dockers.yml # works
 ###ansible-playbook -v --tags test run-main.yml # works
 #ansible-playbook -v --tags test -c local run-main.yml # works
-ansible-playbook -v -i test-inv.yml run-main.yml # works
+#ansible-playbook -v -i test-inv.yml run-main.yml # works
+ansible-playbook -v --tags test -i test-inv.yml run-main.yml # works
 #ansible-playbook -v --tags test run-provisions.yml # works
 #ansible-playbook -v run-anydesk.yml # works
 #ansible-playbook -v run-apt.yml # works

@@ -13,14 +13,20 @@
     restart_policy: always
     env:
         TZ: Europe/Berlin
-        VIRTUAL_HOST: pihole.{{dckr_dmain_nme_pstfx}}
-        PROXY_LOCATION: pihole.{{dckr_dmain_nme_pstfx}}
+        #VIRTUAL_HOST: pihole.skyline.lan
+        #VIRTUAL_HOST: '{{hostname_additional_hosts[0].hostname}}'
+        #PROXY_LOCATION: '{{hostname_additional_hosts[0].hostname}}'
         ServerIP: '{{hostname_additional_hosts[0].ip_address}}'
         dns: '1.1.1.1'
+        WEBPASSWORD: '{{ansible_become_pass}}'  # change!
+        DNSSEC: 'true'
+        WEBTHEME: default-dark
     volumes:
         - '/opt/docker/pihole-8080/etc:/etc/pihole'
         - '/opt/docker/pihole-8080/dnsmasq:/etc/dnsmasq.d'
-    hostname: '{{hostname_additional_hosts[0].hostname}}'
+    hostname: pihole.{{dckr_dmain_nme_pstfx}}
+    #hostname: '{{hostname_additional_hosts[0].hostname}}'
+    #hostname:  pihole.skyline.lan
     image: 'pihole/pihole:latest'
   when: instl_docker_pckg and dckr_dpl_pihole
   tags: 
