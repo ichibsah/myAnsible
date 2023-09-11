@@ -23,7 +23,7 @@
           image: ghcr.io/benphelps/homepage:latest
           ports:
             - 3550:3000
-          restart: on-failure:5
+          restart: always
           #network_mode: host
           user: "${UID}:${GID}"
           volumes:
