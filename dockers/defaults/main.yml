@@ -18,4 +18,5 @@ dckr_dpl_semaphore: no
 dckr_dpl_npxymgmt: no
 dckr_dpl_trcmmnd: no
 dckr_dpl_gravity: no
+dckr_dpl_homepage: no
 

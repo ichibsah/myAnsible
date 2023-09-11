@@ -74,9 +74,14 @@
     file: 8080-pihole.yml
   #when: apt_host_pckg_lst | contains bind9
 #
-- name: Job 14 | import task gravity
+- name: Job 15 | import task gravity
   ansible.builtin.import_tasks:
     file: 8008-gravity.yml
+  #when: apt_host_pckg_lst | contains bind9
+#
+- name: Job 16 | import task homepage
+  ansible.builtin.import_tasks:
+    file: 3550-homepage.yml
   #when: apt_host_pckg_lst | contains bind9
 #
 #

@@ -5,39 +5,31 @@
 # TODO: add passwords to vault
 #       set folder permissions via ansible during installation
 # https://docs.ansible.com/ansible/latest/collections/community/docker/docker_compose_module.html
-- name: Job 00 | Deploy Gravity
+- name: Job 00 | Deploy Homepage
   community.docker.docker_compose:
-    #working_dir: "/opt/docker/gravity-8008/"
-    remove_images: all
-    remove_volumes: True
-    stopped: True
-    state: absent
+    #working_dir: "/opt/docker/homepage-3550/"
+    #remove_images: all
+    #remove_volumes: True
+    #stopped: True
+    #state: absent
     #
-    project_name: Gravity
+    project_name: Homepage
     definition:
       version: '3.9'
       services:
-        gravity:
-          hostname: gravity1
-          container_name: Gravity
-          image: ghcr.io/beryju/gravity:stable
+        homepage:
+          hostname: homepage-3550
+          container_name: Homepage
+          image: ghcr.io/benphelps/homepage:latest
           ports:
-            - 8008:8008
+            - 3550:3000
           restart: on-failure:5
           #network_mode: host
           user: "${UID}:${GID}"
           volumes:
-            - /opt/docker/gravity-8008/gravity:/data:rw
-          logging:
-            driver: json-file
-            options:
-              max-size: "15m"
-              max-file: "5"
-
-      volumes:
-        data:
-          driver: local      
-  when: instl_docker_pckg and dckr_dpl_gravity
+            - /opt/docker/homepage-3550/homepage:/app/config
+            - /var/run/docker.sock:/var/run/docker.sock
+  when: instl_docker_pckg and dckr_dpl_homepage
   register: output
   tags:
     - test
@@ -51,9 +43,9 @@
 - name: Verify that gravity is running
   ansible.builtin.assert:
     that:
-      - "output.services.gravity.Gravity.state.running"
+      - "output.services.homepage.Homepage.state.running"
       - #"output.services.mysql.ansiblemysql.state.running"
-  when: instl_docker_pckg and dckr_dpl_gravity
+  when: instl_docker_pckg and dckr_dpl_homepage
   tags:
     - #test
 

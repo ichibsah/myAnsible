@@ -52,6 +52,7 @@ apt_hst_strt_srvc_lst:                    # Ensure Host Specific Services are ru
 dckr_dpl_pihole: no
 dckr_dpl_npxymgmt: no
 dckr_dpl_trcmmnd: no
+dckr_dpl_homepage: no
 
 # /*******/
 hostname_hostname: "{{ inventory_hostname }}"

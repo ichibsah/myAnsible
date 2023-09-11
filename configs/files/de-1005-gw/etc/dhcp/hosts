@@ -5,7 +5,7 @@
 
 host Babs {
          hardware ethernet 08:62:66:80:99:1C;
-         fixed-address 10.1.4.14;
+         fixed-address 192.168.77.6;
  }
 
 # host msvr02 {
@@ -18,11 +18,11 @@ host Babs {
 #          fixed-address 192.168.14.254;
 #  }
 
-# host My-PC {
-#          hardware ethernet 08:62:66:80:9d:f4;
-#          fixed-address 192.168.14.6;
-#  }
-
+host de-babs {
+         hardware ethernet 08:62:66:80:9d:f4;
+         fixed-address 10.1.4.4;
+ }
+#
 host NPI7F9525 {
          hardware ethernet 3c:77:e6:88:25:ac;
          fixed-address 192.168.77.14;
@@ -36,13 +36,11 @@ host de-1015-hpPTR {
 host andy-PC {
          hardware ethernet 00:0f:00:35:ad:df;
          fixed-address 192.168.77.18;
-	 #option domain-name-servers 192.168.14.254;
  }
 
 host Ladys-PC {
          hardware ethernet 00:10:c6:b1:ee:18;
          fixed-address 192.168.77.1;
-	 #option domain-name-servers 192.168.14.254;
  }
 
 host TL-SG1016DE {
