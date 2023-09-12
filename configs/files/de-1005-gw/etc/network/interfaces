@@ -35,3 +35,4 @@ iface enp1s0f1 inet static
  gateway 192.168.0.80
  dns-servers 10.0.0.110 10.0.0.111 192.168.8.254
 #
+# post-up iptables-restore </path/to/file
