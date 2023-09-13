@@ -12,14 +12,14 @@ iface eno1 inet static
  address 10.1.0.254
  netmask 255.252.0.0
  gateway 192.168.0.80
- dns-servers 10.0.0.110 10.0.0.111 10.0.0.136
+ dns-servers 10.0.0.110 10.0.0.111
 #WLAN
 allow-hotplug eno2
 iface eno2 inet static
  address 192.168.77.254
  netmask 255.255.255.0
  gateway 192.168.0.80
- dns-servers 10.0.0.110 10.0.0.111 192.168.77.254
+ dns-servers 10.0.0.110 10.0.0.111
 #WAN
 allow-hotplug enp1s0f0
 iface enp1s0f0 inet static
@@ -35,4 +35,6 @@ iface enp1s0f1 inet static
  gateway 192.168.0.80
  dns-servers 10.0.0.110 10.0.0.111 192.168.8.254
 #
-# post-up iptables-restore </path/to/file
+# post-up iptables-restore < /etc/iptables/rules.v4
+# https://askubuntu.com/questions/998968/post-up-default-gateway-does-not-get-picked-up
+# post-up ip route add default via 192.168.0.1 dev enp1s0f0
