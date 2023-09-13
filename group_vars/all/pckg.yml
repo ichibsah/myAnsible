@@ -57,6 +57,7 @@ apt_ansbl_pckg_lst:
   #- python3-full
   - ansible
   - sshpass
+  - ansible-lint
 
 #
 pip_ansbl_pckg_lst:                      # Install packages using PIP for Ansible

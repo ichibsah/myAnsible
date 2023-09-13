@@ -35,15 +35,13 @@
   # when: dsbl_dhcpvsx
   # #tags: test
 #
-- name: Job 01.7.3 | Copy network folder to target host that matches "ansible_hostname"
+- name: Job 00 | Copy iptables.sh to root folder
   copy:
-    src: "files/{{ansible_hostname}}/etc/network"
-    dest: "/etc/"
+    src: "files/iptables/"
+    dest: "/root/"
     owner: root
     group: root
-    mode: 0644
-  #when: ansible_hostname != 'virthost01'
-  notify: 
-    - Restart networking
-    - Restart docker
-  #tags: test
+    mode: 0740
+  when: copy_iptables
+  tags:
+    - #test

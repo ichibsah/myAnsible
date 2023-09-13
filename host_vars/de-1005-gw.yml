@@ -56,6 +56,7 @@ instl_dhcp_srvc: yes
 dsbl_dhcpvsx: yes                               # Disable dhcp v6 in DHCP
 dsbl_dhcpvsx_regx: INTERFACESv4='eno1'          # text that should change goes here eg. INTERFACESv4='ens18'
 #
+copy_iptables: yes                                   # Copy iptables to /root folder
 #
 # interfaces:
 #   - iface: eth1

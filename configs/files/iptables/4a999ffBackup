@@ -1,0 +1,41 @@
+#!/bin/bash
+#filename: 4a999ffBackup
+#ssh root@4a999ff.online-server.cloud -o PubkeyAuthentication=no
+#
+# Create a timestamp to use as the folder name
+TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
+#
+#SOURCE_DIR="ibrahim@4a999ff.online-server.cloud:/var/lib/psa/dumps/"
+SOURCE_DIR="ibrahim@4a999ff.online-server.cloud:/var/lib/psa/dumps/"
+DEST_DIR="/mnt/v-Host/4a999ff/backup"
+SOURCE_DIR1="ibrahim@4a999ff.online-server.cloud:/var/www/vhosts/"
+DEST_DIR1="/mnt/v-Host/4a999ff/vhost"
+#
+# Set the path to the key file
+KEY_FILE="/root/.ssh/ibrahim@4a999ff.key"
+
+# checking if script is run as root
+#if [ $(id -u) -ne 0 ]
+#then
+#    echo script is not run as root, exiting...
+#    exit
+#
+#else
+echo "rSync $SOURCE_DIR ==> $DEST_DIR/$TIMESTAMP/"
+# add n for dryrun
+#rsync -vrn --progress $SOURCE_DIR $DEST_DIR
+# Use rsync to copy files from the remote server to the destination directory
+
+needs lost of work
+##ssh -vi $KEY_FILE 4a999ff.online-server.cloud "sudo rsync -avz $SOURCE_DIR $DEST_DIR/$TIMESTAMP/"
+
+#sudo rsync -vrumpg --del --progress $SOURCE_DIR $DEST_DIR/$TIMESTAMP
+echo "rSync $SOURCE_DIR1 ==> $DEST_DIR1/$TIMESTAMP/"
+#sudo rsync -vrumpg --del --progress $SOURCE_DIR1 $DEST_DIR1/$TIMESTAMP
+
+# Remove any folders older than 10 days
+#find $DEST_DIR/* -type d -mtime +10 -exec rm -rf {} \;
+#find $DEST_DIR1/* -type d -mtime +10 -exec rm -rf {} \;
+#fi
+
+#ssh -i /root/.ssh/ibrahim@4a999ff.key 4a999ff.online-server.cloud

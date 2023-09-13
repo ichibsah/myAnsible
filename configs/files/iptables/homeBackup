@@ -1,0 +1,25 @@
+#!/bin/bash
+#filename: homeBackup
+source="/home/"
+output="/mnt/v-Host/home/"
+source1="/root/"
+output1="/mnt/v-Host/root/"
+source2="/etc/"
+output2="/mnt/v-Host/etc/"
+# checking if script is run as root
+#if [ $(id -u) -ne 0 ]
+#then
+#    echo script is not run as root, exiting...
+#    exit
+#
+#else
+echo "rSync $source ==> $output"
+# add n for dryrun
+#rsync -vrn --progress $source $output
+rsync -vrumpg --del --progress $source $output
+echo "rSync $source1 ==> $output1"
+rsync -vrumpg --del --progress $source1 $output1
+echo "rSync $source2 ==> $output2"
+rsync -vrumpg --del --progress $source2 $output2
+#fi
+

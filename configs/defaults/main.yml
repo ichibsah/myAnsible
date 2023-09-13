@@ -6,3 +6,6 @@ dsbl_dhcpvsx: no                                    # Disable dhcp v6
 dsbl_dhcpvsx_regx:                                  # text that should change goes here eg. INTERFACESv4='ens18'
 #
 instl_dhcp_srvc: no                                 # Install DHCP Service
+#
+copy_iptables: no                                   # Copy iptables to /root folder
+#
