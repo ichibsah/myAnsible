@@ -40,7 +40,7 @@
   when: instl_docker_pckg and dckr_dpl_gravity
   register: output
   tags:
-    - test
+    - #test
   #
   # for debug purpose only - disabled in the meantime
 # - name: Show results

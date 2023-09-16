@@ -44,7 +44,7 @@
     line: 'ibrahim ALL=(ALL) NOPASSWD: ALL'
     state: present
     validate: 'visudo -cf %s'
-  when: ansible_os_family == 'Debian' and ansible_hostname != 'virthost01'
+  when: ansible_os_family == 'Debian'
 #
 # - name: Job-1003 | Copy deployment user's home files in place.
 #   copy:
@@ -80,6 +80,7 @@
     #"{{ lookup('vars', 'somevar_' ~ other_var) }}"
   #tags: test
 #
+# the 'item.key' must match the username for it to work
 - name: Job 04 | add public keys to users's authorized_key
   authorized_key:
     user: "{{item.name}}"
@@ -87,6 +88,8 @@
     key: "{{ lookup('file', 'files/authorized_key/{{item.key}}') }}"
   loop: "{{ users }}"
   #when: "{{item.host}}" == 'all' or {{item.host}} == ansible_hostname
+  tags:
+    - #test
 
 # # test
 # - name:

@@ -1,27 +1,31 @@
-- name: Mount mediafiles (NFS volume)
-  ansible.posix.mount:
-    src: 10.0.0.131:/mnt/Pool03-Data/mediafiles
-    path: /net/mediafiles
-    opts: rw,sync,hard
-    #state: mounted
-    state: absent
-    fstype: nfs
+# - name: Mount mediafiles (NFS volume)
+#   ansible.posix.mount:
+#     src: 10.0.0.131:/mnt/Pool03-Data/mediafiles
+#     path: /net/mediafiles
+#     opts: rw,sync,hard
+#     #state: mounted
+#     state: absent
+#     fstype: nfs
+#   when: instl_docker_pckg and dckr_dpl_plex
+#   tags:
+#     - test
+# #
+- name: Mount ephemeral SMB volume
+  block:
+  - name: Mount ephemeral SMB volume
+    ansible.posix.mount:
+      src: //10.0.0.131/mediafiles
+      path: /net/mediafiles
+      #opts: "rw,vers=3,file_mode=0640,dir_mode=0740,dom=skyline,username=ibrahim,password={{ localhost_become_pass }}"
+      opts: "rw,vers=3,file_mode=0640,dir_mode=0740,username=ibrahim,password={{ localhost_become_pass }}"
+      fstype: cifs
+      #state: present
+      state: ephemeral
   when: instl_docker_pckg and dckr_dpl_plex
+  become: false
+  become_user: ibrahim    
   tags:
     - test
-#
-- name: Mount ephemeral SMB volume
-  ansible.posix.mount:
-    src: //10.0.0.131/mediafiles
-    path: /net/mediafiles
-    #opts: "rw,vers=3,file_mode=0640,dir_mode=0740,dom=skyline,username=ibrahim,password={{ localhost_become_pass }}"
-    opts: "rw,vers=3,file_mode=0640,dir_mode=0740,username=ibrahim@skyline,password={{ localhost_become_pass }}"
-    fstype: cifs
-    state: present
-    #state: ephemeral
-  when: instl_docker_pckg and dckr_dpl_plex    
-  tags:
-    - test  
 #
 - name: Job 00 | Deploy Plex
   community.docker.docker_compose:
@@ -61,7 +65,7 @@
   when: instl_docker_pckg and dckr_dpl_plex
   register: output
   tags:
-    - test
+    - #test
   #
   # for debug purpose only - disabled in the meantime
 # - name: Show results
@@ -76,7 +80,7 @@
       - #"output.services.mysql.ansiblemysql.state.running"
   when: instl_docker_pckg and dckr_dpl_plex
   tags:
-    - test
+    - #test
 
 # # https://mariushosting.com/how-to-install-gravity-on-your-synology-nas/
 
