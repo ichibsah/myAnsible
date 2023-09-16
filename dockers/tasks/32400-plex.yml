@@ -1,38 +1,67 @@
-#- name: create new volume
-#  community.docker.docker_volume:
-#    name: portainer-data
+- name: Mount mediafiles (NFS volume)
+  ansible.posix.mount:
+    src: 10.0.0.131:/mnt/Pool03-Data/mediafiles
+    path: /net/mediafiles
+    opts: rw,sync,hard
+    #state: mounted
+    state: absent
+    fstype: nfs
+  when: instl_docker_pckg and dckr_dpl_plex
+  tags:
+    - test
 #
-# TODO: add passwords to vault
-#       set folder permissions via ansible during installation
-# https://docs.ansible.com/ansible/latest/collections/community/docker/docker_compose_module.html
-- name: Job 00 | Deploy Homepage
+- name: Mount ephemeral SMB volume
+  ansible.posix.mount:
+    src: //10.0.0.131/mediafiles
+    path: /net/mediafiles
+    #opts: "rw,vers=3,file_mode=0640,dir_mode=0740,dom=skyline,username=ibrahim,password={{ localhost_become_pass }}"
+    opts: "rw,vers=3,file_mode=0640,dir_mode=0740,username=ibrahim@skyline,password={{ localhost_become_pass }}"
+    fstype: cifs
+    state: present
+    #state: ephemeral
+  when: instl_docker_pckg and dckr_dpl_plex    
+  tags:
+    - test  
+#
+- name: Job 00 | Deploy Plex
   community.docker.docker_compose:
-    #working_dir: "/opt/docker/homepage-3550/"
+    #working_dir: "/opt/docker/plex-32400/"
     #remove_images: all
     #remove_volumes: True
     #stopped: True
     #state: absent
     #
-    project_name: Homepage
+    project_name: Plex
     definition:
       version: '3.9'
       services:
-        homepage:
-          hostname: homepage-3550
-          container_name: Homepage
-          image: ghcr.io/benphelps/homepage:latest
+        plex:
+          hostname: plex.skyline.lan
+          container_name: Plex_container
+          image: plexinc/pms-docker:latest
           ports:
-            - 3550:3000
+            - 32400:32400/tcp
+            - 8324:8324/tcp
+            - 32469:32469/tcp
+            - 1900:1900/udp
+            - 32410:32410/udp
+            - 32412:32412/udp
+            - 32413:32413/udp
+            - 32414:32414/udp
           restart: always
-          #network_mode: host
+          environment:
+            - TZ=Europe/Berlin
+            - PLEX_CLAIM={{plex_claim}}
+            - ADVERTISE_IP=http://10.0.0.137:32400/
           user: "${UID}:${GID}"
           volumes:
-            - /opt/docker/homepage-3550/homepage:/app/config
-            - /var/run/docker.sock:/var/run/docker.sock
-  when: instl_docker_pckg and dckr_dpl_homepage
+            - /opt/docker/plex-32400/database:/config
+            - /opt/docker/plex-32400/transcode:/transcode
+            - /net/mediafiles:/data
+  when: instl_docker_pckg and dckr_dpl_plex
   register: output
   tags:
-    - #test
+    - test
   #
   # for debug purpose only - disabled in the meantime
 # - name: Show results
@@ -43,11 +72,11 @@
 - name: Verify that gravity is running
   ansible.builtin.assert:
     that:
-      - "output.services.homepage.Homepage.state.running"
+      - "output.services.plex.Plex_container.state.running"
       - #"output.services.mysql.ansiblemysql.state.running"
-  when: instl_docker_pckg and dckr_dpl_homepage
+  when: instl_docker_pckg and dckr_dpl_plex
   tags:
-    - #test
+    - test
 
 # # https://mariushosting.com/how-to-install-gravity-on-your-synology-nas/
 
@@ -82,24 +111,22 @@
 #   validate_certs: False # not required. Secure the connection to the API by using TLS and verifying the authenticity of the Docker host server. If the value is not specified in the task, the value of environment variable C(DOCKER_TLS_VERIFY) will be used instead. If the environment variable is not set, the default value will be used.
 #   debug: False # not required. Debug mode
 
-# version: '3.9'
-# services:
-#   gravity:
-#     hostname: gravity1
-#     container_name: Gravity
-#     image: ghcr.io/beryju/gravity:stable
-
-#     restart: on-failure:5
-#     network_mode: host
-#     user: 1026:100
-#     volumes:
-#       - /volume1/docker/gravity:/data:rw
-#     logging:
-#       driver: json-file
-#       options:
-#         max-size: "15m"
-#         max-file: "5"
-
-# volumes:
-#   data:
-#     driver: local
+# docker run \
+# -d \
+# --name plex \
+# -p 32400:32400/tcp \
+# -p 8324:8324/tcp \
+# -p 32469:32469/tcp \
+# -p 1900:1900/udp \
+# -p 32410:32410/udp \
+# -p 32412:32412/udp \
+# -p 32413:32413/udp \
+# -p 32414:32414/udp \
+# -e TZ="<timezone>" \
+# -e PLEX_CLAIM="<claimToken>" \
+# -e ADVERTISE_IP="http://<hostIPAddress>:32400/" \
+# -h <HOSTNAME> \
+# -v <path/to/plex/database>:/config \
+# -v <path/to/transcode/temp>:/transcode \
+# -v <path/to/media>:/data \
+# plexinc/pms-docker

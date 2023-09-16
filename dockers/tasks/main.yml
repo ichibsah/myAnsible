@@ -84,6 +84,11 @@
     file: 3550-homepage.yml
   #when: apt_host_pckg_lst | contains bind9
 #
+- name: Job 17 | import task plex
+  ansible.builtin.import_tasks:
+    file: 32400-plex.yml
+  #when: apt_host_pckg_lst | contains bind9
+#
 #
 #
 # keep this last
