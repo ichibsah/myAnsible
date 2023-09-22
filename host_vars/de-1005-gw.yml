@@ -33,6 +33,7 @@ apt_host_pckg_lst:                        # Install Host Specific Packages (keep
 - cifs-utils
 - isc-dhcp-common
 - isc-dhcp-server
+- kubectx
 #
 #
 pip_host_pckg_lst:                        # Install Host Specific PIP Packages when ansible is also installed

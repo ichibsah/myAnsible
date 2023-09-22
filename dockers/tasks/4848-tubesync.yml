@@ -1,0 +1,55 @@
+- name: Job 00 | Deploy Tubesync
+  community.docker.docker_compose:
+    #working_dir: "/opt/docker/tubesync-4848/"
+    #remove_images: all
+    #remove_volumes: True
+    #stopped: True
+    #state: absent
+    #
+    project_name: Tubesync
+    definition:
+      version: '3.9'
+      services:
+        plex:
+          hostname: tubesync.skyline.lan
+          container_name: Tubesync_con
+          image: ghcr.io/meeb/tubesync:latest
+          ports:
+            - 4848:4848/tcp
+          restart: always
+          environment:
+            - TZ=Europe/Berlin
+            - PUID=${UID}
+            - PGID=${GID}
+            - HTTP_USER=ibrahim
+            - HTTP_PASS={{ansible_become_pass}}
+          volumes:
+            - /opt/docker/tubesync-4848/tubesync:/config
+            - /opt/docker/tubesync-4848/downloads:/downloads
+  when: instl_docker_pckg and dckr_dpl_tubesync
+  register: output
+  tags:
+    - test
+#
+- name: Verify that gravity is running
+  ansible.builtin.assert:
+    that:
+      - "output.services.plex.Plex_container.state.running"
+      - #"output.services.mysql.ansiblemysql.state.running"
+  when: instl_docker_pckg and dckr_dpl_tubesync
+  tags:
+    - test
+
+# # https://mariushosting.com/how-to-install-gravity-on-your-synology-nas/
+
+# docker run -d --name=tubesync \
+# -p 4848:4848 \
+# -e PUID=1026 \
+# -e PGID=100 \
+# -e TZ=Europe/Bucharest \
+# -e HTTP_USER=marius \
+# -e HTTP_PASS=mariushosting \
+# -v /volume1/docker/tubesync:/config \
+# -v /volume1/web/downloads:/downloads \
+# --restart always \
+# ghcr.io/meeb/tubesync

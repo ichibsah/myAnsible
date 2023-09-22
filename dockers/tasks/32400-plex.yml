@@ -22,8 +22,8 @@
       #state: present
       state: ephemeral
   when: instl_docker_pckg and dckr_dpl_plex
-  become: false
-  become_user: ibrahim    
+  # become: false
+  # become_user: ibrahim    
   tags:
     - test
 #
