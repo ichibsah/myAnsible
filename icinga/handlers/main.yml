@@ -1,0 +1,10 @@
+---
+# handlers file for icinga
+- name: restart icinga
+  service:
+    name: "{{ item }}"
+    state: restarted
+  with_items:
+    - icinga
+    - httpd
+  

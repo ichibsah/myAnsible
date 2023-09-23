@@ -1,0 +1,5 @@
+---
+# tasks file for ad
+# https://www.server-world.info/en/note?os=Debian_12&p=realmd
+#
+- name: Job 00 | symlink | Create soft links

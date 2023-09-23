@@ -1,0 +1,13 @@
+---
+- name: ICINGA | Install icinga1 manually
+  hosts: localhost
+  connection: local
+  ignore_errors: false
+  ignore_unreachable: false
+  # remote_user: root
+  # remote_user: ibrahim
+  become: true
+  become_user: root
+
+  roles:
+    - icinga

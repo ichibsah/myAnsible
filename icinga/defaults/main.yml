@@ -1,0 +1,24 @@
+---
+# defaults file for icinga
+users:
+  - name: icinga
+    shell: /bin/bash
+    append: true
+    groups: icinga
+    state: present
+    key: icinga.pub
+    create_home: false
+    local: true
+  - name: icingasrv
+    shell: /bin/bash
+    groups: icingacmd
+    append: true
+    state: present
+    key: icingacmd.pub
+    create_home: false
+    local: true
+#
+groups: 
+  - icinga
+  - icingacmd
+  

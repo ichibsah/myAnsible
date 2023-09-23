@@ -1,5 +1,6 @@
 # tasks file
 ---
+# TODO: takes 67.93 seconds to run. needs review
 - name: install dependencies
   ansible.builtin.apt:
     name: "{{ hostname_dependencies }}"

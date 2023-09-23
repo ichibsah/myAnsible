@@ -1,0 +1,87 @@
+[1501347922] Icinga 1.14.0 starting... (PID=1630)
+[1501347922] Local time is Sat Jul 29 19:05:22 CEST 2017
+[1501347922] LOG VERSION: 2.0
+[1501347922] Finished daemonizing... (New PID=1631)
+[1501347922] Event loop started...
+[1501347922] error executing command '/appl/icinga/libexec/check_ping': No such file or directory. Make sure that the file actually exists (in PATH, if set) and is executable!
+[1501347932] HOST ALERT: localhost;DOWN;SOFT;1;(null)
+[1501347955] error executing command '/appl/icinga/libexec/check_load': No such file or directory. Make sure that the file actually exists (in PATH, if set) and is executable!
+[1501347962] SERVICE ALERT: localhost;Current Load;UNKNOWN;HARD;1;(null)
+[1501347988] error executing command '/appl/icinga/libexec/check_users': No such file or directory. Make sure that the file actually exists (in PATH, if set) and is executable!
+[1501347992] SERVICE ALERT: localhost;Current Users;UNKNOWN;HARD;1;(null)
+[1501347992] error executing command '/appl/icinga/libexec/check_ping': No such file or directory. Make sure that the file actually exists (in PATH, if set) and is executable!
+[1501348002] HOST ALERT: localhost;DOWN;SOFT;2;(null)
+[1501348022] error executing command '/appl/icinga/libexec/check_http': No such file or directory. Make sure that the file actually exists (in PATH, if set) and is executable!
+[1501348032] SERVICE ALERT: localhost;HTTP;UNKNOWN;HARD;1;(null)
+[1501348062] Warning: Return code of 127 for check of service 'Icinga Startup Delay' on host 'localhost' was out of bounds: 'The command defined for service Icinga Startup Delay does not exist
+'
+[1501348062] SERVICE ALERT: localhost;Icinga Startup Delay;CRITICAL;HARD;1;The command defined for service Icinga Startup Delay does not exist
+[1501348062] error executing command '/appl/icinga/libexec/check_ping': No such file or directory. Make sure that the file actually exists (in PATH, if set) and is executable!
+[1501348072] HOST ALERT: localhost;DOWN;SOFT;3;(null)
+[1501348088] error executing command '/appl/icinga/libexec/check_ping': No such file or directory. Make sure that the file actually exists (in PATH, if set) and is executable!
+[1501348092] SERVICE ALERT: localhost;PING;UNKNOWN;HARD;1;(null)
+[1501348122] error executing command '/appl/icinga/libexec/check_disk': No such file or directory. Make sure that the file actually exists (in PATH, if set) and is executable!
+[1501348132] SERVICE ALERT: localhost;Root Partition;UNKNOWN;HARD;1;(null)
+[1501348132] error executing command '/appl/icinga/libexec/check_ping': No such file or directory. Make sure that the file actually exists (in PATH, if set) and is executable!
+[1501348142] HOST ALERT: localhost;DOWN;SOFT;4;(null)
+[1501348155] error executing command '/appl/icinga/libexec/check_ssh': No such file or directory. Make sure that the file actually exists (in PATH, if set) and is executable!
+[1501348162] SERVICE ALERT: localhost;SSH;UNKNOWN;HARD;1;(null)
+[1501348188] error executing command '/appl/icinga/libexec/check_swap': No such file or directory. Make sure that the file actually exists (in PATH, if set) and is executable!
+[1501348192] SERVICE ALERT: localhost;Swap Usage;UNKNOWN;HARD;1;(null)
+[1501348202] error executing command '/appl/icinga/libexec/check_ping': No such file or directory. Make sure that the file actually exists (in PATH, if set) and is executable!
+[1501348212] HOST ALERT: localhost;DOWN;SOFT;5;(null)
+[1501348222] error executing command '/appl/icinga/libexec/check_procs': No such file or directory. Make sure that the file actually exists (in PATH, if set) and is executable!
+[1501348232] SERVICE ALERT: localhost;Total Processes;UNKNOWN;HARD;1;(null)
+[1501348255] error executing command '/appl/icinga/libexec/check_load': No such file or directory. Make sure that the file actually exists (in PATH, if set) and is executable!
+[1501348272] error executing command '/appl/icinga/libexec/check_ping': No such file or directory. Make sure that the file actually exists (in PATH, if set) and is executable!
+[1501348282] HOST ALERT: localhost;DOWN;SOFT;6;(null)
+[1501348288] error executing command '/appl/icinga/libexec/check_users': No such file or directory. Make sure that the file actually exists (in PATH, if set) and is executable!
+[1501348322] error executing command '/appl/icinga/libexec/check_http': No such file or directory. Make sure that the file actually exists (in PATH, if set) and is executable!
+[1501348342] error executing command '/appl/icinga/libexec/check_ping': No such file or directory. Make sure that the file actually exists (in PATH, if set) and is executable!
+[1501348352] HOST ALERT: localhost;DOWN;SOFT;7;(null)
+[1501348362] Warning: Return code of 127 for check of service 'Icinga Startup Delay' on host 'localhost' was out of bounds: 'The command defined for service Icinga Startup Delay does not exist
+'
+[1501348366] Caught SIGHUP, restarting...
+[1501348366] Icinga 1.14.0 starting... (PID=1631)
+[1501348366] Local time is Sat Jul 29 19:12:46 CEST 2017
+[1501348366] LOG VERSION: 2.0
+[1501348366] Event loop started...
+[1501348388] error executing command '/appl/icinga/libexec/check_ping': No such file or directory. Make sure that the file actually exists (in PATH, if set) and is executable!
+[1501348412] error executing command '/appl/icinga/libexec/check_ping': No such file or directory. Make sure that the file actually exists (in PATH, if set) and is executable!
+[1501348416] HOST ALERT: localhost;DOWN;SOFT;8;(null)
+[1501348422] error executing command '/appl/icinga/libexec/check_disk': No such file or directory. Make sure that the file actually exists (in PATH, if set) and is executable!
+[1501348452] Caught SIGTERM, shutting down...
+[1501348452] Successfully shutdown... (PID=1631)
+[1501348453] Icinga 1.14.0 starting... (PID=1918)
+[1501348453] Local time is Sat Jul 29 19:14:13 CEST 2017
+[1501348453] LOG VERSION: 2.0
+[1501348453] Finished daemonizing... (New PID=1919)
+[1501348453] Event loop started...
+[1501348463] SERVICE ALERT: localhost;SSH;OK;HARD;4;SSH OK - OpenSSH_6.6.1 (protocol 2.0)
+[1501348473] HOST ALERT: localhost;UP;SOFT;9;PING OK - Packet loss = 0%, RTA = 0.04 ms
+[1501348493] SERVICE ALERT: localhost;Swap Usage;OK;HARD;4;SWAP OK - 100% free (4095 MB out of 4095 MB)
+[1501348518] EXTERNAL COMMAND: SCHEDULE_FORCED_SVC_CHECK;localhost;Current Load;1501348515
+[1501348518] EXTERNAL COMMAND: SCHEDULE_FORCED_SVC_CHECK;localhost;Current Users;1501348515
+[1501348518] EXTERNAL COMMAND: SCHEDULE_FORCED_SVC_CHECK;localhost;HTTP;1501348515
+[1501348518] EXTERNAL COMMAND: SCHEDULE_FORCED_SVC_CHECK;localhost;PING;1501348515
+[1501348518] EXTERNAL COMMAND: SCHEDULE_FORCED_SVC_CHECK;localhost;Root Partition;1501348515
+[1501348518] EXTERNAL COMMAND: SCHEDULE_FORCED_SVC_CHECK;localhost;Total Processes;1501348515
+[1501348523] SERVICE ALERT: localhost;Current Users;OK;HARD;4;USERS OK - 1 users currently logged in
+[1501348523] SERVICE ALERT: localhost;Current Load;OK;HARD;4;OK - load average: 0.00, 0.01, 0.05
+[1501348523] SERVICE ALERT: localhost;HTTP;WARNING;HARD;4;HTTP WARNING: HTTP/1.1 403 Forbidden - 366 bytes in 0.001 second response time
+[1501348523] SERVICE ALERT: localhost;Root Partition;OK;HARD;4;DISK OK - free space: / 4020 MB (98% inode=99%):
+[1501348523] SERVICE ALERT: localhost;Total Processes;OK;HARD;4;PROCS OK: 86 processes with STATE = RSZDT
+[1501348523] SERVICE ALERT: localhost;PING;OK;HARD;4;PING OK - Packet loss = 0%, RTA = 0.05 ms
+[1501348556] EXTERNAL COMMAND: SCHEDULE_FORCED_SVC_CHECK;localhost;Icinga Startup Delay;1501348555
+[1501348563] SERVICE ALERT: localhost;Icinga Startup Delay;OK;HARD;4;OK: Icinga started with 0 seconds delay
+[1501350061] Icinga 1.14.0 starting... (PID=4741)
+[1501350061] Local time is Sat Jul 29 19:41:01 CEST 2017
+[1501350061] LOG VERSION: 2.0
+[1501350061] Finished daemonizing... (New PID=4742)
+[1501350061] Event loop started...
+[1501350071] SERVICE ALERT: localhost;SSH;OK;HARD;4;SSH OK - OpenSSH_6.6.1 (protocol 2.0)
+[1501350071] HOST ALERT: localhost;UP;SOFT;9;PING OK - Packet loss = 0%, RTA = 0.06 ms
+[1501350101] SERVICE ALERT: localhost;Current Load;OK;HARD;4;OK - load average: 0.01, 0.02, 0.05
+[1501350131] SERVICE ALERT: localhost;Current Users;OK;HARD;4;USERS OK - 1 users currently logged in
+[1501350171] SERVICE ALERT: localhost;HTTP;WARNING;HARD;4;HTTP WARNING: HTTP/1.1 403 Forbidden - 366 bytes in 0.001 second response time
+[1501350201] SERVICE ALERT: localhost;Icinga Startup Delay;OK;HARD;4;OK: Icinga started with 0 seconds delay

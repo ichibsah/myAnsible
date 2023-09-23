@@ -11,6 +11,7 @@
     mode: 0644
   when: apt_reset_source_list and ansible_os_family == 'Ubuntu' and ansible_facts['distribution_version'] is version('20.04', '<')
 #
+# TODO: takes 68.88s to run. needs review
 - name: Job 02 | Update the apt cache
   apt:
     update_cache: yes

@@ -29,7 +29,7 @@
     "{{ dckr_fldr_lst }}"
   when: dckr_fldr_lst.0 is defined
 #
-#TODO: find a way to imporve the copy
+#TODO: find a way to imporve the copy - shut it down and use docker deploy
 - name: Job 04 | Copy docker folder(s) to target host that matches "ansible_hostname"
   copy:
     src: "files/{{ansible_hostname}}/docker"
@@ -92,6 +92,11 @@
 - name: Job 18 | import task tubesync
   ansible.builtin.import_tasks:
     file: 4848-tubesync.yml
+  #when: apt_host_pckg_lst | contains bind9
+#
+- name: Job 19 | import task YoutubeDl
+  ansible.builtin.import_tasks:
+    file: 8084-youtubedl.yml
   #when: apt_host_pckg_lst | contains bind9
 #
 #

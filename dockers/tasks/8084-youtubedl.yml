@@ -1,0 +1,56 @@
+- name: Job 00 | Deploy Tubesync
+  community.docker.docker_compose:
+    #working_dir: "/opt/docker/youtubedl-8084/"
+    #remove_images: all
+    #remove_volumes: True
+    #stopped: True
+    #state: absent
+    #
+    project_name: YoutubeDl
+    definition:
+      version: '3.9'
+      services:
+        youtubedl:
+          hostname: ytdl.skyline.lan
+          container_name: YoutubeDl_con
+          image: tzahi12345/youtubedl-material:latest
+          ports:
+            - 8084:17442/tcp
+          restart: always
+          environment:
+            - TZ=Europe/Berlin
+            - PUID=${UID}
+            - PGID=${GID}
+            - HTTP_USER=ibrahim
+            - HTTP_PASS={{ansible_become_pass}}
+          volumes:
+            - /opt/docker/youtubedl-8084/appdata:/app/appdata
+            - /opt/docker/youtubedl-8084/audio:/app/audio
+            - /opt/docker/youtubedl-8084/subscriptions:/app/subscriptions
+            - /opt/docker/youtubedl-8084/users:/app/users
+            - /opt/docker/youtubedl-8084/video:/app/video
+  when: instl_docker_pckg and dckr_dpl_youtubedl
+  register: output
+  tags:
+    - test
+#
+- name: Verify that tubesync is running
+  ansible.builtin.assert:
+    that:
+      - "output.services.youtubedl.YoutubeDl_con.state.running"
+      - #"output.services.mysql.ansiblemysql.state.running"
+  when: instl_docker_pckg and dckr_dpl_youtubedl
+  tags:
+    - test
+
+# # https://mariushosting.com/how-to-install-tubesync-on-your-synology-nas/
+
+# docker run -d --name=youtube_downloader \
+# -p 8084:17442 \
+# -v $(pwd)/docker/youtubedl/appdata:/app/appdata \
+# -v $(pwd)/docker/youtubedl/audio:/app/audio \
+# -v $(pwd)/docker/youtubedl/subscriptions:/app/subscriptions \
+# -v $(pwd)/docker/youtubedl/users:/app/users \
+# -v $(pwd)/docker/youtubedl/video:/app/video \
+# --restart always \
+# tzahi12345/youtubedl-material

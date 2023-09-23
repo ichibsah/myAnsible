@@ -1,0 +1,71 @@
+---
+# tasks file for icinga
+- name: Job 00 | Set timezone to Europe/Berlin
+  timezone:
+    name: Europe/Berlin
+#
+- name: Job 01 | Create groups
+  group:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ groups }}" # works but 1 array only
+#
+- name: Job 02 | creating users and groups
+  user:
+    name: "{{ item.name }}"
+    #update_password: always
+    #shell: "{{item.shell}}"
+    groups: "{{ item.groups }}"
+    system: yes
+    #password: "{{ localhost_become_pass | password_hash('sha512') }}"
+    append: "{{ item.append }}"
+    create_home: false
+    #local: "{{ item.local }}"
+    state: present
+  loop: "{{ users }}"
+  tags: 
+    - test
+#
+- name: Job 03 | Copy files to /usr/lib64 (dont overite if file already exist)
+  copy:
+    src: "files/lib64/"
+    dest: "/usr/lib64/"
+    owner: root
+    group: root
+    mode: 0644
+  tags: 
+    - test
+#
+- name: Job 04 | Copy files to /etc/
+  copy:
+    src: "files/etc/"
+    dest: "/etc/"
+    owner: root
+    group: root
+    mode: 0644
+  tags: 
+    - test
+#
+- name: Job 05 | Copy files to app/icinga
+  copy:
+    src: "files/appl/"
+    dest: "/appl/"
+    owner: icingasrv
+    group: icingacmd
+    mode: 0644
+  notify: 
+    - Restart icinga
+  tags: 
+    - test
+#
+- name: Job 06 | set file permissions
+  copy:
+    src: "files/appl/"
+    dest: "/appl/"
+    owner: icingasrv
+    group: icingacmd
+    mode: 0644
+  notify: 
+    - Restart icinga
+  tags: 
+    - test

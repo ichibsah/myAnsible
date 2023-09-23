@@ -10,7 +10,7 @@
     definition:
       version: '3.9'
       services:
-        plex:
+        tubesync:
           hostname: tubesync.skyline.lan
           container_name: Tubesync_con
           image: ghcr.io/meeb/tubesync:latest
@@ -29,18 +29,18 @@
   when: instl_docker_pckg and dckr_dpl_tubesync
   register: output
   tags:
-    - test
+    - #test
 #
-- name: Verify that gravity is running
+- name: Verify that tubesync is running
   ansible.builtin.assert:
     that:
-      - "output.services.plex.Plex_container.state.running"
+      - "output.services.tubesync.Tubesync_con.state.running"
       - #"output.services.mysql.ansiblemysql.state.running"
   when: instl_docker_pckg and dckr_dpl_tubesync
   tags:
-    - test
+    - #test
 
-# # https://mariushosting.com/how-to-install-gravity-on-your-synology-nas/
+# # https://mariushosting.com/how-to-install-tubesync-on-your-synology-nas/
 
 # docker run -d --name=tubesync \
 # -p 4848:4848 \
