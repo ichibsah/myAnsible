@@ -41,3 +41,6 @@ apt_hst_strt_srvc_lst:                        # Ensure Host Specific Services ar
 dckr_dpl_plex: yes
 dckr_dpl_tubesync: yes
 dckr_dpl_youtubedl: yes
+dckr_dpl_opnsbttls: yes
+dckr_dpl_tautulli: yes
+dckr_dpl_overseerr: yes

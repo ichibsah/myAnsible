@@ -99,6 +99,21 @@
     file: 8084-youtubedl.yml
   #when: apt_host_pckg_lst | contains bind9
 #
+- name: Job 20 | import task opensubtitles
+  ansible.builtin.import_tasks:
+    file: 0000-opensubtitles.yml
+  #when: apt_host_pckg_lst | contains bind9
+#
+- name: Job 21 | import task tautulli
+  ansible.builtin.import_tasks:
+    file: 8181-tautulli.yml
+  #when: apt_host_pckg_lst | contains bind9
+#
+- name: Job 22 | import task overseerr
+  ansible.builtin.import_tasks:
+    file: 5055-overseerr.yml
+  #when: apt_host_pckg_lst | contains bind9
+#
 #
 #
 # keep this last

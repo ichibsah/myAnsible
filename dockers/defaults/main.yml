@@ -22,4 +22,7 @@ dckr_dpl_homepage: no
 dckr_dpl_plex: no
 dckr_dpl_tubesync: no
 dckr_dpl_youtubedl: no
+dckr_dpl_opnsbttls: no
+dckr_dpl_tautulli: no
+dckr_dpl_overseerr: no
 

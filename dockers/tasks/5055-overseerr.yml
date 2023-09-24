@@ -1,0 +1,59 @@
+---
+- name: Job 00 | Deploy Overseerr
+  community.docker.docker_compose:
+    #working_dir: "/opt/docker/overseerr-5055/"
+    #remove_images: all
+    #remove_volumes: True
+    #stopped: True
+    #state: absent
+    #
+    project_name: Overseerr
+    definition:
+      version: '3.9'
+      services:
+        overseerr:
+          hostname: overseerr.skyline.lan
+          container_name: overseerr_con
+          image: ghcr.io/linuxserver/overseerr:latest
+          ports:
+            - 5055:5055
+          restart: always
+          environment:
+            - TZ=Europe/Berlin
+          user: "${UID}:${GID}"
+          #user: "0:0" # root
+          #user: "1354601103:1354600513" # ibrahim@skyline
+          volumes:
+            - /opt/docker/overseerr-5055/overseerr:/config
+  when: instl_docker_pckg and dckr_dpl_overseerr
+  register: output
+  tags:
+    - test
+  #
+  # for debug purpose only - disabled in the meantime
+# - name: Show results
+#   ansible.builtin.debug:
+#     var: output
+#   #tags: test
+  #
+- name: Verify that overseerr is running
+  ansible.builtin.assert:
+    that:
+      - "output.services.overseerr.overseerr_con.state.running"
+      - #"output.services.mysql.ansiblemysql.state.running"
+  when: instl_docker_pckg and dckr_dpl_overseerr
+  tags:
+    - test
+
+
+
+# docker run -d --name=overseerr \
+# -e PUID=1000 \
+# -e PGID=100 \
+# -e TZ=Europe/Berlin \
+# -v $(pwd)/docker/overseerr:/config \
+# -p 5055:5055 \
+# --restart always \
+# ghcr.io/linuxserver/overseerr
+
+# #https://mariushosting.com/how-to-install-overseerr-on-your-synology-nas/

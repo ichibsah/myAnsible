@@ -1,0 +1,94 @@
+---
+# - name: Mount ephemeral SMB volume
+#   block:
+#   - name: Mount ephemeral SMB volume
+#     ansible.posix.mount:
+#       src: //10.0.0.131/mediafiles
+#       path: /net/mediafiles
+#       #opts: "rw,vers=3,file_mode=0640,dir_mode=0740,dom=skyline,username=ibrahim,password={{ localhost_become_pass }}"
+#       opts: "rw,vers=3,file_mode=0777,dir_mode=0777,username=ibrahim@skyline,password={{ localhost_become_pass }}"
+#       #opts: "rw,vers=3,file_mode=0644,dir_mode=0744,username=root,password={{ localhost_become_pass }}"
+#       fstype: cifs
+#       #state: present
+#       state: ephemeral
+#   when: instl_docker_pckg and dckr_dpl_plex
+#   # become: false
+#   # become_user: ibrahim    
+#   tags:
+#     - test
+# #
+- name: Job 00 | Deploy Opensubtitles
+  community.docker.docker_compose:
+    #working_dir: "/opt/opensubtitles-0000/"
+    #remove_images: all
+    #remove_volumes: True
+    #stopped: True
+    #state: absent
+    #
+    project_name: Opensubtitles
+    definition:
+      version: '3.9'
+      services:
+        opensubtitles:
+          hostname: opensubtitles.skyline.lan
+          container_name: opensubtitles_con
+          image: fredrickbacker/opensubtitles:latest
+          ports:
+            - 4167:3001
+          restart: always
+          environment:
+            - TZ=Europe/Berlin
+            #- USERNAME='{{os_username}}'
+            #- PASSWORD='{{os_password}}'
+          user: "0:0" # root
+          volumes:
+            - /net/mediafiles/mediaFiles/Movies:/movies
+            - /net/mediafiles/mediaFiles/TV-Shows:/series
+            - /opt/opensubtitles-0000/dl-tmp:/tmp
+            - /opt/opensubtitles-0000/config:/config
+  when: instl_docker_pckg and dckr_dpl_opnsbttls
+  register: output
+  tags:
+    - #test
+  #
+  # for debug purpose only - disabled in the meantime
+# - name: Show results
+#   ansible.builtin.debug:
+#     var: output
+#   #tags: test
+  #
+- name: Verify that opensubtitles is running
+  ansible.builtin.assert:
+    that:
+      - "output.services.opensubtitles.opensubtitles_con.state.running"
+      - #"output.services.mysql.ansiblemysql.state.running"
+  when: instl_docker_pckg and dckr_dpl_opnsbttls
+  tags:
+    - #test
+
+# # https://mariushosting.com/how-to-install-gravity-on-your-synology-nas/
+
+# version: "3.4"
+# services:
+#   opensubtitles:
+#     image: fredrickbacker/opensubtitles
+#     container_name: opensubtitles
+#     restart: always
+#     user: "${UID}:${GID}"
+#     ports:
+#       - 4167:3001
+#     volumes:
+#       - /mnt/vHost-Backup/acc-MediaFiles/mediaFiles/Movies:/movies
+#      # - /mnt/prod-MediaFiles/mediaFiles/Movies:/movies
+#       - /mnt/vHost-Backup/acc-MediaFiles/mediaFiles/TV-Shows:/series
+#      # - /mnt/prod-MediaFiles/mediaFiles/TV-Shows:/series
+#       - ./docker/dl-tmp:/tmp
+#       - ./docker/config:/config
+#     environment:
+#       - UID=1000
+#       - GID=1000
+#       - USERNAME='my opensubtitle username'
+#       - PASSWORD='my opensubtitle password      
+
+
+# https://hub.docker.com/r/fredrickbacker/opensubtitles
