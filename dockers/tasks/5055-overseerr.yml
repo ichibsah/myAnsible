@@ -28,7 +28,7 @@
   when: instl_docker_pckg and dckr_dpl_overseerr
   register: output
   tags:
-    - test
+    - #test
   #
   # for debug purpose only - disabled in the meantime
 # - name: Show results
@@ -43,7 +43,7 @@
       - #"output.services.mysql.ansiblemysql.state.running"
   when: instl_docker_pckg and dckr_dpl_overseerr
   tags:
-    - test
+    - #test
 
 
 

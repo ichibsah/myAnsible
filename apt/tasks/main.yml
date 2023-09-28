@@ -189,6 +189,11 @@
     file: ansible.yml
   #when: apt_host_pckg_lst | contains bind9
 #
+- name: Job 21 | import task filebot
+  ansible.builtin.import_tasks:
+    file: filebot.yml
+  #when: apt_host_pckg_lst | contains bind9
+#
 # REBOOT #
 # Rebbot should be done last at all times
 - name: Job 99 | import task reboot

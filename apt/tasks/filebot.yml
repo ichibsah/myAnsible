@@ -1,0 +1,38 @@
+---
+- name: Job 00 | Import filebot GPG Key
+  apt_key:
+    url: https://raw.githubusercontent.com/filebot/plugins/master/gpg/maintainer.pub # not required. The URL to retrieve key from.
+    state: present # not required. choices: absent;present. Ensures that the key is present (added) or absent (revoked).
+    keyring: /etc/apt/trusted.gpg.d/ # not required. The full path to specific keyring file in /etc/apt/trusted.gpg.d/
+    validate_certs: no # not required. If C(no), SSL certificates for the target url will not be validated. This should only be used on personally controlled sites using self-signed certificates.
+  when: instl_filebot_pckg
+#
+- name: Job 01 | Add filebot Repo
+  apt_repository:
+    #repo: deb [arch={{ [ansible_architecture] | map('extract', deb_architecture) | first }}] https://get.filebot.net/deb/{{ ansible_system | lower }}/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable
+    repo: deb [arch=all] https://get.filebot.net/deb/ universal main # TODO use facts variables
+    state: present # not required. choices: absent;present. A source string state.
+    mode: 0644 # not required. The octal mode for newly created files in sources.list.d
+    update_cache: yes # not required. Run the equivalent of C(apt-get update) when a change occurs.  Cache updates are run after making changes.
+    validate_certs: no
+  when: instl_filebot_pckg
+  tags:
+    - #test
+# 
+# --break-system-packages
+- name: Job 02 | Install FileBot
+  apt:
+    pkg: "{{item}}"
+    state: latest
+  with_items:
+  - filebot
+  - ffmpeg
+  - libavcodec-extra 
+  - x264
+  - openjdk17-headless
+  - libavcodec-extra
+  when: instl_filebot_pckg
+  tags:
+    - #test
+
+# wget https://mediaarea.net/repo/deb/repo-mediaarea_1.0-24_all.deb && dpkg -i repo-mediaarea_1.0-24_all.deb && apt-get update

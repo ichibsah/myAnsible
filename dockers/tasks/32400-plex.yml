@@ -46,7 +46,7 @@
     #authorization:  # not required. Sets the authorization of the user. Does nothing when used with other platforms. Can set multiple authorizations using comma separation. To delete all authorizations, use C(authorization=''). Currently supported on Illumos/Solaris.
     #role:  # not required. Sets the role of the user. Does nothing when used with other platforms. Can set multiple roles using comma separation. To delete all roles, use C(role=''). Currently supported on Illumos/Solaris.
   tags:
-    - test  
+    - #test  
 #
 - name: Mount ephemeral SMB volume
   block:
@@ -54,6 +54,25 @@
     ansible.posix.mount:
       src: //10.0.0.131/mediafiles
       path: /net/mediafiles
+      #opts: "rw,vers=3,file_mode=0640,dir_mode=0740,dom=skyline,username=ibrahim,password={{ localhost_become_pass }}"
+      opts: "rw,vers=3,file_mode=0777,dir_mode=0777,username=ibrahim@skyline,password={{ localhost_become_pass }}"
+      #opts: "rw,vers=3,file_mode=0644,dir_mode=0744,username=root,password={{ localhost_become_pass }}"
+      fstype: cifs
+      #state: present
+      state: ephemeral
+  when: instl_docker_pckg and dckr_dpl_plex
+  # become: false
+  # become_user: ibrahim    
+  tags:
+    - #test
+#
+#
+- name: Mount ephemeral SMB volume
+  block:
+  - name: Mount ephemeral SMB volume
+    ansible.posix.mount:
+      src: //10.1.0.131/users/plex
+      path: /net/plex
       #opts: "rw,vers=3,file_mode=0640,dir_mode=0740,dom=skyline,username=ibrahim,password={{ localhost_become_pass }}"
       opts: "rw,vers=3,file_mode=0777,dir_mode=0777,username=ibrahim@skyline,password={{ localhost_become_pass }}"
       #opts: "rw,vers=3,file_mode=0644,dir_mode=0744,username=root,password={{ localhost_become_pass }}"

@@ -33,9 +33,10 @@ apt_host_pckg_lst:                        # Install Host Specific Packages (keep
 
 
 pip_host_pckg_lst:                        # Install Host Specific PIP Packages when ansible is also installed
-
-apt_hst_strt_srvc_lst:                        # Ensure Host Specific Services are running.
-
+#
+apt_hst_strt_srvc_lst:                    # Ensure Host Specific Services are running.
+#
+instl_filebot_pckg: yes                   # Install Filebot on system
 #
 # docker containers
 dckr_dpl_plex: yes
