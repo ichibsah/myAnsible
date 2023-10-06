@@ -1,4 +1,7 @@
 ---
+# get most stuff here:
+# https://www.filebot.net/forums/viewtopic.php?t=6028
+#
 - name: Job 00 | Import filebot GPG Key
   apt_key:
     url: https://raw.githubusercontent.com/filebot/plugins/master/gpg/maintainer.pub # not required. The URL to retrieve key from.
