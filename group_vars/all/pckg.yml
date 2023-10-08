@@ -29,6 +29,9 @@ apt_util_lst:                           # # Install utilities packages
   - iputils-tracepath
   - lnav
   - bat
+  - cheat # https://www.makeuseof.com/run-linux-commands-in-background/
+  - fish
+  - hstr
 #
 apt_def_pckg_lst:                     # Install Default Packages on All Host
 - gpg
