@@ -17,6 +17,8 @@
   ansible.builtin.import_tasks:
     file: bind.yml
   #when: apt_host_pckg_lst | contains bind9
+  tags: 
+    - dns
 
 - name: Job 07 | import task interfaces
   ansible.builtin.import_tasks:

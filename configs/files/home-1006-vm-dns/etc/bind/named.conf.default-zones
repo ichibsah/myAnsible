@@ -32,3 +32,7 @@ zone "home.sawadogo.xyz" {
     file "/etc/bind/home-sawadogo-xyz.zone";
 };
 
+zone "skyline.lan" {
+    type master;
+    file "/etc/bind/skyline-lan.zone";
+};
