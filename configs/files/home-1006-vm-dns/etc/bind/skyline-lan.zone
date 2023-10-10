@@ -1,0 +1,33 @@
+$TTL 2d
+
+$ORIGIN skyline.lan.
+
+@                   IN      SOA     ns.skyline.lan. info.sawadogo.com (
+                                    2023101010      ; serial
+                                    12h             ; refresh
+                                    15m             ; retry
+                                    3w              ; expire
+                                    2h              ; minimum TTL
+                                    )
+
+                    IN      ns      ns.skyline.lan.
+
+ns                  IN      A       10.0.0.136
+
+; -- add dns record below
+
+de-1001-nas         IN      A       10.0.0.131
+de-1013-nas         IN      A       10.1.0.131
+mgmt-1001-nas       IN      A       10.0.0.135
+de-1001-pve         IN      A       10.1.0.135
+mgmt-1001-pve       IN      A       10.1.0.105
+de-1003-dc          IN      A       10.0.0.111
+de-1004-dc          IN      A       10.0.0.110
+de-1005-gw          IN      A       10.1.0.254
+de-1004-babs        IN      A       10.1.4.14
+de-1006-dns         IN      A       10.0.0.136
+de-1007-docker      IN      A       10.0.0.137
+
+; -- add docker dns record below
+
+*                   IN      A       10.1.0.254

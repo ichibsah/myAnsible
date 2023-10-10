@@ -219,4 +219,4 @@ sudo iptables-save > /etc/iptables/rules.v4
 
 # SAVE
 sudo iptables-save
-
+systemctl restart docker
