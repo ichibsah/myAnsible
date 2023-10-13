@@ -1,0 +1,54 @@
+---
+#
+- name: Job 00 | Deploy Emby
+  community.docker.docker_compose:
+    #working_dir: "/opt/docker/emby-8096/"
+    #remove_images: all
+    #remove_volumes: True
+    #stopped: True
+    #state: absent
+    #
+    project_name: Emby
+    definition:
+      version: '3.9'
+      services:
+        emby:
+          hostname: emby.skyline.lan
+          container_name: Emby_container
+          image: emby/embyserver:latest
+          ports:
+            - 1900:1900
+            - 7359:7359
+            - 8096:8096 
+            - 8920:8920 
+          restart: always
+          environment:
+            - TZ=Europe/Berlin
+          user: "${UID}:${GID}"
+          #user: "0:0" # root
+          volumes:
+            - /opt/docker/emby-8096/emby:/config
+            - /net/mediafiles/mediaFiles/TV-Shows:/tvshows
+            - /net/mediafiles/mediaFiles/Movies:/movies
+  when: instl_docker_pckg and dckr_dpl_emby
+  register: output
+  tags:
+    - #test
+  #
+  # for debug purpose only - disabled in the meantime
+# - name: Show results
+#   ansible.builtin.debug:
+#     var: output
+#   #tags: test
+  #
+- name: Verify that emby is running
+  ansible.builtin.assert:
+    that:
+      - "output.services.emby.Emby_container.state.running"
+      - #"output.services.mysql.ansiblemysql.state.running"
+  when: instl_docker_pckg and dckr_dpl_emby
+  tags:
+    - #test
+
+# # https://mariushosting.com/how-to-install-emby-on-your-synology-nas/
+

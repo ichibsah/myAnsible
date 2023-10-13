@@ -114,6 +114,11 @@
     file: 5055-overseerr.yml
   #when: apt_host_pckg_lst | contains bind9
 #
+- name: Job 23 | import task emby
+  ansible.builtin.import_tasks:
+    file: 8096-emby.yml
+  #when: apt_host_pckg_lst | contains bind9
+#
 #
 #
 # keep this last
