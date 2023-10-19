@@ -194,6 +194,7 @@ alias python='python3'
 alias port='netstat -ltnp | grep $1'
 alias djngprg='python3 -m pip install django && python3 -m pip install --upgrade pip && pip install djlint && django-admin startproject config . && python manage.py startapp website && python manage.py migrate && pip freeze > requirements.txt && python manage.py runserver 0.0.0.0:8000'
 alias rserver='python manage.py runserver 0.0.0.0:8000'
+alias llsl='ls -l `find . -maxdepth 1 -type l -print`' # list symlink files only
 # ******************
 alias apr='apropos'
 alias z='ps aux | egrep "Z|defunct"' # zombie processes

@@ -1,6 +1,7 @@
 # tasks file
 ---
-# TODO: takes 67.93 seconds to run. needs review
+# TODO: takes 67.93 seconds to run. needs review and conflicting values (fatal: [home-1007-vm-docker]: FAILED! => changed=false 
+  # msg: 'E:Conflicting values set for option Signed-By regarding source https://get.filebot.net/deb/ universal: /usr/share/keyrings/filebot.gpg != , E:The list of sources could not be read.')
 - name: install dependencies
   ansible.builtin.apt:
     name: "{{ hostname_dependencies }}"

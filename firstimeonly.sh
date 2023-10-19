@@ -7,6 +7,7 @@ clear
 #ansible-inventory -y --list
 #
 ansible-playbook -v run-firstimeonly.yml # works
+#ansible-playbook -v --limit a35a0d3 run-firstimeonly.yml # works
 
 # apt-get install qemu-system
 # apt install cloud-init
@@ -18,3 +19,5 @@ ansible-playbook -v run-firstimeonly.yml # works
 # sudo cscli console enroll clktqwcri0000lb084lgn6tey
 # apt-get install qemu-system
 # sudo apt install cloud-init
+
+# ssh-keygen -f "/home/ibrahim/.ssh/known_hosts" -R "a35a0d3.online-server.cloud"
