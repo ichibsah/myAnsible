@@ -1,0 +1,25 @@
+# https://docs.ansible.com/ansible/latest/collections/community/docker/docker_swarm_module.html
+#
+- name: Init a new swarm with default parameters
+  community.docker.docker_swarm:
+    state: present
+#
+# - name: Inspect swarm
+#   docker_swarm:
+#     state: inspect
+#   register: swarm_info
+# #
+# - name: Show results 
+#   debug:
+#     var:  swarm_info
+#     verbosity: 3 
+#
+# #
+# docker swarm in to master
+#
+# nodes
+# 212.227.166.233
+# 212.227.151.179
+#
+# ports
+# 2377,4789,7946

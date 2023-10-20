@@ -127,6 +127,7 @@
     file: prune.yml
   when: instl_docker_pckg
   tags:
+    - prune
     - #test
 #
 # command: touch "{{ item.item }}"

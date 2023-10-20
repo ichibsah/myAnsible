@@ -45,10 +45,26 @@
     file: firewall.yml
   #when: apt_host_pckg_lst | contains bind9
 #
-- name: Job 10 | import task grafana
+- name: Job 12 | import task grafana
   ansible.builtin.import_tasks:
     file: grafana.yml
   when: instl_grafana
   tags:
     - grafana
+    - #test
+#
+- name: Job 13 | import task docker swarm - master
+  ansible.builtin.import_tasks:
+    file: swarm_master.yml
+  when: instl_swrm_mstr
+  tags:
+    - #test
+    - swarm
+#
+- name: Job 14 | import task docker swarm - node
+  ansible.builtin.import_tasks:
+    file: swarm_node.yml
+  when: instl_swrm_node
+  tags:
     - test
+    - swarm

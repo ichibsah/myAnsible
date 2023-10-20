@@ -10,6 +10,10 @@ instl_dhcp_srvc: no                                 # Install DHCP Service
 copy_iptables: no                                   # Copy iptables to /root folder
 #
 instl_grafana: no                                 # Install Grafana agent Service
+#
+instl_swrm_mstr: no                                 # Install Docker swarm Service
+#
+instl_swrm_node: no                                 # Install Docker swarm Service
 
 #
 # Grafana vars:

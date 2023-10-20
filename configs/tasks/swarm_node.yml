@@ -1,0 +1,18 @@
+# https://docs.ansible.com/ansible/2.8//modules/docker_swarm_module.html
+#
+- name: Add nodes
+  community.docker.docker_swarm:
+    state: join
+    advertise_addr: '{{ hostname_additional_hosts[0].ip_address }}'
+    join_token: "{{ joinToken }}"
+    remote_addrs: [ '217.160.100.209:2377' ]
+#
+# - name: Inspect swarm
+#   docker_swarm:
+#     state: inspect
+#   register: swarm_info
+# #
+# - name: Show results 
+#   debug:
+#     var:  swarm_info
+#     verbosity: 3 

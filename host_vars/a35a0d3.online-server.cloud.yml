@@ -27,3 +27,6 @@ instl_docker_pckg: yes                    # Install Docker package (apt_docker_p
 apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
 #
 instl_grafana: yes                                 # Install Grafana agent Service
+#
+instl_swrm_mstr: yes                                 # Install Docker swarm Service
+#
