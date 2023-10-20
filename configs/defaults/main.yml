@@ -9,3 +9,12 @@ instl_dhcp_srvc: no                                 # Install DHCP Service
 #
 copy_iptables: no                                   # Copy iptables to /root folder
 #
+instl_grafana: no                                 # Install Grafana agent Service
+
+#
+# Grafana vars:
+grafana_cloud_api_key: glc_eyJvIjoiNTkxMjk3IiwibiI6InN0YWNrLTMwNDAwNi1pbnRlZ3JhdGlvbi1pb25vcy1pb25vcyIsImsiOiJmVnUydE93NzZHODM5SG9nN0RsOVE0TjkiLCJtIjp7InIiOiJldSJ9fQ== # Example - glc_eyJrIjoiYjI3NjI5MGQxZTcyOTIxYTc0MDgzMGVhNDhlODNhYzA5OTk2Y2U5YiIsIm4iOiJhbnNpYmxldGVzdCIsImlkIjo2NTI5
+metrics_username: 308074 # Example - 825019
+logs_username: 153007 # Example - 411478
+prometheus_url: https://prometheus-prod-01-eu-west-0.grafana.net/api/prom/push # Example - https://prometheus-us-central1.grafana.net/api/prom/push
+loki_url: https://logs-prod-eu-west-0.grafana.net/loki/api/v1/push # Example - https://logs-prod-017.grafana.net/loki/api/v1/push

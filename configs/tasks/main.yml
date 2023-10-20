@@ -40,7 +40,15 @@
     file: dhcp.yml
   #when: apt_host_pckg_lst | contains bind9
 #
-- name: Job 10 | import task firewall
+- name: Job 11 | import task firewall
   ansible.builtin.import_tasks:
     file: firewall.yml
   #when: apt_host_pckg_lst | contains bind9
+#
+- name: Job 10 | import task grafana
+  ansible.builtin.import_tasks:
+    file: grafana.yml
+  when: instl_grafana
+  tags:
+    - grafana
+    - test
