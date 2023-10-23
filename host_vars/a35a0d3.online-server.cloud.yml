@@ -30,3 +30,5 @@ instl_grafana: yes                                 # Install Grafana agent Servi
 #
 instl_swrm_mstr: yes                                 # Install Docker swarm Service
 #
+dckr_dpl_npxymgmt: yes                    # install nginx-proxy-manager
+#
