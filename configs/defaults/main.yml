@@ -14,7 +14,19 @@ instl_grafana: no                                 # Install Grafana agent Servic
 instl_swrm_mstr: no                                 # Install Docker swarm Service
 #
 instl_swrm_node: no                                 # Install Docker swarm Service
-
+#
+ipsets:
+  - name: swarm_nodes
+    type: 'hash:net'
+    set:
+      - 212.227.166.233 # deb1202.online-server.cloud
+      - 212.227.151.179 # deb1201.online-server.cloud
+      - 217.160.100.194 # d86df44.online-server.cloud
+      - 217.160.144.31  # 112e275.online-server.cloud
+  - name: swarm_master
+    type: 'hash:net'
+    set:
+      - 217.160.100.209
 #
 # Grafana vars:
 grafana_cloud_api_key: glc_eyJvIjoiNTkxMjk3IiwibiI6InN0YWNrLTMwNDAwNi1pbnRlZ3JhdGlvbi1pb25vcy1pb25vcyIsImsiOiJmVnUydE93NzZHODM5SG9nN0RsOVE0TjkiLCJtIjp7InIiOiJldSJ9fQ== # Example - glc_eyJrIjoiYjI3NjI5MGQxZTcyOTIxYTc0MDgzMGVhNDhlODNhYzA5OTk2Y2U5YiIsIm4iOiJhbnNpYmxldGVzdCIsImlkIjo2NTI5

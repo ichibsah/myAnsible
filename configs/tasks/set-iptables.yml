@@ -1,2 +1,11 @@
 # https://docs.ansible.com/ansible/latest/collections/ansible/builtin/iptables_module.html
 # https://markontech.com/ansible/configure-iptables-rules-using-ansible/
+#
+- name: Allow source IPs defined in ipset "admin_hosts" on port 22
+  ansible.builtin.iptables:
+    chain: INPUT
+    match_set: admin_hosts
+    match_set_flags: src
+    destination_port: 22
+    jump: ALLOW
+  when: group is swarm_nodes

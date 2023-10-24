@@ -16,3 +16,15 @@
 #   debug:
 #     var:  swarm_info
 #     verbosity: 3 
+#
+- name: Allow source IPs defined in ipset "swarm_nodes" on port 7946 and 4789
+  ansible.builtin.iptables:
+    chain: INPUT
+    match_set: swarm_nodes
+    match_set_flags: src
+    destination_port: 
+      - 7946 TCP/UDP
+      - 4789 UDP
+    jump: ALLOW
+  tags: 
+    - test
