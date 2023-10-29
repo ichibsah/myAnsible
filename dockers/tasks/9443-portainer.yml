@@ -1,5 +1,7 @@
 # https://docs.ansible.com/ansible/latest/collections/community/docker/docker_stack_module.html
-#
+# $ curl -L https://downloads.portainer.io/ee2-19/portainer-agent-stack.yml -o portainer-agent-stack.yml
+# $ docker stack deploy -c portainer-agent-stack.yml portainer
+
 - name: Deploy stack from a compose file
   community.docker.docker_stack:
     state: present

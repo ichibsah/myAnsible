@@ -31,48 +31,91 @@
 #     - test
 # ipset
 #
-- name: Allow source IPs defined in ipset "swarm_nodes" on port 7946
+- name: Allow source IPs defined in ipset "swarm_nodes" on port 7946 (tcp)
   ansible.builtin.iptables:
     state: present
     #state: absent
-    action: append
+    #action: append
     chain: INPUT
     source: "{{ item }}"
-    protocol: 
-      - TCP
-      - UDP
-    source_port:
-      - "7946"
-    policy: ACCEPT
+    protocol: tcp
+    destination_ports:
+      - 7946
+    jump: ACCEPT
+    #policy: ACCEPT
   loop: 
-    "{{ ipsets[0].set }}"
+    "{{ ipsets[0].set + ipsets[1].set }}"
+    #"{{ ipsets[0].set + ipsets[1].set - hostname_additional_hosts[0].ip_address }}"
   tags: 
     - test
+#
+- name: Allow source IPs defined in ipset "swarm_nodes" on port 7946 (udp)
+  ansible.builtin.iptables:
+    state: present
+    #state: absent
+    #action: append
+    chain: INPUT
+    source: "{{ item }}"
+    protocol: udp
+    destination_ports:
+      - 7946
+    jump: ACCEPT
+    #policy: ACCEPT
+  loop: 
+    "{{ ipsets[0].set + ipsets[1].set }}"
+  tags: 
+    - #test
 #
 - name: Allow source IPs defined in ipset "swarm_nodes" on port 4789
   ansible.builtin.iptables:
     state: present
     chain: INPUT
     source: "{{ item }}"
-    protocol: 
-      - UDP
-    source_port:
-      - "4789"
-    policy: ACCEPT
+    protocol: udp
+    destination_ports:
+      - 4789
+    jump: ACCEPT
+    #policy: ACCEPT
   loop: 
-    "{{ ipsets[0].set }}"
+    "{{ ipsets[0].set + ipsets[1].set }}"
   tags: 
-    - test
+    - #test
 #
-- name: Allow ALLOWLIST
-  iptables:
-    chain: ALLOWLIST
-    chain_management: true
-    #state: present
-    state: absent
+# - name: Allow ALLOWLIST
+#   iptables:
+#     chain: ALLOWLIST
+#     chain_management: true
+#     #state: present
+#     state: absent
 #
 # This will apply to all loaded/active IPv4 tables.
 - name: Save current state of the firewall in system file
   community.general.iptables_state:
     state: saved
     path: /etc/sysconfig/iptables
+
+
+#
+#
+#
+# - name: Allow SSH traffic from specific IP addresses
+#   iptables:
+#     chain: INPUT
+#     protocol: tcp
+#     destination_port: 22
+#     source: “{{ item }}”
+#     jump: ACCEPT
+#     with_items:
+#       - 192.168.1.100
+#       - 192.168.1.101
+# #
+# - name: Block HTTP traffic from specific IP addresses
+#   iptables:
+#     chain: INPUT
+#     protocol: tcp
+#     destination_port: 80
+#     source: “{{ item }}”
+#     jump: DROP
+#     with_items:
+#     - 192.168.1.200
+#     - 192.168.1.201

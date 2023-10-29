@@ -23,3 +23,59 @@
 #
 # ports
 # 2377,4789,7946
+#
+#
+- name: Allow source IPs defined in ipset "swarm_nodes" on port 7946 (tcp)
+  ansible.builtin.iptables:
+    state: present
+    #state: absent
+    #action: append
+    chain: INPUT
+    source: "{{ item }}"
+    protocol: tcp
+    destination_ports:
+      - 7946
+    jump: ACCEPT
+    #policy: ACCEPT
+  loop: 
+    "{{ ipsets[0].set }}"
+  tags: 
+    - #test
+#
+- name: Allow source IPs defined in ipset "swarm_nodes" on port 7946 (udp)
+  ansible.builtin.iptables:
+    state: present
+    #state: absent
+    #action: append
+    chain: INPUT
+    source: "{{ item }}"
+    protocol: udp
+    destination_ports:
+      - 7946
+    jump: ACCEPT
+    #policy: ACCEPT
+  loop: 
+    "{{ ipsets[0].set }}"
+  tags: 
+    - #test
+#
+- name: Allow source IPs defined in ipset "swarm_nodes" on port 4789
+  ansible.builtin.iptables:
+    state: present
+    chain: INPUT
+    source: "{{ item }}"
+    protocol: udp
+    destination_ports:
+      - 4789
+    jump: ACCEPT
+    #policy: ACCEPT
+  loop: 
+    "{{ ipsets[0].set }}"
+  tags: 
+    - #test
+#
+# This will apply to all loaded/active IPv4 tables.
+- name: Save current state of the firewall in system file
+  community.general.iptables_state:
+    state: saved
+    path: /etc/sysconfig/iptables

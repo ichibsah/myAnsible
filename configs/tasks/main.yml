@@ -66,5 +66,5 @@
     file: swarm_node.yml
   when: instl_swrm_node
   tags:
-    - test
+    - #test
     - swarm

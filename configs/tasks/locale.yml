@@ -1,0 +1,36 @@
+# https://docs.ansible.com/ansible/latest/collections/community/general/locale_gen_module.html
+# https://forum.ansible.com/t/ansible-ubuntu-locale-keyboard-configuration/786/5
+#
+- name: Debconf set default locale Ubuntu
+  ansible.builtin.debconf:
+    name: locales
+    question: locales/default_environment_locale
+    value: en_GB.UTF-8
+    vtype: select
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Locales package present Ubuntu
+  ansible.builtin.apt:
+    pkg:
+      - locales
+  when: ansible_distribution == 'Ubuntu'
+
+- name: set as default locale Ubuntu
+  command: localectl set-locale LANG=en_GB.UTF-8
+  when: ansible_distribution == 'Ubuntu'
+
+- name: set as default x11-keymap Ubuntu
+  command: localectl --no-convert set-x11-keymap gb
+  when: ansible_distribution == 'Ubuntu'
+
+- name: create vconsole.conf for VC Keymap Ubuntu
+  ansible.builtin.copy:
+    dest: /etc/vconsole.conf
+    content: |
+      KEYMAP=gb
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Ensure a locale exists
+  community.general.locale_gen:
+    name: de_CH.UTF-8
+    state: present
