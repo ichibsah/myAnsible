@@ -1,0 +1,45 @@
+- name: Job 00 | Deploy whats-up-docker
+  community.docker.docker_compose:
+    #working_dir: "/opt/docker/wud-3555/"
+    #working_dir: "{{dckr_bs_pth}}/wud-3555/"
+    #remove_images: all
+    #remove_volumes: True
+    #stopped: True
+    #state: absent
+    #
+    project_name: whats-up-docker
+    definition:
+      version: '3.9'
+      services:
+        whatsupdocker:
+          image: fmartinou/whats-up-docker
+          container_name: WUD_con
+          mem_limit: 128m
+          mem_reservation: 50m
+          cpu_shares: 256
+          security_opt:
+            - no-new-privileges=true
+          read_only: true
+          volumes:
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - "{{dckr_bs_pth}}/wud-3555/wud:/store"
+          ports:
+            - 3555:3000
+          environment:
+          - WUD_TRIGGER_SMTP_GMAIL_HOST=10.1.0.254
+          - WUD_TRIGGER_SMTP_GMAIL_PORT=465
+          - WUD_TRIGGER_SMTP_GMAIL_USER=Your-own-gmail-address
+          - WUD_TRIGGER_SMTP_GMAIL_PASS=Your-own-app-password
+          - WUD_TRIGGER_SMTP_GMAIL_FROM=Your-own-gmail-address
+          - WUD_TRIGGER_SMTP_GMAIL_TO=Your-own-gmail-address
+          - WUD_TRIGGER_SMTP_GMAIL_TLS_ENABLED=true
+          - WUD_TRIGGER_SMTP_GMAIL_SIMPLETITLE=Container $${name} Update Available
+          - WUD_TRIGGER_SMTP_GMAIL_SIMPLEBODY=Container $${name} Can Be Updated From Version $${local} To Version $${remote}
+
+  when: instl_docker_pckg and dckr_dpl_wud
+  tags:
+    - #test              
+#
+#
+#  
+# https://mariushosting.com/how-to-install-wud-on-your-synology-nas/

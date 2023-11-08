@@ -1,6 +1,7 @@
 - name: Job 00 | Deploy Resume
   community.docker.docker_compose:
     #working_dir: "/opt/docker/rxresume-8662/"
+    #working_dir: "{{dckr_bs_pth}}/rxresume-8662/"
     #remove_images: all
     #remove_volumes: True
     #stopped: True
@@ -12,15 +13,15 @@
       services:
         Resume:
           image: amruthpillai/reactive-resume:v1
-          container_name: Resume-con
-          hostname: https://resume.home.sawadogo.xyz
+          container_name: Resume_con
+          hostname: "https://resume{{ dmain_pstfx }}"
           user: ${UID}:${GID}
           restart: always
           ports:
             - 5050:80
   when: instl_docker_pckg and dckr_dpl_rsume
   tags:
-    - test              
+    - #test              
 #
 #
 #  

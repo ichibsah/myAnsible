@@ -134,6 +134,11 @@
     file: 5050-resume.yml
   #when: apt_host_pckg_lst | contains bind9
 #
+- name: Job 27 | import task resume
+  ansible.builtin.import_tasks:
+    file: 3555-wud.yml
+  #when: apt_host_pckg_lst | contains bind9
+#
 #
 #
 # keep this last

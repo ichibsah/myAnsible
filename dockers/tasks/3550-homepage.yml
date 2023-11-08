@@ -20,7 +20,8 @@
         homepage:
           hostname: homepage-3550
           container_name: Homepage
-          image: ghcr.io/benphelps/homepage:latest
+          image: ghcr.io/gethomepage/homepage:latest
+          #image: ghcr.io/benphelps/homepage:latest
           ports:
             - 3550:3000
           restart: always
