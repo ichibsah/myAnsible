@@ -47,7 +47,7 @@
     "{{ ipsets[0].set + ipsets[1].set }}"
     #"{{ ipsets[0].set + ipsets[1].set - hostname_additional_hosts[0].ip_address }}"
   tags: 
-    - test
+    - #test
 #
 - name: Allow source IPs defined in ipset "swarm_nodes" on port 7946 (udp)
   ansible.builtin.iptables:

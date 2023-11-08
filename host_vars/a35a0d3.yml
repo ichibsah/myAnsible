@@ -32,3 +32,5 @@ instl_swrm_mstr: yes                                 # Install Docker swarm Serv
 #
 dckr_dpl_npxymgmt: yes                    # install nginx-proxy-manager
 #
+dckr_dpl_rsume: yes           
+#

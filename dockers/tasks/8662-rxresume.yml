@@ -1,0 +1,187 @@
+- name: Job 00 | Deploy Rxresume
+  community.docker.docker_compose:
+    #working_dir: "/opt/docker/rxresume-8662/"
+    remove_images: all
+    remove_volumes: True
+    stopped: True
+    state: absent
+    #
+    project_name: Rxresume
+    definition:
+      version: "3.9"
+      services:
+        resume-db:
+          image: postgres
+          container_name: RXRESUME-DB
+          hostname: resume-db
+          security_opt:
+            - no-new-privileges:true
+          healthcheck:
+            test: ["CMD", "pg_isready", "-q", "-d", "reresume", "-U", "reresumeuser"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+          user: ${UID}:${GID}
+          volumes:
+            - /opt/docker/rxresume-8662/rxv3/db:/var/lib/postgresql/data:rw
+          environment:
+            POSTGRES_DB: reresume
+            POSTGRES_USER: reresumeuser
+            POSTGRES_PASSWORD: reresumepw
+          restart: always
+
+        resume-server:
+          image: amruthpillai/reactive-resume:server-latest
+          container_name: RXRESUME-SERVER
+          hostname: resume-server
+          security_opt:
+            - no-new-privileges:true
+          healthcheck:
+            test: curl -fSs http://localhost:3100/health || exit 1
+            interval: 30s
+            timeout: 5s
+            retries: 3
+          ports:
+            - 8661:3100
+          volumes:
+            - /opt/docker/rxresume-8662/rxv3/exports:/app/server/dist/assets/exports:rw
+            - /opt/docker/rxresume-8662/rxv3/uploads:/app/server/dist/assets/uploads:rw
+          environment:
+            - PUBLIC_URL=https://rxresume.home.sawadogo.xyz
+            - PUBLIC_SERVER_URL=https://rxresumeserver.home.sawadogo.xyz
+            - POSTGRES_DB=reresume
+            - POSTGRES_USER=reresumeuser
+            - POSTGRES_PASSWORD=reresumepw
+            - SECRET_KEY=MariushostingMariushostingMari13
+            - POSTGRES_HOST=resume-db
+            - POSTGRES_PORT=5432
+            - JWT_SECRET=MariushostingMariushostingMari13
+            - JWT_EXPIRY_TIME=604800
+            - MAIL_FROM_NAME=Reactive Resume
+            - MAIL_FROM_EMAIL=Your-own-gmail-address
+            - MAIL_HOST=smtp.gmail.com
+            - MAIL_PORT=587
+            - MAIL_USERNAME=Your-own-gmail-address
+            - MAIL_PASSWORD=Your-own-app-password
+          restart: always
+          depends_on:
+            resume-db:
+              condition: service_started
+
+        resume-client:
+          image: amruthpillai/reactive-resume:client-latest
+          container_name: RXRESUME-CLIENT
+          hostname: resume-client
+          security_opt:
+            - no-new-privileges:true
+          healthcheck:
+            test: curl -fSs 127.0.0.1:3000 || exit 1
+            interval: 30s
+            timeout: 5s
+            retries: 3
+          ports:
+            - 8662:3000
+          environment:
+            - PUBLIC_URL=https://rxresume.home.sawadogo.xyz
+            - PUBLIC_SERVER_URL=https://rxresumeserver.home.sawadogo.xyz
+          restart: always
+          depends_on:
+            resume-server:
+              condition: service_healthy
+  when: instl_docker_pckg and dckr_dpl_rxrsum
+  tags:
+    - #test              
+#
+#
+#         youtubedl:
+#           hostname: ytdl.skyline.lan
+#           container_name: YoutubeDl_con
+#           image: tzahi12345/youtubedl-material:latest
+#           ports:
+#             - 8084:17442/tcp
+#           restart: always
+#           environment:
+#             - TZ=Europe/Berlin
+#             - PUID=${UID}
+#             - PGID=${GID}
+#             - HTTP_USER=ibrahim
+#             - HTTP_PASS={{ansible_become_pass}}
+#           volumes:
+#             - /opt/docker/youtubedl-8084/appdata:/app/appdata
+#             - /opt/docker/youtubedl-8084/audio:/app/audio
+#             - /opt/docker/youtubedl-8084/subscriptions:/app/subscriptions
+#             - /opt/docker/youtubedl-8084/users:/app/users
+#             - /opt/docker/youtubedl-8084/video:/app/video
+#   when: instl_docker_pckg and dckr_dpl_youtubedl
+#   register: output
+#   tags:
+#     - #test
+# #
+# - name: Verify that tubesync is running
+#   ansible.builtin.assert:
+#     that:
+#       - "output.services.youtubedl.YoutubeDl_con.state.running"
+#       - #"output.services.mysql.ansiblemysql.state.running"
+#   when: instl_docker_pckg and dckr_dpl_youtubedl
+#   tags:
+#     - #test
+
+# # https://mariushosting.com/how-to-install-invidious-on-your-synology-nas/
+
+# version: "3.9"
+# services:
+#   invidious-db:
+#     image: postgres
+#     container_name: Invidious-DB
+#     hostname: invidious-db
+#     security_opt:
+#       - no-new-privileges:true
+#     healthcheck:
+#       test: ["CMD", "pg_isready", "-q", "-d", "invidious", "-U", "kemal"]
+#       timeout: 45s
+#       interval: 10s
+#       retries: 10
+#     user: 1026:100
+#     volumes:
+#       - /opt/docker/rxresume-8662/invidiousdb:/var/lib/postgresql/data
+#     environment:
+#       POSTGRES_DB: invidious
+#       POSTGRES_USER: kemal
+#       POSTGRES_PASSWORD: kemalpw
+#     restart: always
+
+#   invidious:
+#     image: quay.io/invidious/invidious:latest
+#     container_name: Invidious
+#     hostname: invidious
+#     user: 1026:100
+#     security_opt:
+#       - no-new-privileges:true
+#     healthcheck:
+#       test: wget -nv --tries=1 --spider http://127.0.0.1:3000/api/v1/comments/jNQXAC9IVRw || exit 1
+#       interval: 30s
+#       timeout: 5s
+#       retries: 2
+#     ports:
+#       - 7601:3000
+#     environment:
+#       INVIDIOUS_CONFIG: |
+#         db:
+#           dbname: invidious
+#           user: kemal
+#           password: kemalpw
+#           host: invidious-db
+#           port: 5432
+#         check_tables: true
+#         captcha_enabled: false
+#         default_user_preferences:
+#           locale: ro
+#           region: RO
+#         external_port: 443
+#         domain: invidious.home.sawadogo.xyz
+#         hmac_key: e8b09fcc0882e8b646beab0135027f748c39f27acb142b339a9b199acd3b0a2b
+#         https_only: true
+#     restart: always
+#     depends_on:
+#       invidious-db:
+#         condition: service_started

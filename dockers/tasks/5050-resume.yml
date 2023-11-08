@@ -1,0 +1,30 @@
+- name: Job 00 | Deploy Resume
+  community.docker.docker_compose:
+    #working_dir: "/opt/docker/rxresume-8662/"
+    #remove_images: all
+    #remove_volumes: True
+    #stopped: True
+    #state: absent
+    #
+    project_name: Resume
+    definition:
+      version: "3.9"
+      services:
+        Resume:
+          image: amruthpillai/reactive-resume:v1
+          container_name: Resume-con
+          hostname: https://resume.home.sawadogo.xyz
+          user: ${UID}:${GID}
+          restart: always
+          ports:
+            - 5050:80
+  when: instl_docker_pckg and dckr_dpl_rsume
+  tags:
+    - test              
+#
+#
+#  
+# docker run -d --name=reactive_resume \
+# -p 5050:80 \
+# --restart always \
+# amruthpillai/reactive-resume:v1

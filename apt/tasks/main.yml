@@ -1,4 +1,6 @@
 # file: apt/tasks/main.yml
+# TODA: add this to the auto upgrade
+# pip3 install agent360 --upgrade
 #
 #- include_vars: pckg.yml # see global_var folder for update
 # TODO: challenge - make this dynamic - disabled in the meantime
