@@ -1,0 +1,34 @@
+- name: Job 00 | Deploy icinga2
+  community.docker.docker_compose:
+    #working_dir: "/opt/docker/rxresume-8662/"
+    #working_dir: "{{dckr_bs_pth}}/rxresume-8662/"
+    #remove_images: all
+    #remove_volumes: True
+    #stopped: True
+    #state: absent
+    #
+    project_src: icinga2
+    scale:
+      web: 1
+  register: output
+
+- name: Show results
+  ansible.builtin.debug:
+    var: output
+- name: Verify that web and db services are running
+  ansible.builtin.assert:
+    that:
+      - "output.services.web.flask_web_1.state.running"
+      - "output.services.db.flask_db_1.state.running"
+
+  when: instl_docker_pckg and dckr_dpl_rsume
+  tags:
+    - #test              
+#
+#
+#  
+# docker run -d --name=reactive_resume \
+# -p 5050:80 \
+# --restart always \
+# amruthpillai/reactive-resume:v1
+
