@@ -1,7 +1,7 @@
 hostname_additional_hosts:
   - ip_address: 10.0.0.136
-    hostname: home-1006-vm-dns.skyline.lan
-    hostname_short: home-1006-vm-dns
+    hostname: de-1006-dns.skyline.lan
+    hostname_short: de-1006-dns
   
   #
 #virthost01.skyline.lan: 

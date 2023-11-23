@@ -62,3 +62,16 @@ copy_iptables: yes                                   # Copy iptables to /root fo
 #
 # interfaces:
 #   - iface: eth1
+#
+localusers:
+  - name: mobile
+    shell: /bin/bash
+    #groups: 
+    #  - #docker
+    #append: True
+    state: present
+    key: mobile.pub
+    create_home: True
+    local: True
+    hosts: de-1005-gw
+  - #

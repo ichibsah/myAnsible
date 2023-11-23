@@ -2,17 +2,17 @@
 ---
 # TODO: takes 67.93 seconds to run. needs review and conflicting values (fatal: [home-1007-vm-docker]: FAILED! => changed=false 
   # msg: 'E:Conflicting values set for option Signed-By regarding source https://get.filebot.net/deb/ universal: /usr/share/keyrings/filebot.gpg != , E:The list of sources could not be read.')
-- name: install dependencies
-  ansible.builtin.apt:
-    name: "{{ hostname_dependencies }}"
-    state: "{{ apt_install_state | default('latest') }}"
-    update_cache: true
-    cache_valid_time: "{{ apt_update_cache_valid_time | default(3600) }}"
-  tags:
-    - configuration
-    - hostname
-    - hostname-dependencies
-
+# - name: install dependencies
+#   ansible.builtin.apt:
+#     name: "{{ hostname_dependencies }}"
+#     state: "{{ apt_install_state | default('latest') }}"
+#     update_cache: true
+#     cache_valid_time: "{{ apt_update_cache_valid_time | default(3600) }}"
+#   tags:
+#     - configuration
+#     - hostname
+#     - hostname-dependencies
+#
 - name: update the hostname - hostname module
   ansible.builtin.hostname:
     name: "{{ hostname_hostname if hostname_hostname_use_full else hostname_hostname_short }}"
@@ -21,7 +21,12 @@
     - configuration
     - hostname
     - hostname-update-hostname
-
+#
+- name: Set a hostname specifying strategy
+  ansible.builtin.hostname:
+    name: "{{ hostname_hostname }}"
+    use: systemd
+#
 - name: update the hostname - /etc/hostname file
   ansible.builtin.template:
     src: etc/hostname.j2
@@ -47,7 +52,7 @@
     - hostname
     - hostname-update-hosts-file
 #
-#TODO:  here too fails ( The task includes an option with an undefined variable. The error was: list object has no element 1. list object has no element )
+# TODO:  here too fails ( The task includes an option with an undefined variable. The error was: list object has no element 1. list object has no element )
 - name: update the hostname/domain facts
   ansible.builtin.set_fact:
     ansible_domain: "{{ hostname_hostname.split('.', 1)[1] }}"

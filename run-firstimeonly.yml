@@ -17,11 +17,10 @@
           - sudo
         state: present
 
-
   roles:
     - ssh
     - provisions
-    - #force restart node
+    - reboot
 
 # - name: PROVISIONS | First time Initialisation - LOCALHOST
 #   hosts: local

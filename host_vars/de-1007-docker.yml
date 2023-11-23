@@ -1,10 +1,10 @@
 hostname_additional_hosts:
   - ip_address: 10.0.0.137
-    hostname: home-1007-vm-docker.skyline.lan
-    hostname_short: home-1007-vm-docker
+    hostname: de-1007-docker.skyline.lan
+    hostname_short: de-1007-docker
   - ip_address: 10.0.0.137
-    hostname: home-1007-vm-docker.home.sawadogo.xyz
-    hostname_short: home-1007-vm-docker
+    hostname: de-1007-docker.home.sawadogo.xyz
+    hostname_short: de-1007-docker
   
   ##
 #virthost01.skyline.lan: 

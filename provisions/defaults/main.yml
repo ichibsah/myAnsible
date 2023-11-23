@@ -29,3 +29,16 @@ users:
     create_home: True
     local: True
     hosts: all
+#
+localusers:
+  - name: 
+    shell:
+    groups: 
+      - 
+    append: True
+    state: 
+    key: 
+    create_home: True
+    local: True
+    hosts: de-1005-gw
+  - #

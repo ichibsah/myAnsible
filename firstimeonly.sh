@@ -4,7 +4,7 @@ clear
 # docker login -u michibsah
 # docker push docker.io/michibsah/docker-agent-ansible:latest
 #
-#ansible-inventory -y --list
+ansible-inventory -y --list
 #
 ansible-playbook -v run-firstimeonly.yml # works
 #ansible-playbook -v --limit a35a0d3 run-firstimeonly.yml # works
