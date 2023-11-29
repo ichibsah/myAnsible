@@ -30,15 +30,15 @@ users:
     local: True
     hosts: all
 #
-localusers:
-  - name: 
-    shell:
-    groups: 
-      - 
-    append: True
-    state: 
-    key: 
-    create_home: True
-    local: True
-    hosts: de-1005-gw
-  - #
+# localusers:
+#   - name: 
+#     shell:
+#     groups: 
+#       - 
+#     append: True
+#     state: 
+#     key: 
+#     create_home: True
+#     local: True
+#     hosts: de-1005-gw
+#   - #

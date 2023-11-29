@@ -94,16 +94,16 @@
 - name: Job 05 | creating LOCAL users and groups
   user:
     name: "{{item.name}}"
-    update_password: always
+    update_password: on_create #always
     shell: "{{item.shell}}"
-    groups: "{{item.groups}}" #"{{lookup('item', 'groups')}}"
+    #groups: "{{item.groups}}" #"{{lookup('item', 'groups')}}"
     password: "{{ localhost_become_pass | password_hash('sha512') }}"
     append: "{{item.append}}"
     create_home: True
     #local: "{{item.local}}"
     state: present
+  #when: ansible_hostname == item.hosts
   loop: "{{ localusers }}"
-  when: ansible_hostname == item.hosts
     #"{{ lookup('vars', 'somevar_' ~ other_var) }}"
   #tags: test
 #
@@ -113,8 +113,8 @@
     user: "{{item.name}}"
     state: "{{item.state}}"
     key: "{{ lookup('file', 'files/authorized_key/{{item.key}}') }}"
+  #when: ansible_hostname == item.hosts
   loop: "{{ localusers }}"
-  when: ansible_hostname == item.hosts
   #when: "{{item.host}}" == 'all' or {{item.host}} == ansible_hostname
   tags:
     - #test
@@ -132,3 +132,5 @@
 #
 # openssl rsa -in mobile.key -pubout > mobile.pub
 # ssh-keygen -y -f mobile.key > mobile.pub
+
+

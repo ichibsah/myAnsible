@@ -66,12 +66,12 @@ copy_iptables: yes                                   # Copy iptables to /root fo
 localusers:
   - name: mobile
     shell: /bin/bash
-    #groups: 
-    #  - #docker
-    #append: True
+    groups: 
+      - mobile
+    append: false
     state: present
     key: mobile.pub
     create_home: True
     local: True
     hosts: de-1005-gw
-  - #
+  
