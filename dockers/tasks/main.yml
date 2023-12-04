@@ -138,6 +138,11 @@
   ansible.builtin.import_tasks:
     file: 3555-wud.yml
   #when: apt_host_pckg_lst | contains bind9
+##
+- name: Job 28 | import task webpdf
+  ansible.builtin.import_tasks:
+    file: 25568-webpdf.yml
+  #when: apt_host_pckg_lst | contains bind9
 #
 #
 #

@@ -1,0 +1,44 @@
+- name: Job 00 | Deploy whats-up-docker
+  community.docker.docker_compose:
+    #working_dir: "/opt/docker/webpdf-25568/"
+    #working_dir: "{{dckr_bs_pth}}/webpdf-25568/"
+    #remove_images: all
+    #remove_volumes: True
+    #stopped: True
+    #state: absent
+    #
+    project_name: webpdf
+    definition:
+      version: '3.9'
+      services:
+        webpdf:
+          image: zpex/web-pdf-toolbox
+          container_name: webpdf_con
+          volumes:
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - "{{dckr_bs_pth}}/webpdf-25568/webpdf:/tmp/pdf"
+          ports:
+            - 25568:80
+          #user: "${UID}:${GID}"
+          restart: always
+          environment:
+            - TZ=Europe/Berlin
+            - PUID=${UID}
+            - PGID=${GID}          
+  when: instl_docker_pckg and dckr_dpl_webpdf
+  tags:
+    - #test              
+#
+#
+#  
+# https://mariushosting.com/how-to-install-web-pdf-on-your-synology-nas/
+
+
+# docker run -d --name=webpdf \
+# -p 25568:80 \
+# -e PUID=1026 \
+# -e PGID=100 \
+# -e TZ=Europe/Bucharest \
+# -v /volume1/docker/webpdf:/tmp/pdf/ \
+# --restart always \
+# zpex/web-pdf-toolbox
