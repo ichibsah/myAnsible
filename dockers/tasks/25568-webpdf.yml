@@ -2,10 +2,10 @@
   community.docker.docker_compose:
     #working_dir: "/opt/docker/webpdf-25568/"
     #working_dir: "{{dckr_bs_pth}}/webpdf-25568/"
-    #remove_images: all
-    #remove_volumes: True
-    #stopped: True
-    #state: absent
+    remove_images: all
+    remove_volumes: True
+    stopped: True
+    state: absent
     #
     project_name: webpdf
     definition:
