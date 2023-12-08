@@ -1,4 +1,4 @@
-- name: Job 00 | Deploy whats-up-docker
+- name: Job 00 | Deploy webpdf
   community.docker.docker_compose:
     #working_dir: "/opt/docker/webpdf-25568/"
     #working_dir: "{{dckr_bs_pth}}/webpdf-25568/"

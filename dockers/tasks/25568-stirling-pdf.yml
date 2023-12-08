@@ -1,4 +1,4 @@
-- name: Job 00 | Deploy whats-up-docker
+- name: Job 00 | Deploy stirling-pdf
   community.docker.docker_compose:
     #working_dir: "/opt/docker/stirling-pdf-25568/"
     #working_dir: "{{dckr_bs_pth}}/stirling-pdf-25568/"
