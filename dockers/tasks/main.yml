@@ -149,6 +149,13 @@
     file: 25568-stirling-pdf.yml
   #when: apt_host_pckg_lst | contains bind9
 #
+- name: Job 30 | import task meryem
+  ansible.builtin.import_tasks:
+    file: 8090-meryem.yml
+  when: instl_docker_pckg and dckr_dpl_meryem
+  tags:
+    - test  
+#
 #
 #
 # keep this last

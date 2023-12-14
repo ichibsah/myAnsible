@@ -10,6 +10,9 @@ dckr_fldr_lst:                            # Docker folder list that will be copi
 dsbl_dhcpvsx: no                             # Disable dhcp v6  
 
 # /*******/
+working_dir: "{{dckr_bs_pth}}/meryem-8091/" 
+log_dir: "{{ working_dir}}logs" 
+# /*******/
 dckr_dmain_nme_pstfx: home.sawadogo.xyz
 # docker containers
 dckr_dpl_pihole: no
@@ -31,3 +34,4 @@ dckr_dpl_rxrsum: no
 dckr_dpl_rsume: no
 dckr_dpl_wud: no
 dckr_dpl_webpdf: no
+dckr_dpl_meryem: no

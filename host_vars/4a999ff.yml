@@ -33,3 +33,4 @@ crntb_fldr_lst:                            # Crontab folder list that will be co
 - { fldr: "4a999ff" }
 
 crntb_actvt_crnjbs_mrym: yes
+dckr_dpl_meryem: yes

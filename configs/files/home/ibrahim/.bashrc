@@ -154,12 +154,16 @@ alias azlogin='az login --allow-no-subscriptions --use-device-code'
 alias a=alias d=ls ds="ls -al" drt="ls -lart" g="grep -i --color=yes" gc="grep --color=yes" 
 alias e=echo l=less t="type -a" ..="cd .." r="su -m root" 
 alias md=mkdir rd=rmdir dfh="df -h" ll="ls -l" la="ls -la"
+# ******************
 alias gpom="git push -u origin master"
 alias grv="git remote -v"
 alias grao="git remote add origin $1"
 alias gcbr="git clone -b <branch> <remote_repo>"
 alias gcb="git checkout -b $1" # git create new branch and switch to it
 alias gsb="git checkout $1" # git switch to desired branch
+alias gl1="git log --oneline"
+alias grh="git reset --hard" 
+# ******************
 alias dmesg="dmesg -w -H"
 alias tsyslog="tail -f /var/log/syslog"
 alias tauth="tail -f /var/log/auth.log"

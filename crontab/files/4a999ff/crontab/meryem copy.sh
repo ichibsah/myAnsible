@@ -49,42 +49,22 @@ if [ -d "$REPO_DIR" ]; then
     git pull origin $BRANCH
     
     # Print a message to confirm that the pull was successful
-    #echo "Pull successful"
     echo -e "`date` ${RED} - Pull successful" >> $LOG
-    #pwd
-    #cd "$PWD_DIR"
-    #cd universe-vernissage
-    #pwd
+
     bash /opt/docker/8090-meryem/run.sh >> $LOG
-    # docker rm -f meryem >> $LOG
-    # docker build -t meryem:latest . >> $LOG
-    # docker run -it -d -p 8090:8000 --name meryem --restart always meryem:latest >> $LOG
+
   else
     # Print a message to confirm that there were no updates
-    #echo "Already up to date - no need to start ansible"
     echo -e "`date` ${NOCOLOR} - Already up to date - no need to start $AppName" >> $LOG
-    #pwd
-    #cd "$PWD_DIR"
-    #cd universe-vernissage
-    #pwd
-    #bash /home/ibrahim/sandbox-ansible/ansible-for-devops/mySetupRoles/md-shop.sh >> $LOG # debug
-    #bash /opt/docker/8090-meryem/run.sh >> $LOG
+
   fi
 else
   # Clone the repository if it doesn't exist
   git clone "$REPO_URL" "$PWD_DIR"
   
   # Print a message to confirm that the repository was cloned
-  #echo "Repository cloned - starting first time ansible"
   echo -e "`date` ${RED} - Repository cloned - starting first time $AppName" >> $LOG
-  #pwd
-  #cd "$PWD_DIR"
-  #cd universe-vernissage
-  #pwd
-  #bash /home/ibrahim/temp-docker/universe-vernissage/run.sh >> $LOG
-    # docker rm -f meryem >> $LOG
-    # docker build -t meryem:latest . >> $LOG
-    # docker run -it -d -p 8090:8000 --name meryem --restart always meryem:latest >> $LOG
+
   bash /opt/docker/8090-meryem/run.sh >> $LOG &
 fi
 #
