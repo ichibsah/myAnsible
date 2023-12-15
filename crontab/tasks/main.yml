@@ -90,6 +90,8 @@
     weekday: "*" # Day of the week that the job should run ( 0-6 for Sunday-Saturday, *, etc )
     disabled: False # If the job should be disabled (commented out) in the crontab. Only has effect if C(state=present).
   when: crntb_actvt_crnjbs_mrym
+  tags: 
+    - meryem
 
 - name: Crontab | /*REMOVE*/ cronjob "{{ansible_hostname}}"
   cron:
@@ -105,6 +107,8 @@
     weekday: "*" # Day of the week that the job should run ( 0-6 for Sunday-Saturday, *, etc )
     disabled: False # If the job should be disabled (commented out) in the crontab. Only has effect if C(state=present).
   when: not crntb_actvt_crnjbs_mrym
+  tags: 
+    - meryem
 
 - name: Crontab | /*REMOVE*/ cronjob vernissage.sh
   cron:

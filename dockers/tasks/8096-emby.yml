@@ -48,6 +48,7 @@
       - #"output.services.mysql.ansiblemysql.state.running"
   when: instl_docker_pckg and dckr_dpl_emby
   tags:
+    - assert
     - #test
 
 # # https://mariushosting.com/how-to-install-emby-on-your-synology-nas/

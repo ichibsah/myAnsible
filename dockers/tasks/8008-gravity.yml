@@ -55,6 +55,7 @@
       - #"output.services.mysql.ansiblemysql.state.running"
   when: instl_docker_pckg and dckr_dpl_gravity
   tags:
+    - assert
     - #test
 
 # # https://mariushosting.com/how-to-install-gravity-on-your-synology-nas/

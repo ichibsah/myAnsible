@@ -32,5 +32,5 @@ dckr_fldr_lst:                            # Docker folder list that will be copi
 crntb_fldr_lst:                            # Crontab folder list that will be copied when set in the host variable
 - { fldr: "4a999ff" }
 
-crntb_actvt_crnjbs_mrym: yes
+crntb_actvt_crnjbs_mrym: no
 dckr_dpl_meryem: yes

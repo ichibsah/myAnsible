@@ -38,6 +38,7 @@
       - #"output.services.mysql.ansiblemysql.state.running"
   when: instl_docker_pckg and dckr_dpl_tubesync
   tags:
+    - assert
     - #test
 
 # # https://mariushosting.com/how-to-install-tubesync-on-your-synology-nas/
