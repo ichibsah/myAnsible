@@ -2,7 +2,7 @@
 #
 - name: Job 00 | Deploy Meryem - pull from git
   ansible.builtin.git:
-    #working_dir: "{{dckr_bs_pth}}/meryem-8091/" 
+    #working_dir: "{{dckr_bs_pth}}/meryem-8090/" 
     #log_dir: "{{ working_dir}}logs" 
     repo: https://github.com/ichibsah/meryem.git
     dest: "{{ working_dir }}"

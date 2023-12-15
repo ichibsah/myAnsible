@@ -10,7 +10,8 @@ dckr_fldr_lst:                            # Docker folder list that will be copi
 dsbl_dhcpvsx: no                             # Disable dhcp v6  
 
 # /*******/
-working_dir: "{{dckr_bs_pth}}/meryem-8091/" 
+# find a way to declare them in the same file where they are needed
+working_dir: "{{dckr_bs_pth}}/meryem-8090/" 
 log_dir: "{{ working_dir}}logs" 
 # /*******/
 dckr_dmain_nme_pstfx: home.sawadogo.xyz

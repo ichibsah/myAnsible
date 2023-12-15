@@ -154,7 +154,8 @@
     file: 8090-meryem.yml
   when: instl_docker_pckg and dckr_dpl_meryem
   tags:
-    - test  
+    - meryem
+    - #test  
 #
 #
 #
