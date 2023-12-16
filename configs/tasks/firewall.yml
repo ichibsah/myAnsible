@@ -41,7 +41,16 @@
     dest: "/root/"
     owner: root
     group: root
-    mode: 0740
+    mode: 0540
   when: copy_iptables
   tags:
+    - #test
+#
+- name: Job 01 | Refresh iptables at reboot
+  cron:
+    name: "Start myiptables at boot"
+    special_time: reboot
+    job: "bash /root/myiptable.sh"
+  when: copy_iptables and strt_myiptbls_at_boot
+  tags: 
     - #test
