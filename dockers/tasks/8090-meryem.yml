@@ -24,12 +24,18 @@
       args:
         log_volume: "{{ log_dir }}"
         #listen_port: 8090
+    # As 'latest' usually already is present, we need to enable overwriting of existing tags:
+    force_tag: true
+    force_source: true
     source: build
   # when: instl_docker_pckg and dckr_dpl_meryem    
   # tags:
   #   - test    
 #
-- name: Job 02 | Deploy Meryem - deploy container
+#- name: Job 02 | Deploy Meryem - remove old image
+#  community.docker.docker_image:
+#
+- name: Job 03 | Deploy Meryem - deploy container
   community.docker.docker_compose:
     #working_dir: "/opt/docker/meryem-8090/"
     #working_dir: "{{dckr_bs_pth}}/meryem-8090/"
