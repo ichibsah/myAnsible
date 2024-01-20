@@ -40,9 +40,9 @@
     file: dhcp.yml
   #when: apt_host_pckg_lst | contains bind9
 #
-- name: Job 11 | import task firewall
+- name: Job 11 | import task myiptable
   ansible.builtin.import_tasks:
-    file: firewall.yml
+    file: myiptable.yml
   #when: apt_host_pckg_lst | contains bind9
 #
 - name: Job 12 | import task grafana

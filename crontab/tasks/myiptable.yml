@@ -1,0 +1,12 @@
+#---
+# already set inside config - should be deleted
+#
+# - name: Job 01 | Refresh iptables at reboot
+#   cron:
+#     name: "Start myiptables at boot"
+#     special_time: reboot
+#     job: "bash /root/myiptable.sh"
+#   #when: copy_iptables and strt_myiptbls_at_boot
+#   when: strt_myiptbls_at_boot
+#   tags: 
+#     - #test
