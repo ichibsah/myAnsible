@@ -157,6 +157,14 @@
     - meryem
     - #test  
 #
+- name: Job 31 | import task anasse
+  ansible.builtin.import_tasks:
+    file: 8090-meryem.yml
+  when: instl_docker_pckg and dckr_dpl_anasse
+  tags:
+    - anasse
+    - #test  
+#
 #
 #
 # keep this last
