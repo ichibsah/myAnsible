@@ -7,9 +7,11 @@
   #ansible_user: adminqit #ERROR! 'ansible_user' is not a valid attribute for a Play
   #become: true
   #gathering: smart #ERROR! 'gathering' is not a valid attribute for a Play
+#
   gather_facts: True
-  ignore_errors: True
-  ignore_unreachable: true
+  ##ignore_errors: True
+  ##ignore_unreachable: true
+#
   #become_method: runas 
   #become_user: adminqit
 

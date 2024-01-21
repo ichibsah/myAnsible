@@ -50,4 +50,5 @@ dsbl_dhcpvsx_regx: INTERFACESv4='ens18'         # text that should change goes h
 #
 interfaces:
   - iface: eth1
-  
+#
+strt_myiptbls_at_boot: yes  
