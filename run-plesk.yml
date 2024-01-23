@@ -1,0 +1,47 @@
+- name: PLESK | STARTING run-plesk.yml
+  # hosts: allservers
+  # ignore_errors: true
+  # ignore_unreachable: true
+  # # remote_user: root
+  # remote_user: ibrahim
+  # become: true
+  # become_user: root
+  # roles:
+  #   - apt
+
+# - name: APT | STARTING run-apt.yml - LOCALHOST
+#   hosts: local
+#   ignore_errors: true
+#   ignore_unreachable: true
+#   connection: local
+#   # remote_user: root
+#   remote_user: ibrahim
+#   become: true
+#   become_user: root
+#   roles:
+#     - apt
+
+# complete and working
+
+# https://galaxy.ansible.com/ui/standalone/roles/tzermias/plesk/documentation/
+
+  hosts: plesk_install
+  remote_user: root
+  roles:
+    - plesk
+
+
+# admin_password: changeme
+# email: test@mycompany.com
+# hostname: server.myserver.com
+# company: My Company
+# name: Hosting Services
+# phone: +1234567890
+# address: Address Str. 1
+# city: My City
+# state: My State
+# zip: 12345
+# country: GR
+# release_id: PLESK_12_0_18
+# license: ""
+# install_components: [ ]

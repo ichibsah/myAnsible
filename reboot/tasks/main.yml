@@ -1,6 +1,5 @@
----
 # tasks file for reboot
 - name: Unconditionally reboot the machine with all defaults
   ansible.builtin.reboot:
-  test_command: whoami
-  msg: "Reboot initiated by Ansible"
+    test_command: whoami
+    msg: "Reboot initiated by Ansible"
