@@ -6,8 +6,10 @@ hostname_additional_hosts:
   #   hostname: b.example.com
   #   hostname_short: b
 #
-apt_started_services_list:                # Ensure Services are running.
+apt_hst_strt_srvc_lst:                # Ensure Services are running.
   - chronyd
+  - bind9
+  - psa
 #
 ### PRVS | CONFIG ###
 prvs_copy_home: yes                       # Copy default user's home files in place
@@ -26,7 +28,7 @@ sysd_strt_srvc: yes                       # Start services
 instl_ansbl_pckg: no                      # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
 instl_docker_pckg: yes                    # Install Docker package (apt_docker_pckg_lst)
 apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
-  - bind
+  - bind9
 dckr_fldr_lst:                            # Docker folder list that will be copied when set in the host variable
 - { fldr: "4a999ff" }
 

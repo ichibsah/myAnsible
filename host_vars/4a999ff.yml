@@ -6,7 +6,7 @@ hostname_additional_hosts:
   #   hostname: b.example.com
   #   hostname_short: b
 #
-apt_started_services_list:                # Ensure Services are running.
+apt_hst_strt_srvc_lst:                    # Ensure Services are running.
   - chronyd
 #
 ### PRVS | CONFIG ###

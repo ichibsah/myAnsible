@@ -88,6 +88,8 @@
   loop:
     "{{apt_host_pckg_lst}}"
   when: apt_host_pckg_lst.0 is defined
+  tags: 
+    - #test
 #
 #  09.1.1 and  09.1.2 is not wrking properly.
 - name: Job 09.1.1 | Install Utilities Packages (method once)
@@ -161,6 +163,18 @@
   with_items: 
     "{{apt_strt_srvc_lst}}"
   when: sysd_strt_srvc
+#
+# name changed. see job 18
+# - name: Job 17 | Ensure Services are running.
+#   systemd: 
+#     name: "{{ item }}"
+#     state: started
+#     enabled: yes
+#   with_items: 
+#     "{{apt_started_services_list}}"
+#   when: apt_started_services_list.0 is define
+#   tags: 
+#     - test
 #
 - name: Job 18 | Ensure host specific Services are running.
   systemd: 
