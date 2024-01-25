@@ -2,7 +2,7 @@
 # tasks file for bashrc
 - name: Job 01 | copy .bashrc file to ibrahim
   copy:
-    src: "files/home/ibrahim/.bashrc"
+    src: "files/home/ibrahim/"
     dest: "/home/ibrahim/"
     owner: ibrahim
     group: ibrahim

@@ -30,6 +30,8 @@
   roles:
     - plesk
 
+# sh <(curl https://autoinstall.plesk.com/one-click-installer || wget -O - https://autoinstall.plesk.com/one-click-installer)
+
 
 # admin_password: changeme
 # email: test@mycompany.com
