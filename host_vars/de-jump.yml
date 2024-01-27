@@ -1,7 +1,7 @@
 hostname_additional_hosts:
   - ip_address: 212.227.151.179
-    hostname: deb1201.online-server.cloud
-    hostname_short: deb1201
+    hostname: de-jump.imsawadogo.com
+    hostname_short: de-jump
   # - ip_address: 5.6.7.8
   #   hostname: b.example.com
   #   hostname_short: b
@@ -17,7 +17,7 @@ dkr_copy_def_files: yes                   # Copy default docker files to target 
 dkr_copy_etx_files: no                   # # Copy extended docker files to target host
 #
 dckr_fldr_lst:                            # Docker folder list that will be copied when set in the host variable
-- { fldr: "deb1201" }
+- { fldr: "de-jump" }
 #
 crntb_activate_cronjobs: no
 #

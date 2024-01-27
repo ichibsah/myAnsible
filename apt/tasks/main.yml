@@ -48,7 +48,7 @@
 #     apt_packages_list: "{{ apt_default_packages }} + {{ apt_default_packages_pre20 }}"
 #   when: ansible_os_family == 'Ubuntu' and ansible_facts['distribution_version'] is version('20.04', '<')
 #
-#TODO: find out why others fail here (d86df44 deb1201 deb1202 112e275)
+#TODO: find out why others fail here (d86df44 de-jump deb1202 112e275)
 - name: Job 05 | INSTALL default packages
   apt:
     update_cache: yes

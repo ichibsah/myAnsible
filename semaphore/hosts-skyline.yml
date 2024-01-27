@@ -7,7 +7,7 @@ all:
         #112e275.online-server.cloud:
         #a35a0d3.online-server.cloud:
         #4a999ff.online-server.cloud:
-        #deb1201.online-server.cloud:
+        #de-jump.imsawadogo.com:
         #deb1202.online-server.cloud:          
       children:
         allservers:
@@ -18,7 +18,7 @@ all:
             112e275.online-server.cloud:
             a35a0d3.online-server.cloud:
             4a999ff.online-server.cloud:
-            deb1201.online-server.cloud:
+            de-jump.imsawadogo.com:
             deb1202.online-server.cloud:
             #mgmt.skyline.lan:
               #ansible_host: 192.168.14.244          
@@ -47,7 +47,7 @@ all:
             #d86df44.online-server.cloud:
             #112e275.online-server.cloud:
             #a35a0d3.online-server.cloud: # master
-            #deb1201.online-server.cloud:
+            #de-jump.imsawadogo.com:
             #deb1202.online-server.cloud:
             #b0235ee.online-server.cloud:
         sandbox:
