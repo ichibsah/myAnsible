@@ -228,3 +228,5 @@ export EDITOR=nano
 #echo "type your AZURE_PASSWORD:"
 #read -s AZURE_PASSWORD
 #
+
+# ssh-keygen -t rsa -b 2048 -C "email" -f ~/.ssh/name.first_2048bit_id_rsa

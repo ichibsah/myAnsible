@@ -1,6 +1,6 @@
 hostname_additional_hosts:
   - ip_address: 85.215.157.19
-    hostname: de-1010-xl.online-server.cloud
+    hostname: de-1010-xl.imsawadogo.com
     hostname_short: "de-1010-xl"
   # - ip_address: 5.6.7.8
   #   hostname: b.example.com
