@@ -4,6 +4,13 @@
 #
 #- include_vars: pckg.yml # see global_var folder for update
 # TODO: challenge - make this dynamic - disabled in the meantime
+#
+- name: Job 00 | import task resolv
+  ansible.builtin.import_tasks:
+    file: resolv.yml
+  #when: apt_host_pckg_lst | contains bind9
+
+
 - name: Job 01 | Reset the sources list (/etc/apt/sources.list)
   template:
     src: etc_apt_sources.list.j2

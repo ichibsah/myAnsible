@@ -21,6 +21,11 @@
     name: bind9
     state: restarted
 #
+- name: Restart fail2ban
+  ansible.builtin.service:
+    name: fail2ban
+    state: restarted
+#
 - name: restart sensu-services
   service:
     name: "{{ item }}"

@@ -17,6 +17,8 @@ instl_swrm_node: no                                 # Install Docker swarm Servi
 #
 strt_myiptbls_at_boot: no
 #
+upld_fail2bn_cfg: no                                # upload fail2ban config file
+#
 ipsets:
   - name: swarm_nodes
     type: 'hash:net'

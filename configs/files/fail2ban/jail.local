@@ -1,0 +1,5 @@
+[sshd]
+#Set ban time to 5 minutes
+bantime = 3600
+#Decrease the number of failed login attempts before banning to 2
+maxretry=2

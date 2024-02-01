@@ -29,3 +29,5 @@ pip_host_pckg_lst:                        # Install Host Specific PIP Packages w
 apt_hst_strt_srvc_lst:                    # Ensure Host Specific Services are running.
 #
 instl_filebot_pckg: no                    # Install Filebot on system
+#
+addresolv: no                             # add cloudflare ad dns resolv address temporary to resolv.conf

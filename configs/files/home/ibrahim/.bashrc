@@ -147,6 +147,8 @@ ssh-add ~/.ssh/ibrahim@4a999ff.key
 git config --global user.name $USER
 git config --global user.email $USER@$HOSTNAME
 git config --global core.editor nano
+git config --global init.defaultBranch main
+#git branch -m <name> # rename brunch
 #
 alias apv='ansible-playbook --vault-id ~/.ssh/.jenkins-vault.pw'
 #alias ansible-playbook='. ./environment.sh && ansible-playbook'

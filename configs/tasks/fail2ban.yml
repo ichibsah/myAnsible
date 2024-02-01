@@ -1,0 +1,15 @@
+# https://blog.swmansion.com/limiting-failed-ssh-login-attempts-with-fail2ban-7da15a2313b
+#
+- name: Job 00 | upload fail2ban configuration
+  template:
+    src: files/fail2ban/jail.local
+    dest: /etc/fail2ban/jail.local
+  notify: Restart fail2ban
+  when: upld_fail2bn_cfg
+  tags: 
+    - test
+
+# commands to use:
+# $ sudo fail2ban-client status
+# $ sudo fail2ban-client status sshd
+# $ sudo iptables -S

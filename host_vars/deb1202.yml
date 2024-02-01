@@ -33,3 +33,5 @@ apt_host_pckg_lst:                        # Install Host Specific Packages (keep
 #
 #
 instl_swrm_node: yes                                 # Install Docker swarm Service
+#
+addresolv: yes                            # add cloudflare ad dns resolv address temporary to resolv.conf

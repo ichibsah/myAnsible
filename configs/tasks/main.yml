@@ -13,6 +13,15 @@
     mode: 0700
   when: ansible_hostname != 'virthost01'
 #
+- name: Job 05.1 | Copy global/etc to etc on each linux server
+  copy:
+    src: "files/global/etc/"
+    dest: "/etc/"
+    owner: root
+    group: root
+    mode: 0700
+  when: ansible_os_family == 'Debian'
+#
 - name: Job 06 | import task bind
   ansible.builtin.import_tasks:
     file: bind.yml
@@ -68,3 +77,8 @@
   tags:
     - #test
     - swarm
+#
+- name: Job 15 | import task fail2ban
+  ansible.builtin.import_tasks:
+    file: fail2ban.yml
+  #when: apt_host_pckg_lst | contains bind9

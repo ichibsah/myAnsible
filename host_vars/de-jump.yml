@@ -13,7 +13,7 @@ ansible_become_pass: '{{ deb12_01_become_pass }}'
 prvs_copy_home: yes                       # Copy default user's home files in place
 prvs_root_passwd: yes                     # update root passward
 #
-dkr_copy_def_files: yes                   # Copy default docker files to target server
+dkr_copy_def_files: no                   # Copy default docker files to target server
 dkr_copy_etx_files: no                   # # Copy extended docker files to target host
 #
 dckr_fldr_lst:                            # Docker folder list that will be copied when set in the host variable
@@ -27,8 +27,15 @@ instl_def_pckg: yes                       # Install complete packages. A 'no' wi
 instl_utl_pckg: no                        # Install complete packages. A 'no' will remove it from the host (apt_util_lst)
 sysd_strt_srvc: yes                       # Start services
 instl_ansbl_pckg: no                      # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
-instl_docker_pckg: yes                    # Install Docker package (apt_docker_pckg_lst)
+instl_docker_pckg: no                    # Install Docker package (apt_docker_pckg_lst)
 apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
+  - fail2ban
 #
+apt_hst_strt_srvc_lst:                    # Ensure Services are running.
+  - fail2ban
 #
-instl_swrm_node: yes                                 # Install Docker swarm Service
+upld_fail2bn_cfg: yes                                # upload fail2ban config file
+#
+instl_swrm_node: no                                 # Install Docker swarm Service
+#
+addresolv: yes                            # add cloudflare ad dns resolv address temporary to resolv.conf
