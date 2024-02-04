@@ -1,0 +1,25 @@
+---
+- name: OTDS | Initialisation
+  hosts: ds_install
+  ignore_errors: true
+  ignore_unreachable: true
+  # remote_user: root
+  remote_user: ibrahim
+  become: true
+  become_user: root
+  roles:
+    - otds
+
+# - name: DOCEKERS | Initialisation - LOCALHOST
+#   hosts: local
+#   ignore_errors: true
+#   ignore_unreachable: true
+#   connection: local
+#   # remote_user: root
+#   remote_user: ibrahim
+#   become: true
+#   become_user: root
+#   roles:
+#     - dockers
+
+# complete, tested and working
