@@ -1,5 +1,15 @@
 # tasks file for reboot
 - name: Unconditionally reboot the machine with all defaults
   ansible.builtin.reboot:
+    reboot_timeout: 60
     test_command: whoami
     msg: "Reboot initiated by Ansible"
+#
+# reboot:
+#   pre_reboot_delay: 0 # not required. Seconds to wait before reboot. Passed as a parameter to the reboot command. On Linux, macOS and OpenBSD, this is converted to minutes and rounded down. If less than 60, it will be set to 0. On Solaris and FreeBSD, this will be seconds.
+#   post_reboot_delay: 0 # not required. Seconds to wait after the reboot command was successful before attempting to validate the system rebooted successfully. This is useful if you want wait for something to settle despite your connection already working.
+#   reboot_timeout: 600 # not required. Maximum seconds to wait for machine to reboot and respond to a test command. This timeout is evaluated separately for both reboot verification and test command success so the maximum execution time for the module is twice this amount.
+#   connect_timeout:  # not required. Maximum seconds to wait for a successful connection to the managed hosts before trying again. If unspecified, the default setting for the underlying connection plugin is used.
+#   test_command: whoami # not required. Command to run on the rebooted host and expect success from to determine the machine is ready for further tasks.
+#   msg: "Reboot initiated by Ansible" # not required. Message to display to users before reboot.
+#   search_paths: "['/sbin', '/usr/sbin', '/usr/local/sbin']" # not required. Paths to search on the remote machine for the C(shutdown) command. I(Only) these paths will be searched for the C(shutdown) command. C(PATH) is ignored in the remote node when searching for the C(shutdown) command.

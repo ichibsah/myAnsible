@@ -27,6 +27,14 @@
     upgrade: safe #
     force_apt_get: yes #
     cache_valid_time: "{{apt_cache_valid_time}}"
+  when: ansible_os_family == "Debian"
+#
+- name: Job 02.1 | Update the yum cache
+  dnf:
+    update_cache: yes
+  when: ansible_os_family != "Debian"
+  tags: 
+    - #test
 #
 # TODO: avoid using shell here - disabled in the meantime
 # - name: Job 03 | Check for cached .deb files
@@ -61,8 +69,20 @@
     update_cache: yes
     pkg: "{{apt_def_pckg_lst}}"
     state: present
-  when: instl_def_pckg
+  #when: instl_def_pckg
+  when: ansible_os_family == "Debian" and instl_def_pckg
   #tags: test
+#
+- name: Job 05.1 | INSTALL default packages
+  dnf:
+    update_cache: yes
+    list: "{{apt_def_pckg_lst}}"
+    state: present
+    #use_backend: dnf
+  when: ansible_os_family != "Debian" and instl_def_pckg
+  tags: 
+    - test
+#
 # TODO: run below when above fails
 # - name: Job 05 | INSTALL default packages
 #   apt:
@@ -94,7 +114,8 @@
     state: present
   loop:
     "{{apt_host_pckg_lst}}"
-  when: apt_host_pckg_lst.0 is defined
+  when: apt_host_pckg_lst.0 is defined and ansible_os_family == "Debian"
+  #when: ansible_os_family == "Debian" and instl_def_pckg
   tags: 
     - #test
 #

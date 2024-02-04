@@ -20,6 +20,8 @@ dkr_copy_etx_files: no                   # # Copy extended docker files to targe
 
 crntb_activate_cronjobs: no
 #
+ansible_become_pass: '{{ localhost_become_pass }}'
+#
 #
 ### APT | PACKAGES INSTALL ###
 instl_def_pckg: yes                       # Install complete packages. A 'no' will remove it from the host (apt_def_pckg_lst)

@@ -45,6 +45,17 @@
     validate: 'visudo -cf %s'
   when: ansible_os_family == 'Debian'
 #
+# echo "username  ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/username
+# https://docs.ansible.com/ansible/latest/collections/community/general/sudoers_module.html
+- name: Job 02.1 | Add sudo rights for deployment user.
+  community.general.sudoers:
+    name: ibrahim-as-root
+    state: present
+    user: ibrahim
+    runas: root
+    commands: ALL
+#
+
 # - name: Job-1003 | Copy deployment user's home files in place.
 #   copy:
 #     src: "files/home/ibrahim"
