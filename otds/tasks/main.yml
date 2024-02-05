@@ -1,5 +1,6 @@
 ---
 # tasks file for otds
+# https://github.com/ichibsah/tomcat-ansible
 - name: Job 01 | import task tomcat
   ansible.builtin.import_tasks:
     file: tomcat.yml
@@ -7,3 +8,16 @@
   tags:
     - #test
     - tomcat
+# $ ps aux|grep tomcat
+# $ systemctl status tomcat
+# http://194.164.62.97:8080/
+# sh tomcat/bin/version.sh
+# sudo find / -name "version.sh"
+# /usr/local/tomcat/bin/catalina.sh version
+# cd /usr/mack/apache-tomcat-x.0.xx/bin 
+# # ./version.sh
+# sudo /etc/init.d/tomcat version
+# cd %CATALINA_HOME%\bin
+# >> version
+# ps -ef |grep -i tomcat
+# w3m http://localhost:8080/
