@@ -1,2 +1,9 @@
 ---
 # tasks file for otds
+- name: Job 01 | import task tomcat
+  ansible.builtin.import_tasks:
+    file: tomcat.yml
+  #when: 
+  tags:
+    - #test
+    - tomcat

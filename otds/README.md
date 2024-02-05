@@ -1,38 +1,106 @@
-Role Name
-=========
+## Role info
 
-A brief description of the role goes here.
+> Ansible Role to Install Tomcat 9 on CentOS, Fedora, Debian and Ubuntu Linux.
 
-Requirements
-------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+## Tested on the following operating systems
 
-Role Variables
---------------
+- CentOS 8
+- CentOS 7
+- Fedora 36
+- Ubuntu 20.04 / Ubuntu 18.04
+- Debian 11 / Debian 10
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+## Tasks in the role
 
-Dependencies
-------------
+This role contains tasks to:
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+- Install basic packages required
+- Install Java
+- Add tomcat user and group
+- Download tomcat and install - configure systemd
+- Configure firewall
 
-Example Playbook
-----------------
+## How to use this role
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+- Clone the Project:
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+```
+$ git clone https://github.com/jmutai/tomcat-ansible.git
+$ cd tomcat-ansible
+```
 
-License
--------
+- Update your inventory, e.g:
 
-BSD
+```
+$ vim hosts
+[tomcat_nodes]
+192.168.10.10       # Remote user to act on
+```
 
-Author Information
-------------------
+- Update variables in playbook file - Set Tomcat version, remote user and Tomcat UI access credentials
+- Update ansible.cfg file if necessary
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+```
+$ vim tomcat-setup.yml
+- name: Tomcat deployment playbook
+  hosts: tomcat_nodes       # Inventory hosts group / server to act on
+  become: yes               # If to escalate privilege
+  become_method: sudo       # Set become method
+  remote_user: root         # Update username for remote server
+  vars:
+    tomcat_ver: 9.0.64                          # Tomcat version to install
+    tomcat_v_num: 9                             # Tomcat version number
+    ui_manager_user: manager                    # User who can access the UI manager section only
+    ui_manager_pass: Str0ngManagerP@ssw3rd      # UI manager user password
+    ui_admin_username: admin                    # User who can access bpth manager and admin UI sections
+    ui_admin_pass: Str0ngAdminP@ssw3rd          # UI admin password
+  roles:
+    - tomcat
+```
+
+If you are using non root remote user, then set username and enable sudo:
+
+```
+become: yes
+become_method: sudo
+```
+
+## Running Playbook
+
+Once all values are updated, you can then run the playbook against your nodes.
+
+Playbook executed as root user - with ssh key:
+
+```
+$ ansible-playbook -i hosts tomcat-setup.yml
+```
+
+Playbook executed as root user - with password:
+
+```
+$ ansible-playbook -i hosts tomcat-setup.yml --ask-pass
+```
+
+Playbook executed as sudo user - with password:
+
+```
+$ ansible-playbook -i hosts tomcat-setup.yml --ask-pass --ask-become-pass
+```
+
+Playbook executed as sudo user - with ssh key and sudo password:
+
+```
+$ ansible-playbook -i hosts tomcat-setup.yml --ask-become-pass
+```
+
+Playbook executed as sudo user - with ssh key and passwordless sudo:
+
+```
+$ ansible-playbook -i hosts tomcat-setup.yml --ask-become-pass
+```
+
+Execution should be successful without errors:
+
+```
+```
