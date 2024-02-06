@@ -11,6 +11,7 @@
 # $ ps aux|grep tomcat
 # $ systemctl status tomcat
 # http://194.164.62.97:8080/
+# http://de-suse-xl.imsawadogo.com:8080/
 # sh tomcat/bin/version.sh
 # sudo find / -name "version.sh"
 # /usr/local/tomcat/bin/catalina.sh version
