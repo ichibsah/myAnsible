@@ -1,0 +1,58 @@
+---
+#https://medium.com/@ranmalsl/ansible-how-to-automate-tomcat-package-deployment-cf0c474ee0af
+
+    - name: check if file exists
+      stat:
+        path: "{{ package_path }}/{{ old_filename }}"
+      register: file
+
+    - block:
+      - unarchive:
+          src:  "{{ package_path }}/{{ old_filename }}"     # unzip the ear file
+          dest: "{{ package_path }}"
+
+      - name: Rename ear file to war
+        copy:
+          src: "{{ package_path }}/{{ old_filename | regex_replace( '.ear','.war') }}"  
+          dest: "{{ package_path }}/{{ filename }}.war"
+
+      - name: Check available directories
+        find:
+          paths: "{{ package_path }}"
+          patterns: "*-INF"
+          file_type: directory
+          recurse: no
+        register: directories_to_delete 
+
+      - name: Remove INF directories which are not necessary for the deployment
+        file:
+          path: "{{ item.path }}"
+          state: absent
+        with_items:
+          - "{{ directories_to_delete.files }}" 
+
+      - name: Remove "{{ old_filename }}" 
+        file:
+          path: "{{ package_path }}/{{ old_filename }}"     # remove ear file after extracting
+          state: absent
+
+      when: file.stat.exists == true
+
+###
+
+  - systemd:
+      name: "{{ common_service }}"
+      state: stopped 
+
+  - name: backup catalina.out
+    copy:
+      src: "{{ common_path }}/logs/catalina.out"
+      dest: "{{ common_path }}/logs/catalina.out.ansible.{{ lookup('pipe', 'date +%Y%m%d-%H%M') }}"
+      remote_src: yes
+    ignore_errors: yes    # if log is not available play will run without breaking the execution
+
+  - name: Remove catalina.out
+    file:
+      path: "{{ common_path }}/logs/catalina.out"
+      state: absent
+    ignore_errors: yes    # if log is not available play will run without breaking the execution

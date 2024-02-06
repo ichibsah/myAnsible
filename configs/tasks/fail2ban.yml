@@ -7,7 +7,7 @@
   notify: Restart fail2ban
   when: upld_fail2bn_cfg
   tags: 
-    - test
+    - #test
 
 # commands to use:
 # $ sudo fail2ban-client status

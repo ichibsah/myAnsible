@@ -65,23 +65,14 @@
 #
 #TODO: find out why others fail here (d86df44 de-jump deb1202 112e275)
 - name: Job 05 | INSTALL default packages
-  apt:
-    update_cache: yes
-    pkg: "{{apt_def_pckg_lst}}"
+  package:
+    name: "{{apt_def_pckg_lst}}"
     state: present
   #when: instl_def_pckg
-  when: ansible_os_family == "Debian" and instl_def_pckg
-  #tags: test
+  when: instl_def_pckg
+  tags:
+    - #test
 #
-- name: Job 05.1 | INSTALL default packages
-  dnf:
-    update_cache: yes
-    list: "{{apt_def_pckg_lst}}"
-    state: present
-    #use_backend: dnf
-  when: ansible_os_family != "Debian" and instl_def_pckg
-  tags: 
-    - test
 #
 # TODO: run below when above fails
 # - name: Job 05 | INSTALL default packages
@@ -94,7 +85,7 @@
 #   when: instl_def_pckg
 #
 - name: Job 06 | REMOVE default packages # REMOVE #
-  apt:
+  ansible.builtin.package:
     autoremove: yes
     autoclean: yes
     pkg: "{{ apt_def_pckg_lst }}"
@@ -105,34 +96,36 @@
   apt_key:
     url: https://download.docker.com/linux/debian/gpg # not required. The URL to retrieve key from.
     state: present # not required. choices: absent;present. Ensures that the key is present (added) or absent (revoked).
-    validate_certs: no # not required. If C(no), SSL certificates for the target url will not be validated. This should only be used on personally controlled sites using self-signed certificates.
+    validate_certs: no
+  when: ansible_os_family == "Debian"
 #
 # Todo: Invalid data passed to ''loop'', it requires a list, got this instead: None.
 - name: Job 08 | Install Host Specific Packages
-  apt:
-    pkg: "{{item}}"
+  ansible.builtin.package:
+    name: "{{item}}"
     state: present
   loop:
     "{{apt_host_pckg_lst}}"
-  when: apt_host_pckg_lst.0 is defined and ansible_os_family == "Debian"
+  when: apt_host_pckg_lst.0 is defined
   #when: ansible_os_family == "Debian" and instl_def_pckg
   tags: 
     - #test
 #
 #  09.1.1 and  09.1.2 is not wrking properly.
 - name: Job 09.1.1 | Install Utilities Packages (method once)
-  apt:
-    pkg: "{{apt_util_lst}}" 
+  ansible.builtin.package:
+    name: "{{apt_util_lst}}" 
     state: present
   register: result
+  when: ansible_os_family == "Debian"
   #failed_when: "'FAILED' in result"
   #failed_when: "'no package' in result"
   #when: result is succeeded and instl_utl_pckg
   #tags: test
 #
 - name: Job 09.1.2 | Install Utilities Packages (method loop)
-  apt:
-    pkg: "{{item}}"
+  ansible.builtin.package:
+    name: "{{item}}"
     state: present
   loop:
     "{{apt_util_lst}}"
@@ -140,8 +133,8 @@
   #tags: test
 #
 - name: Job 10 | REMOVE Utilities Packages # REMOVE #
-  apt:
-    pkg: "{{apt_util_lst}}"
+  ansible.builtin.package:
+    name: "{{apt_util_lst}}"
     state: absent
   when: not instl_utl_pckg and not kill_remove
 #
@@ -160,7 +153,7 @@
   when: not instl_ansbl_pckg and not kill_remove
 
 - name: Job 13 | REMOVE ansible package using apt # REMOVE #
-  apt:
+  ansible.builtin.package:
     name:  
       "{{apt_ansbl_pckg_lst}}"
     state: absent
@@ -174,12 +167,12 @@
   when: apt_clean and apt_cache_check.stdout != "0"
 #
 - name: Job 15 | Remove packages that are no longer needed for dependencies
-  apt:
+  ansible.builtin.package:
     autoremove: "yes"
   when: apt_autoremove
 
 - name: Job 16 | Remove .deb files for packages no longer on your system
-  apt:
+  ansible.builtin.package:
     autoclean: "yes"
   when: apt_autoclean
 #
