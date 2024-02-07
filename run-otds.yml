@@ -9,6 +9,7 @@
   become_user: root
   roles:
     - otds
+    - solr
 
 # - name: DOCEKERS | Initialisation - LOCALHOST
 #   hosts: local
