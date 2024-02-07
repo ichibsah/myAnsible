@@ -1,4 +1,7 @@
 ---
+# https://gheorghina.github.io/ansible/solr/cloud/scaling/distribution/2018/06/04/setup-solr-cloud.html
+# https://ansible.jeffgeerling.com/
+# https://github.com/geerlingguy/solr-container
 - import_tasks: user.yml
   when: solr_create_user
 
