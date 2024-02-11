@@ -6,6 +6,7 @@ dkr_copy_def_files: yes                   # Copy default docker files to target 
 dkr_copy_etx_files: no                    # Copy extended docker files to target host
 #
 dckr_fldr_lst:                            # Docker folder list that will be copied when set in the host variable
+  - { fldr: "none" }
 #
 dsbl_dhcpvsx: no                             # Disable dhcp v6  
 
@@ -15,6 +16,8 @@ working_dir: "{{dckr_bs_pth}}/meryem-8090/"
 log_dir: "{{ working_dir}}logs" 
 # /*******/
 dckr_dmain_nme_pstfx: home.sawadogo.xyz
+#
+#
 # docker containers
 dckr_dpl_pihole: no
 dckr_dpl_iSpy: no

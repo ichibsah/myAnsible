@@ -71,16 +71,17 @@
 
 - name: Crontab | cronjob crntb_fldr_lst
   copy:
-    src: "files/{{item.fldr}}/crontab"
+    src: "files/{{ansible_hostname}}/crontab"
+    #src: "files/{{item.fldr}}/crontab"
     dest: "/opt/"
     owner: ibrahim
     group: ibrahim
     mode: 0744
-  with_items:
-    "{{ crntb_fldr_lst }}"
-  when: crntb_fldr_lst.0 is defined
+  #with_items:
+    #"{{ crntb_fldr_lst }}"
+  #when: crntb_fldr_lst.0 is defined
   tags: 
-    - #test
+    - test
 #
 - name: Crontab | /*REMOVE*/ cronjob vernissage.sh
   cron:

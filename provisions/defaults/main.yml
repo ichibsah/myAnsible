@@ -3,6 +3,7 @@
 #
 prvs_copy_home: yes             # Copy default user's home files in place
 prvs_root_passwd: no            # update root passward
+addLocalUser: no                # add a local user to specific host
 #
 #ansible_become_pass: '{{ localhost_become_pass }}'
 #

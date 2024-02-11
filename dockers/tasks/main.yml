@@ -20,14 +20,17 @@
 
 - name: Job 03 | Copy Specific docker folder(s) to target host
   copy:
-    src: "files/{{item.fldr}}/docker"
+    src: "files/{{ansible_hostname}}/docker"
+    #src: "files/{{item.fldr}}/docker"
     dest: "/opt/"
     owner: ibrahim
     group: ibrahim
     mode: 0744
-  with_items:
-    "{{ dckr_fldr_lst }}"
-  when: dckr_fldr_lst.0 is defined
+  #with_items:
+    #"{{ dckr_fldr_lst }}"
+  #when: dckr_fldr_lst.0 is defined
+  tags: 
+    - #test
 #
 #TODO: find a way to imporve the copy - shut it down and use docker deploy
 - name: Job 04 | Copy docker folder(s) to target host that matches "ansible_hostname"
@@ -87,7 +90,7 @@
 - name: Job 17 | import task plex
   ansible.builtin.import_tasks:
     file: 32400-plex.yml
-  #when: apt_host_pckg_lst | contains bind9
+  when: instl_docker_pckg and dckr_dpl_plex
 #
 - name: Job 18 | import task tubesync
   ansible.builtin.import_tasks:

@@ -112,7 +112,7 @@
     create_home: True
     #local: "{{item.local}}"
     state: present
-  #when: ansible_hostname == item.hosts
+  when: addLocalUser
   loop: "{{ localusers }}"
     #"{{ lookup('vars', 'somevar_' ~ other_var) }}"
   #tags: test
@@ -125,7 +125,7 @@
     key: "{{ lookup('file', 'files/authorized_key/{{item.key}}') }}"
   #when: ansible_hostname == item.hosts
   loop: "{{ localusers }}"
-  #when: "{{item.host}}" == 'all' or {{item.host}} == ansible_hostname
+  when: addLocalUser
   tags:
     - #test
 #
