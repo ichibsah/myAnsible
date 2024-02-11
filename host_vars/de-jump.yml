@@ -30,6 +30,7 @@ instl_ansbl_pckg: no                      # Install ansible using PIP (pip_ansbl
 instl_docker_pckg: no                    # Install Docker package (apt_docker_pckg_lst)
 apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
   - fail2ban
+  - crontab
 #
 apt_hst_strt_srvc_lst:                    # Ensure Services are running.
   - fail2ban

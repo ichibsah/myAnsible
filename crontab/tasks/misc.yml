@@ -81,7 +81,7 @@
     #"{{ crntb_fldr_lst }}"
   #when: crntb_fldr_lst.0 is defined
   tags: 
-    - test
+    - #test
 #
 - name: Crontab | /*REMOVE*/ cronjob vernissage.sh
   cron:

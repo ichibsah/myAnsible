@@ -53,6 +53,7 @@ apt_def_pckg_lst:                     # Install Default Packages on All Host
 - rsync
 - resolvconf
 - bash-completion # https://github.com/cykerway/complete-alias
+- cron
 #
 #apt_packages_list:
 #- python3-apt

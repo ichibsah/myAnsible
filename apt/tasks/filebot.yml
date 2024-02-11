@@ -24,15 +24,16 @@
 # 
 # --break-system-packages
 - name: Job 02 | Install FileBot
-  apt:
-    pkg: "{{item}}"
-    state: latest
+  package:
+    name: "{{item}}"
+    state: present
   with_items:
   - filebot
   - ffmpeg
   - libavcodec-extra 
   - x264
-  - openjdk17-headless
+  - default-jdk
+  - #openjdk17-headless
   - libavcodec-extra
   when: instl_filebot_pckg
   tags:
