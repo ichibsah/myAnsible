@@ -1,6 +1,6 @@
 ---
 # tasks file for dockers
-- name: Job 01 | Copy default docker files to "{{ansible_hostname}}"
+- name: Job 01 | Copy default docker files to "ansible_hostname"
   copy:
     src: "files/docker"
     dest: "/opt/"
