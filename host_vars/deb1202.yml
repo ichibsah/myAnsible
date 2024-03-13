@@ -33,6 +33,22 @@ apt_host_pckg_lst:                        # Install Host Specific Packages (keep
   - crontab
 #
 #
-instl_swrm_node: yes                                 # Install Docker swarm Service
+instl_swrm_node: yes                      # Install Docker swarm Service
 #
 addresolv: yes                            # add cloudflare ad dns resolv address temporary to resolv.conf
+#
+addLocalUser: yes                         # add a local user to specific host
+#
+localusers:
+  - name: joe
+    shell: /bin/bash
+    group: joe
+    groups: 
+      - sudo
+    append: True
+    state: present
+    key: joe.pub
+    create_home: True
+    local: True
+    hosts: deb1202
+    bashrc: /home/ibrahim/sandbox/myAnsible/configs/files/home/ibrahim/.bashrc

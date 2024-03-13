@@ -2,10 +2,10 @@
 #
 - name: Job 00 | Deploy Skylinewebservice - pull from git
   ansible.builtin.git:
-    #working_dir: "{{dckr_bs_pth}}/Skylinewebservice-8090/" 
-    #log_dir: "{{ working_dir}}logs" 
+    #working_dir_skyline: "{{dckr_bs_pth}}/Skylinewebservice-8094/" 
+    #log_dir: "{{ working_dir_skyline}}logs" 
     repo: https://github.com/skylinewebservice/skylinewebservice.com.git
-    dest: "{{ working_dir }}"
+    dest: "{{ working_dir_skyline }}"
     force: yes
     clone: yes
     update: yes
@@ -20,7 +20,7 @@
     #push: true
     tag: latest
     build:
-      path: "{{ working_dir }}"
+      path: "{{ working_dir_skyline }}"
       args:
         log_volume: "{{ log_dir }}"
         #listen_port: 8090
@@ -37,8 +37,8 @@
 #
 - name: Job 03 | Deploy Skylinewebservice - deploy container
   community.docker.docker_compose:
-    #working_dir: "/opt/docker/Skylinewebservice-8090/"
-    #working_dir: "{{dckr_bs_pth}}/Skylinewebservice-8090/"
+    #working_dir_skyline: "/opt/docker/Skylinewebservice-8094/"
+    #working_dir_skyline: "{{dckr_bs_pth}}/Skylinewebservice-8094/"
     #remove_images: all
     #remove_volumes: True
     #stopped: True

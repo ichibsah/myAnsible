@@ -13,6 +13,7 @@ dsbl_dhcpvsx: no                             # Disable dhcp v6
 # /*******/
 # find a way to declare them in the same file where they are needed
 working_dir: "{{dckr_bs_pth}}/meryem-8090/" 
+working_dir_skyline: "{{dckr_bs_pth}}/skyline-8094/" 
 log_dir: "{{ working_dir}}logs" 
 # /*******/
 dckr_dmain_nme_pstfx: home.sawadogo.xyz

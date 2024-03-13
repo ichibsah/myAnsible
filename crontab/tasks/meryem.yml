@@ -34,4 +34,4 @@
   when: not crntb_actvt_crnjbs_mrym
   tags: 
     - meryem
-    - test
+    - #test
