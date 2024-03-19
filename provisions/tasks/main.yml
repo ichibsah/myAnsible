@@ -106,7 +106,7 @@
     name: "{{item.name}}"
     update_password: on_create #always
     shell: "{{item.shell}}"
-    group: "{{item.group}}"
+    #group: "{{item.group}}"
     groups: "{{item.groups}}"
     #groups: "{{item.groups}}" #"{{lookup('item', 'groups')}}"
     password: "{{ localhost_become_pass | password_hash('sha512') }}"
@@ -118,6 +118,7 @@
   loop: "{{ localusers }}"
     #"{{ lookup('vars', 'somevar_' ~ other_var) }}"
   tags: 
+    - localusers
     - #test
 #
 # the 'item.key' must match the username for it to work
@@ -130,6 +131,7 @@
   loop: "{{ localusers }}"
   when: addLocalUser
   tags:
+    - localusers
     - #test
 #
 #
