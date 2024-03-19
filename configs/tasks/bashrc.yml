@@ -43,3 +43,31 @@
   when: ansible_os_family == 'Debian'
   tags:
     - #test
+#
+## copy same to localusers
+- name: Job 05 | copy .bashrc file to localusers
+  copy:
+    src: "files/home/ibrahim/.bashrc"
+    dest: "/home/{{item.name}}/"
+    owner: "{{item.name}}"
+    group: "{{item.name}}"
+    mode: 0744
+  when: addLocalUser
+  loop: "{{ localusers }}"
+  tags:
+    - localusers
+    - #test
+#
+- name: Job 06 | copy .ssh/config file to localusers
+  copy:
+    src: "files/home/.ssh/config"
+    dest: "/home/{{item.name}}/.ssh/"
+    owner: "{{item.name}}"
+    group: "{{item.name}}"
+    mode: 0644
+  when: addLocalUser
+  loop: "{{ localusers }}"
+  tags:
+    - localusers
+    - #test
+#

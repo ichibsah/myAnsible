@@ -19,6 +19,10 @@ strt_myiptbls_at_boot: no
 #
 upld_fail2bn_cfg: no                                # upload fail2ban config file
 #
+#
+addLocalUser: no                # add a local user to specific host
+#
+#
 ipsets:
   - name: swarm_nodes
     type: 'hash:net'
