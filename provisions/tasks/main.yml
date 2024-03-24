@@ -112,6 +112,7 @@
     password: "{{ localhost_become_pass | password_hash('sha512') }}"
     append: "{{item.append}}"
     create_home: True
+    generate_ssh_key: "{{item.gen_ssh_key}}"
     #local: "{{item.local}}"
     state: present
   when: addLocalUser

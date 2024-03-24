@@ -30,6 +30,7 @@ sysd_strt_srvc: yes                       # Start services
 instl_ansbl_pckg: no                      # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
 instl_docker_pckg: yes                    # Install Docker package (apt_docker_pckg_lst)
 apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
+  - python3-virtualenv
   - #bind9
 dckr_fldr_lst:                            # Docker folder list that will be copied when set in the host variable
 - #{ fldr: "4a999ff" }
@@ -51,9 +52,25 @@ localusers:
     group: joe
     groups: 
       - sudo
+      - docker
     append: True
     state: present
     key: joe.pub
+    gen_ssh_key: True
+    create_home: True
+    local: True
+    hosts: deb1202
+    bashrc: /home/ibrahim/sandbox/myAnsible/configs/files/home/ibrahim/.bashrc
+  - name: thelma
+    shell: /bin/bash
+    group: thelma
+    groups: 
+      - sudo
+      - docker
+    append: True
+    state: present
+    key: thelma.pub
+    gen_ssh_key: True
     create_home: True
     local: True
     hosts: deb1202
