@@ -232,3 +232,4 @@ export EDITOR=nano
 #
 
 # ssh-keygen -t rsa -b 2048 -C "email" -f ~/.ssh/name.first_2048bit_id_rsa
+# ssh-keygen -t rsa -b 2048 -C "joe@gh-dev-xl" -f ~/.ssh/id_rsa
