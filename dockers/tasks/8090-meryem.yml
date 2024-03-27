@@ -1,6 +1,10 @@
 ---
 #
 - name: Job 00 | Deploy Meryem - pull from git
+  vars:
+    working_dir: "{{dckr_bs_pth}}/meryem-8090/" 
+    log_dir: "{{ working_dir}}logs" 
+    #http://test.katja-meryem-bruegel.de/
   ansible.builtin.git:
     #working_dir: "{{dckr_bs_pth}}/meryem-8090/" 
     #log_dir: "{{ working_dir}}logs" 

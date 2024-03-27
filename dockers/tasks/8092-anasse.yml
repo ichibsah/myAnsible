@@ -1,9 +1,14 @@
 ---
 #
 - name: Job 00 | Deploy anasse - pull from git
+  vars:
+    working_dir: "{{dckr_bs_pth}}/anasse-8092/" 
+    log_dir: "{{ working_dir}}logs" 
+    #http://test.anasse.de
   ansible.builtin.git:
     #working_dir: "{{dckr_bs_pth}}/anasse-8092/" 
     #log_dir: "{{ working_dir}}logs" 
+    #repo: https://github.com/skylinewebservice/anasse.git
     repo: https://github.com/ichibsah/anasse.git
     dest: "{{ working_dir }}"
     force: yes
@@ -11,8 +16,8 @@
     update: yes
     remote: origin
   # when: instl_docker_pckg and dckr_dpl_anasse
-  # tags:
-  #   - test
+  tags:
+    - #test
 #
 - name: Job 01 | Deploy anasse - build image
   community.docker.docker_image:
