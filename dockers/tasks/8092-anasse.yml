@@ -2,15 +2,15 @@
 #
 - name: Job 00 | Deploy anasse - pull from git
   vars:
-    working_dir: "{{dckr_bs_pth}}/anasse-8092/" 
-    log_dir: "{{ working_dir}}logs" 
+    working_dir2: "{{dckr_bs_pth}}/anasse-8092/" 
+    log_dir: "{{ working_dir2 }}logs" 
     #http://test.anasse.de
   ansible.builtin.git:
     #working_dir: "{{dckr_bs_pth}}/anasse-8092/" 
     #log_dir: "{{ working_dir}}logs" 
     #repo: https://github.com/skylinewebservice/anasse.git
     repo: https://github.com/ichibsah/anasse.git
-    dest: "{{ working_dir }}"
+    dest: "{{ working_dir2 }}"
     force: yes
     clone: yes
     update: yes
@@ -20,12 +20,15 @@
     - #test
 #
 - name: Job 01 | Deploy anasse - build image
+  vars:
+    working_dir1: "{{dckr_bs_pth}}/anasse-8092/" 
+    log_dir: "{{ working_dir1}}logs" 
   community.docker.docker_image:
     name: anasse
     #push: true
     tag: latest
     build:
-      path: "{{ working_dir }}"
+      path: "{{ working_dir1 }}"
       args:
         log_volume: "{{ log_dir }}"
         #listen_port: 8092

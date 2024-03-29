@@ -207,6 +207,8 @@ alias apr='apropos'
 alias z='ps aux | egrep "Z|defunct"' # zombie processes
 alias diso="nohup $ > ~/disown/output-$(date +%F).log 2>&1 &"
 # ******************
+alias ver='uname -srm && cat /etc/*version && hostnamectl && cat /etc/issue && cat /etc/os-release && lsb_release -a'
+# ******************
 
 
 
