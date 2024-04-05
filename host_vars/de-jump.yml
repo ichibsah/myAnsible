@@ -40,3 +40,5 @@ upld_fail2bn_cfg: yes                                # upload fail2ban config fi
 instl_swrm_node: no                                 # Install Docker swarm Service
 #
 addresolv: yes                            # add cloudflare ad dns resolv address temporary to resolv.conf
+#
+instl_vctr: yes

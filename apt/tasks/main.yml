@@ -231,6 +231,14 @@
     file: filebot.yml
   #when: apt_host_pckg_lst | contains bind9
 #
+- name: Job 22 | import task vector
+  ansible.builtin.import_tasks:
+    file: vector.yml
+  #when: apt_host_pckg_lst | contains bind9
+  when: instl_def_pckg and instl_vctr
+  tags: 
+    - test
+#
 # REBOOT #
 # Rebbot should be done last at all times
 - name: Job 99 | import task reboot

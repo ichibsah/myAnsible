@@ -209,6 +209,8 @@ alias diso="nohup $ > ~/disown/output-$(date +%F).log 2>&1 &"
 # ******************
 alias ver='uname -srm && cat /etc/*version && hostnamectl && cat /etc/issue && cat /etc/os-release && lsb_release -a'
 # ******************
+alias audit='aureport -au -i | more && aureport -au -i --success | more && aureport -au -i --failed | more && aureport -l --success --summary -i | more'
+# ******************
 
 
 

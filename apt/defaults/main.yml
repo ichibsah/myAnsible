@@ -31,3 +31,5 @@ apt_hst_strt_srvc_lst:                    # Ensure Host Specific Services are ru
 instl_filebot_pckg: no                    # Install Filebot on system
 #
 addresolv: no                             # add cloudflare ad dns resolv address temporary to resolv.conf
+#
+instl_vctr: no
