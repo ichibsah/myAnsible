@@ -31,6 +31,8 @@ instl_ansbl_pckg: no                      # Install ansible using PIP (pip_ansbl
 instl_docker_pckg: yes                    # Install Docker package (apt_docker_pckg_lst)
 apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
   - bind9
+  - telnetd
+  - telnet    # systemctl status inetd
 dckr_fldr_lst:                            # Docker folder list that will be copied when set in the host variable
 - { fldr: "4a999ff" }
 
@@ -40,3 +42,4 @@ crntb_fldr_lst:                            # Crontab folder list that will be co
 crntb_actvt_crnjbs_mrym: no
 dckr_dpl_meryem: yes
 dckr_dpl_anasse: yes
+dckr_dpl_opendot: yes

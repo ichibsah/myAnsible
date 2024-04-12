@@ -20,7 +20,6 @@ apt_util_lst:                           # # Install utilities packages
   - mtr
   - multitail
   - ncdu
-  #- netcat
   - pciutils
   - pv
   - smem
@@ -36,6 +35,8 @@ apt_util_lst:                           # # Install utilities packages
   - cheat # https://www.makeuseof.com/run-linux-commands-in-background/
   - fish
   - hstr
+  - telnetd
+  - telnet    # systemctl status inetd
 #
 apt_def_pckg_lst:                     # Install Default Packages on All Host
 - gpg

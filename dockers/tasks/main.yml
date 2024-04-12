@@ -168,6 +168,13 @@
     - anasse
     - #test  
 #
+- name: Job 32 | import task opendot
+  ansible.builtin.import_tasks:
+    file: 8098-opendot.yml
+  when: instl_docker_pckg and dckr_dpl_opendot
+  tags:
+    - opendot
+    - test  
 #
 #
 # keep this last
