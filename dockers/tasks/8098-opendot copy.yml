@@ -26,7 +26,7 @@
     msg: "Directory is failed"
   when: changes_in_git_pull is failed
 
-- name: Run only if the task that registered the "result" variable succeeds # just the green color
+- name: Run only if the task that registered the "result" variable succeeds
   ansible.builtin.debug:
     msg: "Directory is succeeded"
   when: changes_in_git_pull is succeeded
@@ -41,17 +41,7 @@
     msg: "Directory is changed"
   when: changes_in_git_pull is changed
 #
-- name: Job 01 | Delete old image
-  docker_image:
-    name:  opendot 
-    force:  True
-    force_absent: True
-    rm: True # not required. Remove intermediate containers after build. Please use I(build.rm) instead. This option will be removed in Ansible 2.12.
-    nocache: True # not required. Do not use cache when building an image. Please use I(build.nocache) instead. This option will be removed in Ansible 2.12.
-    state: absent # not required. choices: absent;present;build. Make assertions about the state of an image. When C(absent) an image will be removed. Use the force option to un-tag and remove all images matching the provided name. When C(present) check if an image exists using the provided name and tag. If the image is not found or the force option is used, the image will either be pulled, built or loaded, depending on the I(source) option. By default the image will be pulled from Docker Hub, or the registry specified in the image's name. Note that this will change in Ansible 2.12, so to make sure that you are pulling, set I(source) to C(pull). To build the image, provide a I(path) value set to a directory containing a context and Dockerfile, and set I(source) to C(build). To load an image, specify I(load_path) to provide a path to an archive file. To tag an image to a repository, provide a I(repository) path. If the name contains a repository path, it will be pushed. *Note:* C(state=build) is DEPRECATED and will be removed in Ansible 2.11. Specifying C(build) will behave the same as C(present).
-  when: changes_in_git_pull is changed  
-#      
-- name: Job 02 | Deploy opendot - build image
+- name: Job 01 | Deploy opendot - build image
   vars:
     working_dir1: "{{dckr_bs_pth}}/opendot-8098/" 
     log_dir: "{{ working_dir1}}logs" 
@@ -64,11 +54,16 @@
       args:
         log_volume: "{{ log_dir }}"
         #listen_port: 8098
+    # As 'latest' usually already is present, we need to enable overwriting of existing tags:
     force_tag: true
     force_source: true
     source: build
-    nocache: True
-  when: changes_in_git_pull is changed    
+  # when: instl_docker_pckg and dckr_dpl_opendot    
+  # tags:
+  #   - test    
+#
+#- name: Job 02 | Deploy opendot - remove old image
+#  community.docker.docker_image:
 #
 - name: Job 03 | Deploy opendot - deploy container
   community.docker.docker_compose:
@@ -99,7 +94,6 @@
           #   - /net/mediafiles/mediaFiles/TV-Shows:/tvshows
           #   - /net/mediafiles/mediaFiles/Movies:/movies
   # when: instl_docker_pckg and dckr_dpl_opendot
-  when: changes_in_git_pull is changed
   register: output
   #
   # for debug purpose only - disabled in the meantime
@@ -108,13 +102,12 @@
 #     var: output
 #   #tags: test
   #
-- name: Job 03 | Verify that opendot is running
+- name: Verify that opendot is running
   ansible.builtin.assert:
     that:
       - "output.services.opendot.opendot_con.state.running"
       - #"output.services.mysql.ansiblemysql.state.running"
   # when: instl_docker_pckg and dckr_dpl_opendot
-  when: changes_in_git_pull is changed
   tags:
     - assert
     - #test

@@ -237,7 +237,7 @@
   #when: apt_host_pckg_lst | contains bind9
   when: instl_def_pckg and instl_vctr
   tags: 
-    - test
+    - #test
 #
 # REBOOT #
 # Rebbot should be done last at all times
