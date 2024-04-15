@@ -211,6 +211,8 @@ alias ver='uname -srm && cat /etc/*version && hostnamectl && cat /etc/issue && c
 # ******************
 alias audit='aureport -au -i | more && aureport -au -i --success | more && aureport -au -i --failed | more && aureport -l --success --summary -i | more'
 # ******************
+export GIT_SSH_COMMAND="ssh -i /home/$USER/.ssh/id_rsa -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
+# ******************
 
 
 
