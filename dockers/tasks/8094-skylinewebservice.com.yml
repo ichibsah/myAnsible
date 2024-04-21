@@ -1,6 +1,10 @@
 ---
 #
 - name: Job 00 | Deploy Skylinewebservice - pull from git
+  vars:
+    working_dir2: "{{dckr_bs_pth}}/opendot-8098/" 
+    log_dir: "{{ working_dir2 }}logs"
+    prg_name: "skylinewebservice"
   ansible.builtin.git:
     #working_dir_skyline: "{{dckr_bs_pth}}/Skylinewebservice-8094/" 
     #log_dir: "{{ working_dir_skyline}}logs" 
@@ -11,14 +15,56 @@
     clone: yes
     update: yes
     remote: origin
-    key_file: /home/ibrahim/.ssh/ibrahim@4a999ff.key
+    #key_file: /home/ibrahim/.ssh/ibrahim@4a999ff.key
+    #key_file: "{{ lookup('ansible.builtin.file', '/home/ibrahim/.ssh/id_rsa') }}"
+    #key_file: ~/.ssh/id_rsa
+    key_file: /home/ibrahim/.ssh/id_rsa # file must exist on remote server
+    accept_hostkey: yes
+  check_mode: true
+  register: changes_in_git_pull
   # when: instl_docker_pckg and dckr_dpl_Skylinewebservice
   # tags:
   #   - test
 #
-- name: Job 01 | Deploy Skylinewebservice - build image
+#
+- name: Run only if the task that registered the "result" variable fails
+  ansible.builtin.debug:
+    msg: "Directory is failed"
+  when: changes_in_git_pull is failed
+
+- name: Run only if the task that registered the "result" variable succeeds # just the green color
+  ansible.builtin.debug:
+    msg: "Directory is succeeded"
+  when: changes_in_git_pull is succeeded
+
+- name: Run only if the task that registered the "result" variable is skipped
+  ansible.builtin.debug:
+    msg: "Directory is skipped"
+  when: changes_in_git_pull is skipped
+
+- name: Run only if the task that registered the "result" variable changed something.
+  ansible.builtin.debug:
+    msg: "Directory is changed"
+  when: changes_in_git_pull is changed
+#
+- name: Job 01 | Delete old image
+  docker_image:
+    name:  "{{ prg_name }}"
+    #force:  True
+    force_absent: True
+    #rm: True # not required. Remove intermediate containers after build. Please use I(build.rm) instead. This option will be removed in Ansible 2.12.
+    #nocache: True # not required. Do not use cache when building an image. Please use I(build.nocache) instead. This option will be removed in Ansible 2.12.
+    state: absent # not required. choices: absent;present;build. Make assertions about the state of an image. When C(absent) an image will be removed. Use the force option to un-tag and remove all images matching the provided name. When C(present) check if an image exists using the provided name and tag. If the image is not found or the force option is used, the image will either be pulled, built or loaded, depending on the I(source) option. By default the image will be pulled from Docker Hub, or the registry specified in the image's name. Note that this will change in Ansible 2.12, so to make sure that you are pulling, set I(source) to C(pull). To build the image, provide a I(path) value set to a directory containing a context and Dockerfile, and set I(source) to C(build). To load an image, specify I(load_path) to provide a path to an archive file. To tag an image to a repository, provide a I(repository) path. If the name contains a repository path, it will be pushed. *Note:* C(state=build) is DEPRECATED and will be removed in Ansible 2.11. Specifying C(build) will behave the same as C(present).
+  when: changes_in_git_pull is changed
+#
+- name: Job 02 | Deploy Skylinewebservice - build image
+  vars:
+    working_dir2: "{{dckr_bs_pth}}/Skylinewebservice-8094/" 
+    #log_dir: "{{ working_dir2 }}logs"
+    log_dir: "{{ working_dir_skyline}}logs" 
+    prg_name: "skylinewebservice"
   community.docker.docker_image:
-    name: Skylinewebservice
+    name: "{{ prg_name }}"
     #push: true
     tag: latest
     build:
@@ -30,6 +76,7 @@
     force_tag: true
     force_source: true
     source: build
+  when: changes_in_git_pull is changed
   # when: instl_docker_pckg and dckr_dpl_Skylinewebservice    
   # tags:
   #   - test    
@@ -52,8 +99,8 @@
       services:
         Skylinewebservice:
           hostname: https://Skylinewebservice{{ dmain_pstfx }}"
-          container_name: Skylinewebservice_con
-          image: Skylinewebservice:latest
+          container_name: skylinewebservice_con
+          image: skylinewebservice:latest
           ports:
             - 8094:8000 
           restart: always
@@ -66,6 +113,7 @@
           #   - /net/mediafiles/mediaFiles/TV-Shows:/tvshows
           #   - /net/mediafiles/mediaFiles/Movies:/movies
   # when: instl_docker_pckg and dckr_dpl_Skylinewebservice
+  when: changes_in_git_pull is changed
   register: output
   #
   # for debug purpose only - disabled in the meantime
@@ -77,7 +125,7 @@
 - name: Verify that Skylinewebservice is running
   ansible.builtin.assert:
     that:
-      - "output.services.Skylinewebservice.Skylinewebservice_con.state.running"
+      - "output.services.Skylinewebservice.skylinewebservice_con.state.running"
       - #"output.services.mysql.ansiblemysql.state.running"
   # when: instl_docker_pckg and dckr_dpl_Skylinewebservice
   tags:
@@ -171,3 +219,29 @@
 #   archive:  # not required. Specify archive file path with extension. If specified, creates an archive file of the specified format containing the tree structure for the source tree. Allowed archive formats ["zip", "tar.gz", "tar", "tgz"] This will clone and perform git archive from local directory as not all git servers support git archive.
 #   separate_git_dir:  # not required. The path to place the cloned repository. If specified, Git repository can be separated from working tree.
 #   gpg_whitelist: [] # not required. A list of trusted GPG fingerprints to compare to the fingerprint of the GPG-signed commit. Only used when I(verify_commit=yes).
+
+
+
+
+#
+# github_key:
+#   token:  # required. GitHub Access Token with permission to list and create public keys.
+#   name:  # required. SSH key name
+#   pubkey:  # not required. SSH public key value. Required when C(state=present).
+#   state: present # not required. choices: present;absent. Whether to remove a key, ensure that it exists, or update its value.
+#   force: yes # not required. The default is C(yes), which will replace the existing remote key if it's different than C(pubkey). If C(no), the key will only be set if no key with the given C(name) exists.
+
+
+#
+# github_deploy_key:
+#   owner:  # required. The name of the individual account or organization that owns the GitHub repository.
+#   repo:  # required. The name of the GitHub repository.
+#   name:  # required. The name for the deploy key.
+#   key:  # required. The SSH public key to add to the repository as a deploy key.
+#   read_only: yes # not required. If C(true), the deploy key will only be able to read repository contents. Otherwise, the deploy key will be able to read and write.
+#   state: present # not required. choices: present;absent. The state of the deploy key.
+#   force: no # not required. If C(true), forcefully adds the deploy key by deleting any existing deploy key with the same public key or title.
+#   username:  # not required. The username to authenticate with. Should not be set when using personal access token
+#   password:  # not required. The password to authenticate with. Alternatively, a personal access token can be used instead of I(username) and I(password) combination.
+#   token:  # not required. The OAuth2 token or personal access token to authenticate with. Mutually exclusive with I(password).
+#   otp:  # not required. The 6 digit One Time Password for 2-Factor Authentication. Required together with I(username) and I(password).
