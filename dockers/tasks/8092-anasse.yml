@@ -2,64 +2,102 @@
 #
 - name: Job 00 | Deploy anasse - pull from git
   vars:
-    working_dir2: "{{dckr_bs_pth}}/anasse-8092/" 
-    log_dir: "{{ working_dir2 }}logs" 
-    #http://test.anasse.de
+    working_dir: "{{dckr_bs_pth}}/anasse-8092/" 
+    log_dir: "{{ working_dir }}logs"
+    prg_name: "anasse"
   ansible.builtin.git:
-    #working_dir: "{{dckr_bs_pth}}/anasse-8092/" 
-    #log_dir: "{{ working_dir}}logs" 
-    #repo: https://github.com/skylinewebservice/anasse.git
-    repo: https://github.com/ichibsah/anasse.git
-    dest: "{{ working_dir2 }}"
+    repo: git@github.com:ichibsah/anasse.git
+    dest: "{{ working_dir }}"
     force: yes
     clone: yes
     update: yes
     remote: origin
-  # when: instl_docker_pckg and dckr_dpl_anasse
-  tags:
-    - #test
+    key_file: /home/ibrahim/.ssh/id_rsa # file must exist on remote server
+    accept_hostkey: yes
+  check_mode: false
+  register: changes_in_git_pull
 #
-- name: Job 01 | Deploy anasse - build image
+#
+- name: Run only if the task that registered the "result" variable fails
+  ansible.builtin.debug:
+    msg: "Directory is failed"
+  when: changes_in_git_pull is failed
+
+- name: Run only if the task that registered the "result" variable succeeds # just the green color
+  ansible.builtin.debug:
+    msg: "Directory is succeeded"
+  when: changes_in_git_pull is succeeded
+
+- name: Run only if the task that registered the "result" variable is skipped
+  ansible.builtin.debug:
+    msg: "Directory is skipped"
+  when: changes_in_git_pull is skipped
+
+- name: Run only if the task that registered the "result" variable changed something.
+  ansible.builtin.debug:
+    msg: "Directory is changed"
+  when: changes_in_git_pull is changed
+#
+#
+- name: Job 01 | Delete container
   vars:
-    working_dir1: "{{dckr_bs_pth}}/anasse-8092/" 
-    log_dir: "{{ working_dir1}}logs" 
-  community.docker.docker_image:
-    name: anasse
-    #push: true
-    tag: latest
-    build:
-      path: "{{ working_dir1 }}"
-      args:
-        log_volume: "{{ log_dir }}"
-        #listen_port: 8092
-    # As 'latest' usually already is present, we need to enable overwriting of existing tags:
-    force_tag: true
-    force_source: true
-    source: build
-  # when: instl_docker_pckg and dckr_dpl_anasse    
-  # tags:
-  #   - test    
-#
-#- name: Job 02 | Deploy anasse - remove old image
-#  community.docker.docker_image:
-#
-- name: Job 03 | Deploy anasse - deploy container
+    prg_name: "anasse"
+    con_name: "{{prg_name}}_con"
   community.docker.docker_compose:
-    #working_dir: "/opt/docker/anasse-8092/"
-    #working_dir: "{{dckr_bs_pth}}/anasse-8092/"
-    #remove_images: all
-    #remove_volumes: True
-    #stopped: True
-    #state: absent
-    #
-    project_name: anasse
+    remove_images: all
+    remove_volumes: True
+    stopped: True
+    state: absent
+    project_name: "{{ prg_name }}"
     definition:
       version: '3.9'
       services:
         anasse:
-          hostname: https://anasse{{ dmain_pstfx }}"
-          container_name: anasse_con
-          image: anasse:latest
+          container_name: "{{con_name}}"
+          image: "{{ prg_name }}:latest"
+  when: changes_in_git_pull is changed
+#
+- name: Job 01 | Delete old image
+  vars:
+    prg_name: "anasse"
+  docker_image:
+    name:  "{{ prg_name }}"
+    force_absent: True
+    state: absent
+  when: changes_in_git_pull is changed
+#
+- name: Job 02 | Deploy anasse - build image
+  vars:
+    working_dir: "{{dckr_bs_pth}}/anasse-8092/" 
+    log_dir: "{{ working_dir }}logs"
+    prg_name: "anasse"
+  community.docker.docker_image:
+    name: "{{ prg_name }}"
+    build:
+      path: "{{ working_dir }}"
+      args:
+        log_volume: "{{ log_dir }}"
+    force_tag: true
+    force_source: true
+    source: build
+    tag: latest
+  when: changes_in_git_pull is changed
+#
+- name: Job 03 | Deploy anasse - deploy container
+  vars:
+    working_dir: "{{dckr_bs_pth}}/anasse-8092/" 
+    log_dir: "{{ working_dir }}logs"
+    prg_name: "anasse"
+    con_name: "{{prg_name}}_con"
+  community.docker.docker_compose:
+    project_name: anasse
+    definition:
+      version: '3.9'
+      services:
+        Anasse:
+          hostname: https://{{prg_name}}{{ dmain_pstfx }}"
+          container_name: "{{con_name}}"
+          image: "{{prg_name}}:latest"
           ports:
             - 8092:8000 
           restart: always
@@ -71,25 +109,19 @@
           #   - /opt/docker/emby-8096/emby:/config
           #   - /net/mediafiles/mediaFiles/TV-Shows:/tvshows
           #   - /net/mediafiles/mediaFiles/Movies:/movies
-  # when: instl_docker_pckg and dckr_dpl_anasse
+  when: changes_in_git_pull is changed or changes_in_git_pull is succeeded
   register: output
-  #
-  # for debug purpose only - disabled in the meantime
-# - name: Show results
-#   ansible.builtin.debug:
-#     var: output
-#   #tags: test
-  #
+#
 - name: Verify that anasse is running
   ansible.builtin.assert:
     that:
-      - "output.services.anasse.anasse_con.state.running"
+      - "output.services.Anasse.anasse_con.state.running"
       - #"output.services.mysql.ansiblemysql.state.running"
-  # when: instl_docker_pckg and dckr_dpl_anasse
   tags:
     - assert
-    - #test
-
+#
+#
+#
 # # https://mariushosting.com/how-to-install-emby-on-your-synology-nas/
 
 # git:
@@ -151,3 +183,55 @@
 #   tls: False # not required. Secure the connection to the API by using TLS without verifying the authenticity of the Docker host server. Note that if I(validate_certs) is set to C(yes) as well, it will take precedence. If the value is not specified in the task, the value of environment variable C(DOCKER_TLS) will be used instead. If the environment variable is not set, the default value will be used.
 #   validate_certs: False # not required. Secure the connection to the API by using TLS and verifying the authenticity of the Docker host server. If the value is not specified in the task, the value of environment variable C(DOCKER_TLS_VERIFY) will be used instead. If the environment variable is not set, the default value will be used.
 #   debug: False # not required. Debug mode
+
+
+#
+# git:
+#   repo:  # required. git, SSH, or HTTP(S) protocol address of the git repository.
+#   dest:  # required. The path of where the repository should be checked out. This parameter is required, unless C(clone) is set to C(no).
+#   version: HEAD # not required. What version of the repository to check out.  This can be the literal string C(HEAD), a branch name, a tag name. It can also be a I(SHA-1) hash, in which case C(refspec) needs to be specified if the given revision is not already available.
+#   accept_hostkey: no # not required. if C(yes), ensure that "-o StrictHostKeyChecking=no" is present as an ssh option.
+#   ssh_opts:  # not required. Creates a wrapper script and exports the path as GIT_SSH which git then automatically uses to override ssh arguments. An example value could be "-o StrictHostKeyChecking=no" (although this particular option is better set via C(accept_hostkey)).
+#   key_file:  # not required. Specify an optional private key file path, on the target host, to use for the checkout.
+#   reference:  # not required. Reference repository (see "git clone --reference ...")
+#   remote: origin # not required. Name of the remote.
+#   refspec:  # not required. Add an additional refspec to be fetched. If version is set to a I(SHA-1) not reachable from any branch or tag, this option may be necessary to specify the ref containing the I(SHA-1). Uses the same syntax as the 'git fetch' command. An example value could be "refs/meta/config".
+#   force: no # not required. If C(yes), any modified files in the working repository will be discarded.  Prior to 0.7, this was always 'yes' and could not be disabled.  Prior to 1.9, the default was `yes`
+#   depth:  # not required. Create a shallow clone with a history truncated to the specified number or revisions. The minimum possible value is C(1), otherwise ignored. Needs I(git>=1.9.1) to work correctly.
+#   clone: yes # not required. If C(no), do not clone the repository even if it does not exist locally
+#   update: yes # not required. If C(no), do not retrieve new revisions from the origin repository Operations like archive will work on the existing (old) repository and might not respond to changes to the options version or remote.
+#   executable:  # not required. Path to git executable to use. If not supplied, the normal mechanism for resolving binary paths will be used.
+#   bare: no # not required. if C(yes), repository will be created as a bare repo, otherwise it will be a standard repo with a workspace.
+#   umask:  # not required. The umask to set before doing any checkouts, or any other repository maintenance.
+#   recursive: yes # not required. if C(no), repository will be cloned without the --recursive option, skipping sub-modules.
+#   track_submodules: no # not required. if C(yes), submodules will track the latest commit on their master branch (or other branch specified in .gitmodules).  If C(no), submodules will be kept at the revision specified by the main project. This is equivalent to specifying the --remote flag to git submodule update.
+#   verify_commit: no # not required. if C(yes), when cloning or checking out a C(version) verify the signature of a GPG signed commit. This requires C(git) version>=2.1.0 to be installed. The commit MUST be signed and the public key MUST be present in the GPG keyring.
+#   archive:  # not required. Specify archive file path with extension. If specified, creates an archive file of the specified format containing the tree structure for the source tree. Allowed archive formats ["zip", "tar.gz", "tar", "tgz"] This will clone and perform git archive from local directory as not all git servers support git archive.
+#   separate_git_dir:  # not required. The path to place the cloned repository. If specified, Git repository can be separated from working tree.
+#   gpg_whitelist: [] # not required. A list of trusted GPG fingerprints to compare to the fingerprint of the GPG-signed commit. Only used when I(verify_commit=yes).
+
+
+
+
+#
+# github_key:
+#   token:  # required. GitHub Access Token with permission to list and create public keys.
+#   name:  # required. SSH key name
+#   pubkey:  # not required. SSH public key value. Required when C(state=present).
+#   state: present # not required. choices: present;absent. Whether to remove a key, ensure that it exists, or update its value.
+#   force: yes # not required. The default is C(yes), which will replace the existing remote key if it's different than C(pubkey). If C(no), the key will only be set if no key with the given C(name) exists.
+
+
+#
+# github_deploy_key:
+#   owner:  # required. The name of the individual account or organization that owns the GitHub repository.
+#   repo:  # required. The name of the GitHub repository.
+#   name:  # required. The name for the deploy key.
+#   key:  # required. The SSH public key to add to the repository as a deploy key.
+#   read_only: yes # not required. If C(true), the deploy key will only be able to read repository contents. Otherwise, the deploy key will be able to read and write.
+#   state: present # not required. choices: present;absent. The state of the deploy key.
+#   force: no # not required. If C(true), forcefully adds the deploy key by deleting any existing deploy key with the same public key or title.
+#   username:  # not required. The username to authenticate with. Should not be set when using personal access token
+#   password:  # not required. The password to authenticate with. Alternatively, a personal access token can be used instead of I(username) and I(password) combination.
+#   token:  # not required. The OAuth2 token or personal access token to authenticate with. Mutually exclusive with I(password).
+#   otp:  # not required. The 6 digit One Time Password for 2-Factor Authentication. Required together with I(username) and I(password).

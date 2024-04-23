@@ -166,7 +166,7 @@
   when: instl_docker_pckg and dckr_dpl_anasse
   tags:
     - anasse
-    - #test  
+    - test  
 #
 - name: Job 32 | import task opendot
   ansible.builtin.import_tasks:
@@ -190,7 +190,7 @@
   when: instl_docker_pckg and dckr_dpl_reddot_africa
   tags:
     - reddot_africa
-    - test
+    - #test
 #
 #
 #
