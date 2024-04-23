@@ -1,30 +1,21 @@
 ---
 #
-- name: Job 00 | Deploy Skylinewebservice - pull from git
+- name: Job 00 | Deploy skylinewebservice - pull from git
   vars:
-    working_dir2: "{{dckr_bs_pth}}/opendot-8098/" 
-    log_dir: "{{ working_dir2 }}logs"
+    working_dir: "{{dckr_bs_pth}}/skylinewebservice-8094/" 
+    log_dir: "{{ working_dir }}logs"
     prg_name: "skylinewebservice"
   ansible.builtin.git:
-    #working_dir_skyline: "{{dckr_bs_pth}}/Skylinewebservice-8094/" 
-    #log_dir: "{{ working_dir_skyline}}logs" 
-    #repo: https://github.com/skylinewebservice/skylinewebservice.com.git
     repo: git@github.com:skylinewebservice/skylinewebservice.com.git
-    dest: "{{ working_dir_skyline }}"
+    dest: "{{ working_dir }}"
     force: yes
     clone: yes
     update: yes
     remote: origin
-    #key_file: /home/ibrahim/.ssh/ibrahim@4a999ff.key
-    #key_file: "{{ lookup('ansible.builtin.file', '/home/ibrahim/.ssh/id_rsa') }}"
-    #key_file: ~/.ssh/id_rsa
     key_file: /home/ibrahim/.ssh/id_rsa # file must exist on remote server
     accept_hostkey: yes
-  check_mode: true
+  check_mode: false
   register: changes_in_git_pull
-  # when: instl_docker_pckg and dckr_dpl_Skylinewebservice
-  # tags:
-  #   - test
 #
 #
 - name: Run only if the task that registered the "result" variable fails
@@ -47,60 +38,66 @@
     msg: "Directory is changed"
   when: changes_in_git_pull is changed
 #
-- name: Job 01 | Delete old image
-  docker_image:
-    name:  "{{ prg_name }}"
-    #force:  True
-    force_absent: True
-    #rm: True # not required. Remove intermediate containers after build. Please use I(build.rm) instead. This option will be removed in Ansible 2.12.
-    #nocache: True # not required. Do not use cache when building an image. Please use I(build.nocache) instead. This option will be removed in Ansible 2.12.
-    state: absent # not required. choices: absent;present;build. Make assertions about the state of an image. When C(absent) an image will be removed. Use the force option to un-tag and remove all images matching the provided name. When C(present) check if an image exists using the provided name and tag. If the image is not found or the force option is used, the image will either be pulled, built or loaded, depending on the I(source) option. By default the image will be pulled from Docker Hub, or the registry specified in the image's name. Note that this will change in Ansible 2.12, so to make sure that you are pulling, set I(source) to C(pull). To build the image, provide a I(path) value set to a directory containing a context and Dockerfile, and set I(source) to C(build). To load an image, specify I(load_path) to provide a path to an archive file. To tag an image to a repository, provide a I(repository) path. If the name contains a repository path, it will be pushed. *Note:* C(state=build) is DEPRECATED and will be removed in Ansible 2.11. Specifying C(build) will behave the same as C(present).
-  when: changes_in_git_pull is changed
 #
-- name: Job 02 | Deploy Skylinewebservice - build image
+- name: Job 01 | Delete container
   vars:
-    working_dir2: "{{dckr_bs_pth}}/Skylinewebservice-8094/" 
-    #log_dir: "{{ working_dir2 }}logs"
-    log_dir: "{{ working_dir_skyline}}logs" 
     prg_name: "skylinewebservice"
-  community.docker.docker_image:
-    name: "{{ prg_name }}"
-    #push: true
-    tag: latest
-    build:
-      path: "{{ working_dir_skyline }}"
-      args:
-        log_volume: "{{ log_dir }}"
-        #listen_port: 8090
-    # As 'latest' usually already is present, we need to enable overwriting of existing tags:
-    force_tag: true
-    force_source: true
-    source: build
-  when: changes_in_git_pull is changed
-  # when: instl_docker_pckg and dckr_dpl_Skylinewebservice    
-  # tags:
-  #   - test    
-#
-#- name: Job 02 | Deploy Skylinewebservice - remove old image
-#  community.docker.docker_image:
-#
-- name: Job 03 | Deploy Skylinewebservice - deploy container
+    con_name: "{{prg_name}}_con"
   community.docker.docker_compose:
-    #working_dir_skyline: "/opt/docker/Skylinewebservice-8094/"
-    #working_dir_skyline: "{{dckr_bs_pth}}/Skylinewebservice-8094/"
-    #remove_images: all
-    #remove_volumes: True
-    #stopped: True
-    #state: absent
-    #
-    project_name: Skylinewebservice
+    remove_images: all
+    remove_volumes: True
+    stopped: True
+    state: absent
+    project_name: "{{ prg_name }}"
     definition:
       version: '3.9'
       services:
-        Skylinewebservice:
-          hostname: https://Skylinewebservice{{ dmain_pstfx }}"
-          container_name: skylinewebservice_con
-          image: skylinewebservice:latest
+        skylinewebservice:
+          container_name: "{{con_name}}"
+          image: "{{ prg_name }}:latest"
+  when: changes_in_git_pull is changed
+#
+- name: Job 01 | Delete old image
+  vars:
+    prg_name: "skylinewebservice"
+  docker_image:
+    name:  "{{ prg_name }}"
+    force_absent: True
+    state: absent
+  when: changes_in_git_pull is changed
+#
+- name: Job 02 | Deploy skylinewebservice - build image
+  vars:
+    working_dir: "{{dckr_bs_pth}}/skylinewebservice-8094/" 
+    log_dir: "{{ working_dir }}logs"
+    prg_name: "skylinewebservice"
+  community.docker.docker_image:
+    name: "{{ prg_name }}"
+    build:
+      path: "{{ working_dir }}"
+      args:
+        log_volume: "{{ log_dir }}"
+    force_tag: true
+    force_source: true
+    source: build
+    tag: latest
+  when: changes_in_git_pull is changed
+#
+- name: Job 03 | Deploy skylinewebservice - deploy container
+  vars:
+    working_dir: "{{dckr_bs_pth}}/skylinewebservice-8094/" 
+    log_dir: "{{ working_dir }}logs"
+    prg_name: "skylinewebservice"
+    con_name: "{{prg_name}}_con"
+  community.docker.docker_compose:
+    project_name: skylinewebservice
+    definition:
+      version: '3.9'
+      services:
+        skylinewebservice:
+          hostname: https://{{prg_name}}{{ dmain_pstfx }}"
+          container_name: "{{con_name}}"
+          image: "{{prg_name}}:latest"
           ports:
             - 8094:8000 
           restart: always
@@ -112,26 +109,19 @@
           #   - /opt/docker/emby-8096/emby:/config
           #   - /net/mediafiles/mediaFiles/TV-Shows:/tvshows
           #   - /net/mediafiles/mediaFiles/Movies:/movies
-  # when: instl_docker_pckg and dckr_dpl_Skylinewebservice
-  when: changes_in_git_pull is changed
+  when: changes_in_git_pull is changed or changes_in_git_pull is succeeded
   register: output
-  #
-  # for debug purpose only - disabled in the meantime
-# - name: Show results
-#   ansible.builtin.debug:
-#     var: output
-#   #tags: test
-  #
-- name: Verify that Skylinewebservice is running
+#
+- name: Verify that skylinewebservice is running
   ansible.builtin.assert:
     that:
-      - "output.services.Skylinewebservice.skylinewebservice_con.state.running"
+      - "output.services.skylinewebservice.skylinewebservice_con.state.running"
       - #"output.services.mysql.ansiblemysql.state.running"
-  # when: instl_docker_pckg and dckr_dpl_Skylinewebservice
   tags:
     - assert
-    - #test
-
+#
+#
+#
 # # https://mariushosting.com/how-to-install-emby-on-your-synology-nas/
 
 # git:
@@ -245,3 +235,37 @@
 #   password:  # not required. The password to authenticate with. Alternatively, a personal access token can be used instead of I(username) and I(password) combination.
 #   token:  # not required. The OAuth2 token or personal access token to authenticate with. Mutually exclusive with I(password).
 #   otp:  # not required. The 6 digit One Time Password for 2-Factor Authentication. Required together with I(username) and I(password).
+
+
+
+
+# docker_compose:
+#   project_src:  # not required. Path to a directory containing a C(docker-compose.yml) or C(docker-compose.yaml) file. Mutually exclusive with I(definition). Required when no I(definition) is provided.
+#   project_name:  # not required. Provide a project name. If not provided, the project name is taken from the basename of I(project_src). Required when I(definition) is provided.
+#   files:  # not required. List of Compose file names relative to I(project_src). Overrides C(docker-compose.yml) or C(docker-compose.yaml). Files are loaded and merged in the order given.
+#   state: absent # not required. choices: absent;present. Desired state of the project. Specifying C(present) is the same as running C(docker-compose up) resp. C(docker-compose stop) (with I(stopped)) resp. C(docker-compose restart) (with I(restarted)). Specifying C(absent) is the same as running C(docker-compose down).
+#   services:  # not required. When I(state) is C(present) run C(docker-compose up) resp. C(docker-compose stop) (with I(stopped)) resp. C(docker-compose restart) (with I(restarted)) on a subset of services. If empty, which is the default, the operation will be performed on all services defined in the Compose file (or inline I(definition)).
+#   scale:  # not required. When I(state) is C(present) scale services. Provide a dictionary of key/value pairs where the key is the name of the service and the value is an integer count for the number of containers.
+#   dependencies: True # not required. When I(state) is C(present) specify whether or not to include linked services.
+#   definition:  # not required. Compose file describing one or more services, networks and volumes. Mutually exclusive with I(project_src) and I(files).
+#   hostname_check: False # not required. Whether or not to check the Docker daemon's hostname against the name provided in the client certificate.
+#   recreate: always # not required. choices: always;never;smart. By default containers will be recreated when their configuration differs from the service definition. Setting to C(never) ignores configuration differences and leaves existing containers unchanged. Setting to C(always) forces recreation of all existing containers.
+#   build: False # not required. Use with I(state) C(present) to always build images prior to starting the application. Same as running C(docker-compose build) with the pull option. Images will only be rebuilt if Docker detects a change in the Dockerfile or build directory contents. Use the I(nocache) option to ignore the image cache when performing the build. If an existing image is replaced, services using the image will be recreated unless I(recreate) is C(never).
+#   pull: False # not required. Use with I(state) C(present) to always pull images prior to starting the application. Same as running C(docker-compose pull). When a new image is pulled, services using the image will be recreated unless I(recreate) is C(never).
+#   nocache: False # not required. Use with the I(build) option to ignore the cache during the image build process.
+#   remove_images: all # not required. choices: all;local. Use with I(state) C(absent) to remove all images or only local images.
+#   remove_volumes: False # not required. Use with I(state) C(absent) to remove data volumes.
+#   stopped: False # not required. Use with I(state) C(present) to stop all containers defined in the Compose file. If I(services) is defined, only the containers listed there will be stopped.
+#   restarted: False # not required. Use with I(state) C(present) to restart all containers defined in the Compose file. If I(services) is defined, only the containers listed there will be restarted.
+#   remove_orphans: False # not required. Remove containers for services not defined in the Compose file.
+#   timeout: 10 # not required. timeout in seconds for container shutdown when attached or when containers are already running.
+#   docker_host: unix://var/run/docker.sock # not required. The URL or Unix socket path used to connect to the Docker API. To connect to a remote host, provide the TCP connection string. For example, C(tcp://192.0.2.23:2376). If TLS is used to encrypt the connection, the module will automatically replace C(tcp) in the connection URL with C(https). If the value is not specified in the task, the value of environment variable C(DOCKER_HOST) will be used instead. If the environment variable is not set, the default value will be used.
+#   tls_hostname: localhost # not required. When verifying the authenticity of the Docker Host server, provide the expected name of the server. If the value is not specified in the task, the value of environment variable C(DOCKER_TLS_HOSTNAME) will be used instead. If the environment variable is not set, the default value will be used.
+#   api_version: auto # not required. The version of the Docker API running on the Docker Host. Defaults to the latest version of the API supported by Docker SDK for Python and the docker daemon. If the value is not specified in the task, the value of environment variable C(DOCKER_API_VERSION) will be used instead. If the environment variable is not set, the default value will be used.
+#   ca_cert:  # not required. Use a CA certificate when performing server verification by providing the path to a CA certificate file. If the value is not specified in the task and the environment variable C(DOCKER_CERT_PATH) is set, the file C(ca.pem) from the directory specified in the environment variable C(DOCKER_CERT_PATH) will be used.
+#   client_cert:  # not required. Path to the client's TLS certificate file. If the value is not specified in the task and the environment variable C(DOCKER_CERT_PATH) is set, the file C(cert.pem) from the directory specified in the environment variable C(DOCKER_CERT_PATH) will be used.
+#   client_key:  # not required. Path to the client's TLS key file. If the value is not specified in the task and the environment variable C(DOCKER_CERT_PATH) is set, the file C(key.pem) from the directory specified in the environment variable C(DOCKER_CERT_PATH) will be used.
+#   ssl_version:  # not required. Provide a valid SSL version number. Default value determined by ssl.py module. If the value is not specified in the task, the value of environment variable C(DOCKER_SSL_VERSION) will be used instead.
+#   tls: False # not required. Secure the connection to the API by using TLS without verifying the authenticity of the Docker host server. Note that if I(validate_certs) is set to C(yes) as well, it will take precedence. If the value is not specified in the task, the value of environment variable C(DOCKER_TLS) will be used instead. If the environment variable is not set, the default value will be used.
+#   validate_certs: False # not required. Secure the connection to the API by using TLS and verifying the authenticity of the Docker host server. If the value is not specified in the task, the value of environment variable C(DOCKER_TLS_VERIFY) will be used instead. If the environment variable is not set, the default value will be used.
+#   debug: False # not required. Debug mode

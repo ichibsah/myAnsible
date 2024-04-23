@@ -1,12 +1,12 @@
 ---
 #
-- name: Job 00 | Deploy Skylinewebservice - pull from git
+- name: Job 00 | Deploy reddot_africa - pull from git
   vars:
-    working_dir: "{{dckr_bs_pth}}/prg_name-port/" 
+    working_dir: "{{dckr_bs_pth}}/reddot_africa-8100/" 
     log_dir: "{{ working_dir }}logs"
-    prg_name: "skylinewebservice_prg_name"
+    prg_name: "reddot_africa"
   ansible.builtin.git:
-    repo: git@github.com:skylinewebservice/skylinewebservice.com.git
+    repo: git@github.com:skylinewebservice/reddot_africa.git
     dest: "{{ working_dir }}"
     force: yes
     clone: yes
@@ -41,7 +41,7 @@
 #
 - name: Job 01 | Delete container
   vars:
-    prg_name: "skylinewebservice_prg_name"
+    prg_name: "reddot_africa"
     con_name: "{{prg_name}}_con"
   community.docker.docker_compose:
     remove_images: all
@@ -52,25 +52,25 @@
     definition:
       version: '3.9'
       services:
-        Skylinewebservice:
+        reddot_africa:
           container_name: "{{con_name}}"
           image: "{{ prg_name }}:latest"
   when: changes_in_git_pull is changed
 #
 - name: Job 01 | Delete old image
   vars:
-    prg_name: "skylinewebservice_prg_name"
+    prg_name: "reddot_africa"
   docker_image:
     name:  "{{ prg_name }}"
     force_absent: True
     state: absent
   when: changes_in_git_pull is changed
 #
-- name: Job 02 | Deploy Skylinewebservice - build image
+- name: Job 02 | Deploy reddot_africa - build image
   vars:
-    working_dir: "{{dckr_bs_pth}}/prg_name-port/" 
+    working_dir: "{{dckr_bs_pth}}/reddot_africa-8100/" 
     log_dir: "{{ working_dir }}logs"
-    prg_name: "skylinewebservice_prg_name"
+    prg_name: "reddot_africa"
   community.docker.docker_image:
     name: "{{ prg_name }}"
     build:
@@ -83,23 +83,23 @@
     tag: latest
   when: changes_in_git_pull is changed
 #
-- name: Job 03 | Deploy Skylinewebservice - deploy container
+- name: Job 03 | Deploy reddot_africa - deploy container
   vars:
-    working_dir: "{{dckr_bs_pth}}/prg_name-port/" 
+    working_dir: "{{dckr_bs_pth}}/reddot_africa-8100/" 
     log_dir: "{{ working_dir }}logs"
-    prg_name: "skylinewebservice"
+    prg_name: "reddot_africa"
     con_name: "{{prg_name}}_con"
   community.docker.docker_compose:
-    project_name: Skylinewebservice
+    project_name: reddot_africa
     definition:
       version: '3.9'
       services:
-        Skylinewebservice:
+        reddot_africa:
           hostname: https://{{prg_name}}{{ dmain_pstfx }}"
           container_name: "{{con_name}}"
           image: "{{prg_name}}:latest"
           ports:
-            - 8094:8000 
+            - 8100:8000 
           restart: always
           environment:
             - TZ=Europe/Berlin
@@ -109,19 +109,17 @@
           #   - /opt/docker/emby-8096/emby:/config
           #   - /net/mediafiles/mediaFiles/TV-Shows:/tvshows
           #   - /net/mediafiles/mediaFiles/Movies:/movies
-  when: changes_in_git_pull is changed or changes_in_git_pull is succeeded
+  when: changes_in_git_pull is changed
   register: output
 #
-- name: Verify that Skylinewebservice is running
+- name: Verify that reddot_africa is running
   ansible.builtin.assert:
     that:
-      - "output.services.Skylinewebservice.skylinewebservice_con.state.running"
+      - "output.services.reddot_africa.reddot_africa_con.state.running"
       - #"output.services.mysql.ansiblemysql.state.running"
   tags:
     - assert
-#
-#
-#
+
 # # https://mariushosting.com/how-to-install-emby-on-your-synology-nas/
 
 # git:

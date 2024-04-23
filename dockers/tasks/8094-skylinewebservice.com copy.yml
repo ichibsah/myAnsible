@@ -2,20 +2,29 @@
 #
 - name: Job 00 | Deploy Skylinewebservice - pull from git
   vars:
-    working_dir: "{{dckr_bs_pth}}/prg_name-port/" 
-    log_dir: "{{ working_dir }}logs"
-    prg_name: "skylinewebservice_prg_name"
+    working_dir2: "{{dckr_bs_pth}}/opendot-8098/" 
+    log_dir: "{{ working_dir2 }}logs"
+    prg_name: "skylinewebservice"
   ansible.builtin.git:
+    #working_dir_skyline: "{{dckr_bs_pth}}/Skylinewebservice-8094/" 
+    #log_dir: "{{ working_dir_skyline}}logs" 
+    #repo: https://github.com/skylinewebservice/skylinewebservice.com.git
     repo: git@github.com:skylinewebservice/skylinewebservice.com.git
-    dest: "{{ working_dir }}"
+    dest: "{{ working_dir_skyline }}"
     force: yes
     clone: yes
     update: yes
     remote: origin
+    #key_file: /home/ibrahim/.ssh/ibrahim@4a999ff.key
+    #key_file: "{{ lookup('ansible.builtin.file', '/home/ibrahim/.ssh/id_rsa') }}"
+    #key_file: ~/.ssh/id_rsa
     key_file: /home/ibrahim/.ssh/id_rsa # file must exist on remote server
     accept_hostkey: yes
-  check_mode: false
+  check_mode: true
   register: changes_in_git_pull
+  # when: instl_docker_pckg and dckr_dpl_Skylinewebservice
+  # tags:
+  #   - test
 #
 #
 - name: Run only if the task that registered the "result" variable fails
@@ -38,66 +47,60 @@
     msg: "Directory is changed"
   when: changes_in_git_pull is changed
 #
-#
-- name: Job 01 | Delete container
-  vars:
-    prg_name: "skylinewebservice_prg_name"
-    con_name: "{{prg_name}}_con"
-  community.docker.docker_compose:
-    remove_images: all
-    remove_volumes: True
-    stopped: True
-    state: absent
-    project_name: "{{ prg_name }}"
-    definition:
-      version: '3.9'
-      services:
-        Skylinewebservice:
-          container_name: "{{con_name}}"
-          image: "{{ prg_name }}:latest"
-  when: changes_in_git_pull is changed
-#
 - name: Job 01 | Delete old image
-  vars:
-    prg_name: "skylinewebservice_prg_name"
   docker_image:
     name:  "{{ prg_name }}"
+    #force:  True
     force_absent: True
-    state: absent
+    #rm: True # not required. Remove intermediate containers after build. Please use I(build.rm) instead. This option will be removed in Ansible 2.12.
+    #nocache: True # not required. Do not use cache when building an image. Please use I(build.nocache) instead. This option will be removed in Ansible 2.12.
+    state: absent # not required. choices: absent;present;build. Make assertions about the state of an image. When C(absent) an image will be removed. Use the force option to un-tag and remove all images matching the provided name. When C(present) check if an image exists using the provided name and tag. If the image is not found or the force option is used, the image will either be pulled, built or loaded, depending on the I(source) option. By default the image will be pulled from Docker Hub, or the registry specified in the image's name. Note that this will change in Ansible 2.12, so to make sure that you are pulling, set I(source) to C(pull). To build the image, provide a I(path) value set to a directory containing a context and Dockerfile, and set I(source) to C(build). To load an image, specify I(load_path) to provide a path to an archive file. To tag an image to a repository, provide a I(repository) path. If the name contains a repository path, it will be pushed. *Note:* C(state=build) is DEPRECATED and will be removed in Ansible 2.11. Specifying C(build) will behave the same as C(present).
   when: changes_in_git_pull is changed
 #
 - name: Job 02 | Deploy Skylinewebservice - build image
   vars:
-    working_dir: "{{dckr_bs_pth}}/prg_name-port/" 
-    log_dir: "{{ working_dir }}logs"
-    prg_name: "skylinewebservice_prg_name"
+    working_dir2: "{{dckr_bs_pth}}/Skylinewebservice-8094/" 
+    #log_dir: "{{ working_dir2 }}logs"
+    log_dir: "{{ working_dir_skyline}}logs" 
+    prg_name: "skylinewebservice"
   community.docker.docker_image:
     name: "{{ prg_name }}"
+    #push: true
+    tag: latest
     build:
-      path: "{{ working_dir }}"
+      path: "{{ working_dir_skyline }}"
       args:
         log_volume: "{{ log_dir }}"
+        #listen_port: 8090
+    # As 'latest' usually already is present, we need to enable overwriting of existing tags:
     force_tag: true
     force_source: true
     source: build
-    tag: latest
   when: changes_in_git_pull is changed
+  # when: instl_docker_pckg and dckr_dpl_Skylinewebservice    
+  # tags:
+  #   - test    
+#
+#- name: Job 02 | Deploy Skylinewebservice - remove old image
+#  community.docker.docker_image:
 #
 - name: Job 03 | Deploy Skylinewebservice - deploy container
-  vars:
-    working_dir: "{{dckr_bs_pth}}/prg_name-port/" 
-    log_dir: "{{ working_dir }}logs"
-    prg_name: "skylinewebservice"
-    con_name: "{{prg_name}}_con"
   community.docker.docker_compose:
+    #working_dir_skyline: "/opt/docker/Skylinewebservice-8094/"
+    #working_dir_skyline: "{{dckr_bs_pth}}/Skylinewebservice-8094/"
+    #remove_images: all
+    #remove_volumes: True
+    #stopped: True
+    #state: absent
+    #
     project_name: Skylinewebservice
     definition:
       version: '3.9'
       services:
         Skylinewebservice:
-          hostname: https://{{prg_name}}{{ dmain_pstfx }}"
-          container_name: "{{con_name}}"
-          image: "{{prg_name}}:latest"
+          hostname: https://Skylinewebservice{{ dmain_pstfx }}"
+          container_name: skylinewebservice_con
+          image: skylinewebservice:latest
           ports:
             - 8094:8000 
           restart: always
@@ -109,19 +112,26 @@
           #   - /opt/docker/emby-8096/emby:/config
           #   - /net/mediafiles/mediaFiles/TV-Shows:/tvshows
           #   - /net/mediafiles/mediaFiles/Movies:/movies
-  when: changes_in_git_pull is changed or changes_in_git_pull is succeeded
+  # when: instl_docker_pckg and dckr_dpl_Skylinewebservice
+  when: changes_in_git_pull is changed
   register: output
-#
+  #
+  # for debug purpose only - disabled in the meantime
+# - name: Show results
+#   ansible.builtin.debug:
+#     var: output
+#   #tags: test
+  #
 - name: Verify that Skylinewebservice is running
   ansible.builtin.assert:
     that:
       - "output.services.Skylinewebservice.skylinewebservice_con.state.running"
       - #"output.services.mysql.ansiblemysql.state.running"
+  # when: instl_docker_pckg and dckr_dpl_Skylinewebservice
   tags:
     - assert
-#
-#
-#
+    - #test
+
 # # https://mariushosting.com/how-to-install-emby-on-your-synology-nas/
 
 # git:
