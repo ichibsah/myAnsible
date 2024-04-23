@@ -182,7 +182,7 @@
   when: instl_docker_pckg and dckr_dpl_skyline
   tags:
     - skyline
-    - test  
+    - #test  
 #
 - name: Job 34 | import task Skylinewebservice
   ansible.builtin.import_tasks:
@@ -190,7 +190,7 @@
   when: instl_docker_pckg and dckr_dpl_reddot_africa
   tags:
     - reddot_africa
-    - #test
+    - test
 #
 #
 #

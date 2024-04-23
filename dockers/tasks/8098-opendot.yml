@@ -15,7 +15,7 @@
     clone: yes
     update: yes
     remote: origin
-  check_mode: true
+  #check_mode: true
   register: changes_in_git_pull
   # when: instl_docker_pckg and dckr_dpl_opendot
   tags:
@@ -99,7 +99,7 @@
           #   - /net/mediafiles/mediaFiles/TV-Shows:/tvshows
           #   - /net/mediafiles/mediaFiles/Movies:/movies
   # when: instl_docker_pckg and dckr_dpl_opendot
-  when: changes_in_git_pull is changed
+  when: changes_in_git_pull is changed or changes_in_git_pull is succeeded
   register: output
   #
   # for debug purpose only - disabled in the meantime
