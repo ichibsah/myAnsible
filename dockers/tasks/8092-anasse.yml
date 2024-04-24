@@ -6,7 +6,8 @@
     log_dir: "{{ working_dir }}logs"
     prg_name: "anasse"
   ansible.builtin.git:
-    repo: git@github.com:ichibsah/anasse.git
+    #repo: git@github.com:ichibsah/anasse.git
+    repo: git@github.com:skylinewebservice/anasse.git
     dest: "{{ working_dir }}"
     force: yes
     clone: yes
