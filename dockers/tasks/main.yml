@@ -166,7 +166,7 @@
   when: instl_docker_pckg and dckr_dpl_anasse
   tags:
     - anasse
-    - test  
+    - #test  
 #
 - name: Job 32 | import task opendot
   ansible.builtin.import_tasks:
@@ -192,6 +192,13 @@
     - reddot_africa
     - #test
 #
+- name: Job 34 | import task Skylinewebservice
+  ansible.builtin.import_tasks:
+    file: 8102-blingbody.yml
+  when: instl_docker_pckg and dckr_dpl_blingbody
+  tags:
+    - blingbody
+    - test
 #
 #
 #

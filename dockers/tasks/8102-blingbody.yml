@@ -1,12 +1,12 @@
 ---
 #
-- name: Job 00 | Deploy Skylinewebservice - pull from git
+- name: Job 00 | Deploy blingbody - pull from git
   vars:
-    working_dir: "{{dckr_bs_pth}}/prg_name-port/" 
+    working_dir: "{{dckr_bs_pth}}/blingbody-8102/" 
     log_dir: "{{ working_dir }}logs"
-    prg_name: "skylinewebservice_prg_name"
+    prg_name: "blingbody"
   ansible.builtin.git:
-    repo: git@github.com:skylinewebservice/skylinewebservice.com.git
+    repo: git@github.com:skylinewebservice/blingbody.git
     dest: "{{ working_dir }}"
     force: yes
     clone: yes
@@ -41,7 +41,7 @@
 #
 - name: Job 01 | Delete container
   vars:
-    prg_name: "skylinewebservice_prg_name"
+    prg_name: "blingbody"
     con_name: "{{prg_name}}_con"
   community.docker.docker_compose:
     remove_images: all
@@ -52,25 +52,25 @@
     definition:
       version: '3.9'
       services:
-        Skylinewebservice:
+        blingbody:
           container_name: "{{con_name}}"
           image: "{{ prg_name }}:latest"
   when: changes_in_git_pull is changed
 #
 - name: Job 01 | Delete old image
   vars:
-    prg_name: "skylinewebservice_prg_name"
+    prg_name: "blingbody"
   docker_image:
     name:  "{{ prg_name }}"
     force_absent: True
     state: absent
   when: changes_in_git_pull is changed
 #
-- name: Job 02 | Deploy Skylinewebservice - build image
+- name: Job 02 | Deploy blingbody - build image
   vars:
-    working_dir: "{{dckr_bs_pth}}/prg_name-port/" 
+    working_dir: "{{dckr_bs_pth}}/blingbody-8102/" 
     log_dir: "{{ working_dir }}logs"
-    prg_name: "skylinewebservice_prg_name"
+    prg_name: "blingbody"
   community.docker.docker_image:
     name: "{{ prg_name }}"
     build:
@@ -83,23 +83,23 @@
     tag: latest
   when: changes_in_git_pull is changed
 #
-- name: Job 03 | Deploy Skylinewebservice - deploy container
+- name: Job 03 | Deploy blingbody - deploy container
   vars:
-    working_dir: "{{dckr_bs_pth}}/prg_name-port/" 
+    working_dir: "{{dckr_bs_pth}}/blingbody-8102/" 
     log_dir: "{{ working_dir }}logs"
-    prg_name: "skylinewebservice"
+    prg_name: "blingbody"
     con_name: "{{prg_name}}_con"
   community.docker.docker_compose:
     project_name: "{{prg_name}}"
     definition:
       version: '3.9'
       services:
-        Skylinewebservice:
+        blingbody:
           hostname: https://{{prg_name}}{{ dmain_pstfx }}"
           container_name: "{{con_name}}"
           image: "{{prg_name}}:latest"
           ports:
-            - 8094:8000 
+            - 8102:8000 
           restart: always
           environment:
             - TZ=Europe/Berlin
@@ -112,10 +112,10 @@
   when: changes_in_git_pull is changed or changes_in_git_pull is succeeded
   register: output
 #
-- name: Verify that Skylinewebservice is running
+- name: Verify that blingbody is running
   ansible.builtin.assert:
     that:
-      - "output.services.Skylinewebservice.skylinewebservice_con.state.running"
+      - "output.services.blingbody.blingbody_con.state.running"
       - #"output.services.mysql.ansiblemysql.state.running"
   tags:
     - assert
