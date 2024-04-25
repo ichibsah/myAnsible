@@ -198,8 +198,15 @@
   when: instl_docker_pckg and dckr_dpl_blingbody
   tags:
     - blingbody
-    - test
+    - #test
 #
+- name: Job 35 | import task webcheck
+  ansible.builtin.import_tasks:
+    file: 6160-webcheck.yml
+  when: instl_docker_pckg and dckr_dpl_webcheck
+  tags:
+    - webcheck
+    - test
 #
 #
 #
@@ -210,7 +217,7 @@
   when: instl_docker_pckg
   tags:
     - prune
-    - #test
+    - test
 #
 # command: touch "{{ item.item }}"
 #   with_items:

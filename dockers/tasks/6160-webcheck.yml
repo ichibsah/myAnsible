@@ -1,0 +1,41 @@
+---
+#
+- name: Job 03 | Deploy webcheck | deploy container
+  vars:
+    working_dir: "{{dckr_bs_pth}}/webcheck-6160/" 
+    log_dir: "{{ working_dir }}logs"
+    prg_name: webcheck
+    con_name: "{{prg_name}}_con"
+  community.docker.docker_compose:
+    project_name: "{{prg_name}}"
+    definition:
+      version: '3.9'
+      services:
+        webcheck:
+          hostname: "https://{{prg_name}}{{ dmain_pstfx }}"
+          container_name: "{{con_name}}"
+          image: lissy93/web-check
+          mem_limit: 4g
+          cpu_shares: 768
+          security_opt:
+            - no-new-privileges:true
+          restart: always
+          ports:
+            - 6160:3000
+          environment:
+            - TZ=Europe/Berlin
+          user: "${UID}:${GID}"
+  register: output
+#
+- name: Verify that blingbody is running
+  ansible.builtin.assert:
+    that:
+      - "output.services.webcheck.webcheck_con.state.running"
+      - #"output.services.mysql.ansiblemysql.state.running"
+  tags:
+    - assert
+#
+#
+#
+# # https://mariushosting.com/how-to-install-emby-on-your-synology-nas/
+
