@@ -9,7 +9,7 @@
     #working_dir: "{{dckr_bs_pth}}/opendot-8098/" 
     #log_dir: "{{ working_dir}}logs" 
     #repo: https://github.com/skylinewebservice/opendot.git
-    repo: https://github.com/skylinewebservice/opendot.git
+    repo: git@github.com:skylinewebservice/opendot.git
     dest: "{{ working_dir2 }}"
     force: yes
     clone: yes
