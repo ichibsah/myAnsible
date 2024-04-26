@@ -4,6 +4,7 @@
 prvs_copy_home: yes             # Copy default user's home files in place
 prvs_root_passwd: no            # update root passward
 addLocalUser: no                # add a local user to specific host
+instl_gthb_ky: no               # add id_rsa to only ibrahim to allow local server access to git
 #
 #ansible_become_pass: '{{ localhost_become_pass }}'
 #

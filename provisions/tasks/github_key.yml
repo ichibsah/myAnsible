@@ -1,0 +1,11 @@
+---
+- name: Job 00 | copy .ssh/id_rsa file to ~/ibrahim/.ssh
+  copy:
+    src: "{{ lookup('file', '~/ibrahim/.ssh/id_rsa'}}"
+    dest: "/home/ibrahim/.ssh/"
+    owner: ibrahim
+    group: ibrahim
+    mode: 0600
+#
+#
+#

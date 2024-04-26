@@ -25,6 +25,7 @@ instl_utl_pckg: yes                        # Install complete packages. A 'no' w
 sysd_strt_srvc: yes                       # Start services
 instl_ansbl_pckg: no                      # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
 instl_docker_pckg: yes                    # Install Docker package (apt_docker_pckg_lst)
+instl_gthb_ky: yes                        # add id_rsa to only ibrahim to allow local server access to git
 apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
 dckr_fldr_lst:                            # Docker folder list that will be copied when set in the host variable
 - { fldr: "4a999ff" }

@@ -8,15 +8,13 @@
   ansible.builtin.git:
     #working_dir: "{{dckr_bs_pth}}/meryem-8090/" 
     #log_dir: "{{ working_dir}}logs" 
-    repo: https://github.com/ichibsah/meryem.git
+    #repo: https://github.com/ichibsah/meryem.git
+    repo: git@github.com:ichibsah/meryem.git
     dest: "{{ working_dir }}"
     force: yes
     clone: yes
     update: yes
     remote: origin
-  # when: instl_docker_pckg and dckr_dpl_meryem
-  # tags:
-  #   - test
 #
 - name: Job 01 | Deploy Meryem - build image
   community.docker.docker_image:
@@ -32,12 +30,6 @@
     force_tag: true
     force_source: true
     source: build
-  # when: instl_docker_pckg and dckr_dpl_meryem    
-  # tags:
-  #   - test    
-#
-#- name: Job 02 | Deploy Meryem - remove old image
-#  community.docker.docker_image:
 #
 - name: Job 03 | Deploy Meryem - deploy container
   community.docker.docker_compose:

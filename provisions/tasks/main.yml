@@ -136,12 +136,20 @@
     - #test
 #
 #
+- name: Job 98 | import task github key
+  ansible.builtin.import_tasks:
+    file: github_key.yml
+  when: instl_docker_pckg and instl_gthb_ky
+  tags:
+    - test  
+#
+#
 - name: Job 99 | Check if reboot required
   stat:
     path: /var/run/reboot-required
   register: reboot_required_file
 
-- name: Job 06 | Reboot if required
+- name: Job 99.01 | Reboot if required
   reboot:
     reboot_timeout: 60 
     connect_timeout:  
