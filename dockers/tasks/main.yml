@@ -174,7 +174,7 @@
   when: instl_docker_pckg and dckr_dpl_opendot
   tags:
     - opendot
-    - test  
+    - #test  
 #
 - name: Job 33 | import task Skylinewebservice
   ansible.builtin.import_tasks:
@@ -217,7 +217,7 @@
   when: instl_docker_pckg
   tags:
     - prune
-    - test
+    - #test
 #
 # command: touch "{{ item.item }}"
 #   with_items:
