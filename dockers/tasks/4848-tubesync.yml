@@ -29,6 +29,7 @@
   when: instl_docker_pckg and dckr_dpl_tubesync
   register: output
   tags:
+    - assert
     - #test
 #
 - name: Verify that tubesync is running

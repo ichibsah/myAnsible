@@ -28,6 +28,7 @@
   when: instl_docker_pckg and dckr_dpl_overseerr
   register: output
   tags:
+    - assert
     - #test
   #
   # for debug purpose only - disabled in the meantime

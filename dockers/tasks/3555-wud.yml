@@ -38,7 +38,8 @@
 
   when: instl_docker_pckg and dckr_dpl_wud
   tags:
-    - #test              
+    - assert
+    - #test           
 #
 #
 #  

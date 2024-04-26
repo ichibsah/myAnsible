@@ -67,7 +67,8 @@
               condition: service_started
   when: instl_docker_pckg and dckr_dpl_invdus
   tags:
-    - #test              
+    - assert
+    - #test           
 #
 #
 #         youtubedl:

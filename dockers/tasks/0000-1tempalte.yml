@@ -27,6 +27,8 @@
           #   - /net/mediafiles/mediaFiles/TV-Shows:/tvshows
           #   - /net/mediafiles/mediaFiles/Movies:/movies
   register: output
+  tags:
+    - assert
 #
 - name: Verify that blingbody is running
   ansible.builtin.assert:

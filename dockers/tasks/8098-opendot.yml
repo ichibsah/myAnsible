@@ -98,9 +98,11 @@
           #   - /opt/docker/emby-8096/emby:/config
           #   - /net/mediafiles/mediaFiles/TV-Shows:/tvshows
           #   - /net/mediafiles/mediaFiles/Movies:/movies
-  # when: instl_docker_pckg and dckr_dpl_opendot
-  when: changes_in_git_pull is changed or changes_in_git_pull is succeeded
+  #when: changes_in_git_pull is changed or changes_in_git_pull is succeeded
   register: output
+  tags:
+    - assert
+    - #test
   #
   # for debug purpose only - disabled in the meantime
 # - name: Show results

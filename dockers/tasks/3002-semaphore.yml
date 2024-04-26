@@ -53,13 +53,8 @@
             - mysql
   when: instl_docker_pckg and dckr_dpl_semaphore
   register: output
-  #tags: test
-  #
-  # for debug purpose only - disabled in the meantime
-# - name: Show results
-#   ansible.builtin.debug:
-#     var: output
-#   #tags: test
+  tags:
+    - assert
   #
 - name: Verify that semaphore and db services are running
   ansible.builtin.assert:
@@ -68,6 +63,7 @@
       - "output.services.mysql.ansiblemysql.state.running"
   when: instl_docker_pckg and dckr_dpl_semaphore
   tags:
+    - assert
     - #test
 
 # # https://mariushosting.com/docker/

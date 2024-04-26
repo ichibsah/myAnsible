@@ -109,8 +109,11 @@
           #   - /opt/docker/emby-8096/emby:/config
           #   - /net/mediafiles/mediaFiles/TV-Shows:/tvshows
           #   - /net/mediafiles/mediaFiles/Movies:/movies
-  when: changes_in_git_pull is changed
+  #when: changes_in_git_pull is changed
   register: output
+  tags:
+    - assert
+    - #test
 #
 - name: Verify that reddot_africa is running
   ansible.builtin.assert:

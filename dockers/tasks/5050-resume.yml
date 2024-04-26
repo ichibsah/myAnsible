@@ -21,7 +21,8 @@
             - 5050:80
   when: instl_docker_pckg and dckr_dpl_rsume
   tags:
-    - #test              
+    - assert
+    - #test           
 #
 #
 #  

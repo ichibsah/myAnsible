@@ -69,12 +69,9 @@
           #   - /net/mediafiles/mediaFiles/Movies:/movies
   # when: instl_docker_pckg and dckr_dpl_meryem
   register: output
-  #
-  # for debug purpose only - disabled in the meantime
-# - name: Show results
-#   ansible.builtin.debug:
-#     var: output
-#   #tags: test
+  tags:
+    - assert
+    - #test
   #
 - name: Verify that meryem is running
   ansible.builtin.assert:

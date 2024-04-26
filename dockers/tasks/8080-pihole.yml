@@ -29,7 +29,8 @@
     hostname:  pihole.skyline.lan
     image: 'pihole/pihole:latest'
   when: instl_docker_pckg and dckr_dpl_pihole
-  tags: 
+  tags:
+    - assert
     - #test
 
   
