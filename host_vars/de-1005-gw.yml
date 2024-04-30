@@ -51,6 +51,7 @@ dckr_dpl_gravity: yes
 dckr_dpl_homepage: yes
 dckr_dpl_wud: yes
 dckr_dpl_webcheck: yes
+dckr_dpl_uptmkm: yes
 #
 apt_hst_strt_srvc_lst:                          # Ensure Host Specific Services are running.
   - isc-dhcp-server

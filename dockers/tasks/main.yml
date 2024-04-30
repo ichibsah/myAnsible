@@ -158,7 +158,7 @@
   when: instl_docker_pckg and dckr_dpl_meryem
   tags:
     - meryem
-    - #test  
+    - test  
 #
 - name: Job 31 | import task anasse
   ansible.builtin.import_tasks:
@@ -207,6 +207,23 @@
   tags:
     - webcheck
     - #test
+#
+- name: Job 36 | import task uptimekuma
+  ansible.builtin.import_tasks:
+    file: 3444-uptime_kuma.yml
+  when: instl_docker_pckg and dckr_dpl_uptmkm
+  tags:
+    - uptimekuma
+    - #test
+#
+- name: Job 37 | import task activ
+  ansible.builtin.import_tasks:
+    file: 8104-activ.yml
+  when: instl_docker_pckg and dckr_dpl_activ
+  tags:
+    - uptimekuma
+    - #test
+#
 #
 #
 #
