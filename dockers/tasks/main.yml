@@ -221,8 +221,8 @@
     file: 8104-activ.yml
   when: instl_docker_pckg and dckr_dpl_activ
   tags:
-    - uptimekuma
-    - #test
+    - activ
+    - test
 #
 #
 #
