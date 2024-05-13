@@ -230,8 +230,15 @@
   when: instl_docker_pckg and dckr_dpl_spotube
   tags:
     - spotube
-    - test
+    - #test
 #
+- name: Job 38 | import task spotube
+  ansible.builtin.import_tasks:
+    file: 8108-jmj.yml
+  when: instl_docker_pckg and dckr_dpl_jmj
+  tags:
+    - jmj
+    - test
 #
 #
 # keep this last
