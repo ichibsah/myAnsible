@@ -79,4 +79,17 @@ localusers:
     create_home: True
     local: True
     hosts: de-1005-gw
-  
+  - name: lady
+    shell: /bin/bash
+    #group: lady
+    groups: 
+      - sudo
+      - docker
+    append: True
+    state: present
+    key: lady.pub
+    gen_ssh_key: True
+    create_home: True
+    local: True
+    hosts: de-1005-gw
+    bashrc: /home/ibrahim/sandbox/myAnsible/configs/files/home/ibrahim/.bashrc  
