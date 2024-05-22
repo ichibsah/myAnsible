@@ -3,22 +3,22 @@ all:
   children:
     ionos:
       hosts:
-        #d86df44.online-server.cloud:
-        #112e275.online-server.cloud:
-        #a35a0d3.online-server.cloud:
-        #4a999ff.online-server.cloud:
+        #d86df44.imsawadogo.com:
+        #112e275.imsawadogo.com:
+        #a35a0d3.imsawadogo.com:
+        #4a999ff.imsawadogo.com:
         #de-jump.imsawadogo.com:
-        #deb1202.online-server.cloud:          
+        #deb1202.imsawadogo.com:          
       children:
         allservers:
           hosts: 
             #msrv02.skyline.lan:
-            #d86df44.online-server.cloud:
-            #112e275.online-server.cloud:
-            #a35a0d3.online-server.cloud:
-            #4a999ff.online-server.cloud:
+            #d86df44.imsawadogo.com:
+            #112e275.imsawadogo.com:
+            #a35a0d3.imsawadogo.com:
+            #4a999ff.imsawadogo.com:
             #de-jump.imsawadogo.com:
-            #deb1202.online-server.cloud:
+            #deb1202.imsawadogo.com:
             #mgmt.skyline.lan:  
               #ansible_host: 192.168.14.244          
             #solr.skyline.lan:
@@ -41,32 +41,32 @@ all:
               ansible_host: 10.3.0.137
         swarm:
           hosts:
-            #d86df44.online-server.cloud:
-            #112e275.online-server.cloud:
-            #a35a0d3.online-server.cloud: # master
+            #d86df44.imsawadogo.com:
+            #112e275.imsawadogo.com:
+            #a35a0d3.imsawadogo.com: # master
             #de-jump.imsawadogo.com:
-            #deb1202.online-server.cloud:
-            #b0235ee.online-server.cloud:
+            #deb1202.imsawadogo.com:
+            #b0235ee.imsawadogo.com:
         sandbox:
           hosts:
             #msvr02.skyline.lan:
-            #d86df44.online-server.cloud:
-            #112e275.online-server.cloud:
-            #a35a0d3.online-server.cloud:
-            #4a999ff.online-server.cloud:
+            #d86df44.imsawadogo.com:
+            #112e275.imsawadogo.com:
+            #a35a0d3.imsawadogo.com:
+            #4a999ff.imsawadogo.com:
         firstimeonly:
           #ansible_remote_user: root
           #ansible_ssh_user: root
           hosts: 
             #msrv02.skyline.lan:
-            #d86df44.online-server.cloud:
-            #112e275.online-server.cloud:
-            #a35a0d3.online-server.cloud:
-            #4a999ff.online-server.cloud:
-            #deb12_01.online-server.cloud:
+            #d86df44.imsawadogo.com:
+            #112e275.imsawadogo.com:
+            #a35a0d3.imsawadogo.com:
+            #4a999ff.imsawadogo.com:
+            #deb12_01.imsawadogo.com:
               #ansible_ssh_pass: '{{localhost_become_pass}}'
               #ansible_ssh_pass: '{{deb12_01_become_pass}}'
-            #deb12_02.online-server.cloud:
+            #deb12_02.imsawadogo.com:
               #ansible_ssh_pass: '{{localhost_become_pass}}'
               #ansible_ssh_pass: '{{deb12_02_become_pass}}'
             #pve01.skyline.lan:
@@ -110,14 +110,14 @@ all:
             #babs.skyline.lan:
             #  ansible_host: 192.168.77.6
             #msrv02.skyline.lan:
-            #d86df44.online-server.cloud:
-            #112e275.online-server.cloud:
-            #a35a0d3.online-server.cloud:
-            #4a999ff.online-server.cloud:
-            #deb12_01.online-server.cloud:
+            #d86df44.imsawadogo.com:
+            #112e275.imsawadogo.com:
+            #a35a0d3.imsawadogo.com:
+            #4a999ff.imsawadogo.com:
+            #deb12_01.imsawadogo.com:
               #ansible_ssh_pass: '{{localhost_become_pass}}'
               #ansible_ssh_pass: '{{deb12_01_become_pass}}'
-            #deb12_02.online-server.cloud:
+            #deb12_02.imsawadogo.com:
               #ansible_ssh_pass: '{{localhost_become_pass}}'
               #ansible_ssh_pass: '{{deb12_02_become_pass}}'
 ######

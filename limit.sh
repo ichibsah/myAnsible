@@ -12,5 +12,5 @@ ansible-inventory -y --list
 ansible-playbook -v --limit de-1010-xl run-main.yml # works
 #ansible-playbook -v --limit 112e275 run-main.yml # works
 #ansible-playbook -v --limit de-jump run-main.yml # works
-#ansible-playbook -v --limit a35a0d3.online-server.cloud -t ~/log/ansible-$($date) run-main.yml # works
+#ansible-playbook -v --limit a35a0d3.imsawadogo.com -t ~/log/ansible-$($date) run-main.yml # works
 #ansible-playbook -v --limit a35a0d3 run-main.yml # works

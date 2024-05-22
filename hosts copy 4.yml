@@ -38,7 +38,7 @@ all:
         de-jump:
         deb1202:
       vars:
-        ansible_ssh_common_args: '-o ProxyCommand="ssh -p 22 -W %h:%p -q ibrahim@4a999ff.online-server.cloud"'    
+        ansible_ssh_common_args: '-o ProxyCommand="ssh -p 22 -W %h:%p -q ibrahim@4a999ff.imsawadogo.com"'    
     swarm_nodes:
       hosts:
         d86df44:
@@ -130,7 +130,7 @@ all:
         de-1010-xl:
         gh-dev-xl:
       vars:
-        ansible_ssh_common_args: '-o ProxyCommand="ssh -p 22 -W %h:%p -q ibrahim@4a999ff.online-server.cloud"'   
+        ansible_ssh_common_args: '-o ProxyCommand="ssh -p 22 -W %h:%p -q ibrahim@4a999ff.imsawadogo.com"'   
 #
     plesk_install:
       hosts:

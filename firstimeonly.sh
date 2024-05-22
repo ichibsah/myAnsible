@@ -20,4 +20,4 @@ ansible-playbook -v run-firstimeonly.yml # works
 # apt-get install qemu-system
 # sudo apt install cloud-init
 
-# ssh-keygen -f "/home/ibrahim/.ssh/known_hosts" -R "a35a0d3.online-server.cloud"
+# ssh-keygen -f "/home/ibrahim/.ssh/known_hosts" -R "a35a0d3.imsawadogo.com"

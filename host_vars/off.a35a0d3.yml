@@ -1,6 +1,6 @@
 hostname_additional_hosts:
   - ip_address: 217.160.100.209
-    hostname: a35a0d3.online-server.cloud
+    hostname: a35a0d3.imsawadogo.com
     hostname_short: "a35a0d3"
   # - ip_address: 5.6.7.8
   #   hostname: b.example.com

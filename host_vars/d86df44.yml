@@ -1,6 +1,6 @@
 hostname_additional_hosts:
   - ip_address: 217.160.100.194
-    hostname: d86df44.online-server.cloud
+    hostname: d86df44.imsawadogo.com
     hostname_short: d86df44
   # - ip_address: 5.6.7.8
   #   hostname: b.example.com

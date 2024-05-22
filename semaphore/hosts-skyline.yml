@@ -48,7 +48,7 @@ ionos:
     gh-dev-xl:
       ansible_host: 194.164.62.97
   vars:
-    ansible_ssh_common_args: '-o ProxyCommand="ssh -p 22 -W %h:%p -q ibrahim@4a999ff.online-server.cloud"'    
+    ansible_ssh_common_args: '-o ProxyCommand="ssh -p 22 -W %h:%p -q ibrahim@4a999ff.imsawadogo.com"'    
 #
 swarm_nodes:
   hosts:

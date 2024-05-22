@@ -2,20 +2,20 @@
 all:
   children:
     hosts: 
-      - d86df44.online-server.cloud
-      - 112e275.online-server.cloud
-      - a35a0d3.online-server.cloud
-      - b0235ee.online-server.cloud
-      - 4a999ff.online-server.cloud
-      #4a999ff.online-server.cloud ansible_ssh_user=root ansible_user=root ansible_become_user=root ansible_become=no ansible_become_method=sudo ansible_ssh_pass='{{ a999ff_become_pass }}' ansible_become_pass='{{ a999ff_become_pass }}'
-      #b0235ee.online-server.cloud ansible_ssh_user=root ansible_user=root ansible_become_user=root ansible_become=yes ansible_become_method=su ansible_ssh_pass='{{ b0235ee_become_pass }}' ansible_become_pass='{{ b0235ee_become_pass }}'
+      - d86df44.imsawadogo.com
+      - 112e275.imsawadogo.com
+      - a35a0d3.imsawadogo.com
+      - b0235ee.imsawadogo.com
+      - 4a999ff.imsawadogo.com
+      #4a999ff.imsawadogo.com ansible_ssh_user=root ansible_user=root ansible_become_user=root ansible_become=no ansible_become_method=sudo ansible_ssh_pass='{{ a999ff_become_pass }}' ansible_become_pass='{{ a999ff_become_pass }}'
+      #b0235ee.imsawadogo.com ansible_ssh_user=root ansible_user=root ansible_become_user=root ansible_become=yes ansible_become_method=su ansible_ssh_pass='{{ b0235ee_become_pass }}' ansible_become_pass='{{ b0235ee_become_pass }}'
       #217.160.100.194 #ansible_user=root #d8
       #217.160.144.31  
       ##217.160.144.31  #ansible_user=root #11 <-- this line over rides the allserver group when its uncommented
-      #217.160.100.209 #ansible_user=root # a35a0d3.online-server.cloud
+      #217.160.100.209 #ansible_user=root # a35a0d3.imsawadogo.com
     jumper:
       ansible_port: 22
-      ansible_host: 4a999ff.online-server.cloud
+      ansible_host: 4a999ff.imsawadogo.com
     vars:
       ##ansible_user=root #11 <-- this line over rides the allserver group when its uncommented
       ##ansible_ssh_user=root
@@ -31,16 +31,16 @@ remote:
       #217.160.100.194
       #217.160.144.31
       #217.160.100.209
-      #dummy.online-server.cloud ansible_host=san-francisco ansible_ssh_user=user ansible_become_pass='{{ sanfrancisco_become_pass }}'
-      - d86df44.online-server.cloud
-      - 112e275.online-server.cloud
-      - a35a0d3.online-server.cloud
-      - b0235ee.online-server.cloud
-      - 4a999ff.online-server.cloud
-      #4a999ff.online-server.cloud ansible_user=ibrahim ansible_become_user=ibrahim ansible_become=yes ansible_become_method=su ansible_become_pass='{{ a999ff_become_pass }}'
+      #dummy.imsawadogo.com ansible_host=san-francisco ansible_ssh_user=user ansible_become_pass='{{ sanfrancisco_become_pass }}'
+      - d86df44.imsawadogo.com
+      - 112e275.imsawadogo.com
+      - a35a0d3.imsawadogo.com
+      - b0235ee.imsawadogo.com
+      - 4a999ff.imsawadogo.com
+      #4a999ff.imsawadogo.com ansible_user=ibrahim ansible_become_user=ibrahim ansible_become=yes ansible_become_method=su ansible_become_pass='{{ a999ff_become_pass }}'
       #192.168.14.32 #msvr ansible_user=manager ansible_become=yes ansible_become_method=su
     vars:
-      ansible_ssh_common_args='-o ProxyCommand="ssh -p 22 -W %h:%p -q ibrahim@4a999ff.online-server.cloud"'
+      ansible_ssh_common_args='-o ProxyCommand="ssh -p 22 -W %h:%p -q ibrahim@4a999ff.imsawadogo.com"'
       ansible_user=ibrahim
       ansible_ssh_user=ibrahim
       ansible_become=yes
@@ -52,13 +52,13 @@ remote:
       #ansible_ssh_common_args='-o StrictHostKeyChecking=no'
   cloud:
     hosts:
-      - d86df44.online-server.cloud
-      - 112e275.online-server.cloud
-      - a35a0d3.online-server.cloud
-      - b0235ee.online-server.cloud
-      #d86df44.online-server.cloud (217.160.100.194)
-      #112e275.online-server.cloud (217.160.144.31)
-      #a35a0d3.online-server.cloud (217.160.100.209)
+      - d86df44.imsawadogo.com
+      - 112e275.imsawadogo.com
+      - a35a0d3.imsawadogo.com
+      - b0235ee.imsawadogo.com
+      #d86df44.imsawadogo.com (217.160.100.194)
+      #112e275.imsawadogo.com (217.160.144.31)
+      #a35a0d3.imsawadogo.com (217.160.100.209)
     jumper:
       ansible_port: 22
-      ansible_host: 4a999ff.online-server.cloud
+      ansible_host: 4a999ff.imsawadogo.com

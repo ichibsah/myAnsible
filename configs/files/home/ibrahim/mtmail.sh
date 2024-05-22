@@ -27,7 +27,7 @@ postsuper -r ALL
 postqueue -f
 
 hostname -f
-hostnamectl set-hostname 4a999ff.online-server.cloud
+hostnamectl set-hostname 4a999ff.imsawadogo.com
 hostnamectl set-hostname de-1010-xl.imsawadogo.com
 
 

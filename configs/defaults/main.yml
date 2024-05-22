@@ -27,10 +27,10 @@ ipsets:
   - name: swarm_nodes
     type: 'hash:net'
     set:
-      - 212.227.166.233 # deb1202.online-server.cloud
+      - 212.227.166.233 # deb1202.imsawadogo.com
       - 212.227.151.179 # de-jump.imsawadogo.com
-      - 217.160.100.194 # d86df44.online-server.cloud
-      - 217.160.144.31  # 112e275.online-server.cloud
+      - 217.160.100.194 # d86df44.imsawadogo.com
+      - 217.160.144.31  # 112e275.imsawadogo.com
   - name: swarm_master
     type: 'hash:net'
     set:

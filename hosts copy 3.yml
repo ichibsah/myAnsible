@@ -3,48 +3,48 @@ all:
   children:
     ionos:
       hosts:
-        d86df44.online-server.cloud:
-        112e275.online-server.cloud:
-        a35a0d3.online-server.cloud:
-        #b0235ee.online-server.cloud:
-        4a999ff.online-server.cloud:
+        d86df44.imsawadogo.com:
+        112e275.imsawadogo.com:
+        a35a0d3.imsawadogo.com:
+        #b0235ee.imsawadogo.com:
+        4a999ff.imsawadogo.com:
       children:
         provision:
           hosts: 
             msvr02.skyline.lan:
-            d86df44.online-server.cloud:
-            112e275.online-server.cloud:
-            a35a0d3.online-server.cloud:
-            #b0235ee.online-server.cloud: 
+            d86df44.imsawadogo.com:
+            112e275.imsawadogo.com:
+            a35a0d3.imsawadogo.com:
+            #b0235ee.imsawadogo.com: 
               #ansible_become_pass: '{{ b0235ee_become_pass }}'
               #ansible_ssh_user: root
-            4a999ff.online-server.cloud:
+            4a999ff.imsawadogo.com:
           vars:
             #ansible_user: root
             #ansible_ssh_user: root
         cloud:
           hosts:
-            d86df44.online-server.cloud:
-            112e275.online-server.cloud:
-            a35a0d3.online-server.cloud:
-            #b0235ee.online-server.cloud:
+            d86df44.imsawadogo.com:
+            112e275.imsawadogo.com:
+            a35a0d3.imsawadogo.com:
+            #b0235ee.imsawadogo.com:
         allservers:
           hosts:
             msvr02.skyline.lan:
-            d86df44.online-server.cloud:
-            112e275.online-server.cloud:
-            a35a0d3.online-server.cloud:
-            #b0235ee.online-server.cloud:
+            d86df44.imsawadogo.com:
+            112e275.imsawadogo.com:
+            a35a0d3.imsawadogo.com:
+            #b0235ee.imsawadogo.com:
           vars:
             ansible_user: root
             ansible_ssh_user: ibrahim
         sandbox:
           hosts:
-            112e275.online-server.cloud:
-            d86df44.online-server.cloud:
-            a35a0d3.online-server.cloud:
-            #b0235ee.online-server.cloud:
-            4a999ff.online-server.cloud:
+            112e275.imsawadogo.com:
+            d86df44.imsawadogo.com:
+            a35a0d3.imsawadogo.com:
+            #b0235ee.imsawadogo.com:
+            4a999ff.imsawadogo.com:
             #virthost01.skyline.lan:
             #msvr02.skyline.lan:
             #  #ansible_become_method: su
