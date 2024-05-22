@@ -14,7 +14,8 @@
       services:
         mysql:
           container_name: ansiblemysql
-          image: mysql:8.0
+          #image: mysql:8.0
+          image: mysql:latest
           hostname: mysql
           volumes:
             - /opt/docker/semaphore-3002/semaphore-mysql:/var/lib/mysql
@@ -55,6 +56,7 @@
   register: output
   tags:
     - assert
+    - #test
   #
 - name: Verify that semaphore and db services are running
   ansible.builtin.assert:

@@ -60,7 +60,9 @@
 - name: Job 11 | import task semaphore
   ansible.builtin.import_tasks:
     file: 3002-semaphore.yml
-  #when: apt_host_pckg_lst | contains bind9
+  tags:
+    - semaphore
+    - test  
 #
 - name: Job 12 | import task semaphore
   ansible.builtin.import_tasks:
@@ -238,7 +240,7 @@
   when: instl_docker_pckg and dckr_dpl_jmj
   tags:
     - jmj
-    - test
+    - #test
 #
 #
 # keep this last
