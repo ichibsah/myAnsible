@@ -91,7 +91,7 @@
     prg_name: "anasse"
     con_name: "{{prg_name}}_con"
   community.docker.docker_compose:
-    project_name: anasse
+    project_name: "{{ prg_name }}"
     definition:
       version: '3.9'
       services:
@@ -119,7 +119,7 @@
 - name: Verify that anasse is running
   ansible.builtin.assert:
     that:
-      - "output.services.Anasse.anasse_con.state.running"
+      - "output.services.anasse.anasse_con.state.running"
       - #"output.services.mysql.ansiblemysql.state.running"
   tags:
     - assert
