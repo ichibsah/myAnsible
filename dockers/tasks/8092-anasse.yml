@@ -95,7 +95,7 @@
     definition:
       version: '3.9'
       services:
-        Anasse:
+        anasse:
           hostname: https://{{prg_name}}{{ dmain_pstfx }}"
           container_name: "{{con_name}}"
           image: "{{prg_name}}:latest"
