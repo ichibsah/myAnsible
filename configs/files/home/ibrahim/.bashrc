@@ -148,6 +148,7 @@ git config --global user.name $USER
 git config --global user.email $USER@$HOSTNAME
 git config --global core.editor nano
 git config --global init.defaultBranch main
+git config --global pull.ff only
 #git branch -m <name> # rename brunch
 #
 alias apv='ansible-playbook --vault-id ~/.ssh/.jenkins-vault.pw'
