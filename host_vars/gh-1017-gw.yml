@@ -1,0 +1,139 @@
+hostname_additional_hosts:
+  - ip_address: 192.168.1.120
+    hostname: gh-1017-gw.skyline.lan
+    hostname_short: gh-1017-gw
+  #- ip_address: 192.168.77.254
+  #  hostname: gh-1017-gw.skyline.lan
+  #  hostname_short: gh-1017-gw
+  #- ip_address: 192.168.0.80
+  #  hostname: gh-1017-gw.skyline.lan
+  #  hostname_short: gh-1017-gw
+  #
+dckr_dmain_nme_pstfx: home.sawadogo.xyz
+#virthost01.skyline.lan: 
+#ansible_connection: local # this will overwrite any other type of connections. its needed here.
+ansible_become_pass: '{{ localhost_become_pass }}'
+#
+### PRVS | CONFIG ###
+prvs_copy_home: no                       # Copy default user's home files in place
+prvs_root_passwd: no                     # update root passward
+#
+dkr_copy_def_files: no                   # Copy default docker files to target server
+#
+crntb_activate_cronjobs: no
+#
+apt_hst_strt_srvc_lst:                # Ensure Services are running.
+  - chronyd
+  - #bind9
+  - #psa
+#
+### APT | PACKAGES INSTALL ###
+instl_def_pckg: yes                       # Install complete packages. A 'no' will remove it from the host (apt_def_pckg_lst)
+instl_utl_pckg: yes                        # Install complete packages. A 'no' will remove it from the host (apt_util_lst)
+sysd_strt_srvc: yes                       # Start services
+instl_ansbl_pckg: no                      # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
+instl_docker_pckg: yes                    # Install Docker package (apt_docker_pckg_lst)
+apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
+  - python3-virtualenv
+  - #bind9
+dckr_fldr_lst:                            # Docker folder list that will be copied when set in the host variable
+- #{ fldr: "4a999ff" }
+
+crntb_fldr_lst:                            # Crontab folder list that will be copied when set in the host variable
+- #{ fldr: "4a999ff" }
+
+crntb_actvt_crnjbs_mrym: no
+dckr_dpl_meryem: no
+dckr_dpl_anasse: no
+##
+addresolv: yes                            # add cloudflare ad dns resolv address temporary to resolv.conf
+#
+addLocalUser: yes                # add a local user to specific host
+#
+#
+### APT | PACKAGES INSTALL ###
+#instl_def_pckg: yes                       # Install complete packages. A 'no' will remove it from the host (apt_def_pckg_lst)
+#instl_utl_pckg: yes                        # Install complete packages. A 'no' will remove it from the host (apt_util_lst)
+#sysd_strt_srvc: yes                       # Start services
+#instl_ansbl_pckg: yes                      # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
+#instl_docker_pckg: yes                    # Install Docker package (apt_docker_pckg_lst)
+#apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
+#- cifs-utils
+#- isc-dhcp-common
+#- isc-dhcp-server
+#- kubectx
+#
+#
+pip_host_pckg_lst:                        # Install Host Specific PIP Packages when ansible is also installed
+#
+#
+# docker containers
+dckr_dpl_pihole: yes
+dckr_dpl_iSpy: no
+dckr_dpl_semaphore: yes
+dckr_dpl_trcmmnd: no
+dckr_dpl_npxymgmt: yes
+dckr_dpl_gravity: yes
+dckr_dpl_homepage: yes
+dckr_dpl_wud: yes
+dckr_dpl_webcheck: yes
+dckr_dpl_uptmkm: yes
+#
+#apt_hst_strt_srvc_lst:                          # Ensure Host Specific Services are running.
+  #- isc-dhcp-server
+#
+#
+#
+instl_dhcp_srvc: no
+dsbl_dhcpvsx: yes                               # Disable dhcp v6 in DHCP
+dsbl_dhcpvsx_regx: INTERFACESv4='eno1'          # text that should change goes here eg. INTERFACESv4='ens18'
+#
+copy_iptables: yes                                   # Copy iptables to /root folder
+strt_myiptbls_at_boot: yes
+#
+# interfaces:
+#   - iface: eth1
+#
+localusers:
+  - name: lady
+    shell: /bin/bash
+    #group: lady
+    groups: 
+      - sudo
+      - docker
+    append: True
+    state: present
+    key: lady.pub
+    gen_ssh_key: True
+    create_home: True
+    local: True
+    hosts: gh-1017-gw
+    bashrc: /home/ibrahim/sandbox/myAnsible/configs/files/home/ibrahim/.bashrc  
+  - name: joe
+    shell: /bin/bash
+    group: joe
+    groups: 
+      - sudo
+      - docker
+    append: True
+    state: present
+    key: joe.pub
+    gen_ssh_key: True
+    create_home: True
+    local: True
+    hosts: deb1202
+    bashrc: /home/ibrahim/sandbox/myAnsible/configs/files/home/ibrahim/.bashrc
+  - name: thelma
+    shell: /bin/bash
+    group: thelma
+    groups: 
+      - sudo
+      - docker
+    append: True
+    state: present
+    key: thelma.pub
+    gen_ssh_key: True
+    create_home: True
+    local: True
+    hosts: deb1202
+    bashrc: /home/ibrahim/sandbox/myAnsible/configs/files/home/ibrahim/.bashrc
