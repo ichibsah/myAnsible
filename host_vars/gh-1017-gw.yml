@@ -1,7 +1,7 @@
 hostname_additional_hosts:
   - ip_address: 192.168.1.120
     hostname: gh-1017-gw.skyline.lan
-    hostname_short: gh-1017-gw
+    hostname_short: "gh-1017-gw"
   #- ip_address: 192.168.77.254
   #  hostname: gh-1017-gw.skyline.lan
   #  hostname_short: gh-1017-gw
