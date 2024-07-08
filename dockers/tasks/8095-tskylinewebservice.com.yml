@@ -1,0 +1,275 @@
+---
+#
+- name: Job 00 | Deploy skylinewebservice - pull from git
+  vars:
+    working_dir: "{{dckr_bs_pth}}/skylinewebservice-8095/" 
+    log_dir: "{{ working_dir }}logs"
+    prg_name: "tskylinewebservice"
+  ansible.builtin.git:
+    repo: git@github.com:skylinewebservice/skylinewebservice.com.git
+    dest: "{{ working_dir }}"
+    force: yes
+    clone: yes
+    update: yes
+    remote: origin
+    key_file: /home/ibrahim/.ssh/id_rsa # file must exist on remote server
+    accept_hostkey: yes
+  check_mode: false
+  register: changes_in_git_pull
+#
+#
+- name: Run only if the task that registered the "result" variable fails
+  ansible.builtin.debug:
+    msg: "Directory is failed"
+  when: changes_in_git_pull is failed
+
+- name: Run only if the task that registered the "result" variable succeeds # just the green color
+  ansible.builtin.debug:
+    msg: "Directory is succeeded"
+  when: changes_in_git_pull is succeeded
+
+- name: Run only if the task that registered the "result" variable is skipped
+  ansible.builtin.debug:
+    msg: "Directory is skipped"
+  when: changes_in_git_pull is skipped
+
+- name: Run only if the task that registered the "result" variable changed something.
+  ansible.builtin.debug:
+    msg: "Directory is changed"
+  when: changes_in_git_pull is changed
+#
+#
+- name: Job 01 | Delete container
+  vars:
+    prg_name: "tskylinewebservice"
+    con_name: "{{prg_name}}_con"
+  community.docker.docker_compose:
+    remove_images: all
+    remove_volumes: True
+    stopped: True
+    state: absent
+    project_name: "{{ prg_name }}"
+    definition:
+      version: '3.9'
+      services:
+        tskylinewebservice:
+          container_name: "{{con_name}}"
+          image: "{{ prg_name }}:latest"
+  when: changes_in_git_pull is changed
+#
+- name: Job 01 | Delete old image
+  vars:
+    prg_name: "tskylinewebservice"
+  docker_image:
+    name:  "{{ prg_name }}"
+    force_absent: True
+    state: absent
+  when: changes_in_git_pull is changed
+#
+- name: Job 02 | Deploy skylinewebservice - build image
+  vars:
+    working_dir: "{{dckr_bs_pth}}/skylinewebservice-8095/" 
+    log_dir: "{{ working_dir }}logs"
+    prg_name: "tskylinewebservice"
+  community.docker.docker_image:
+    name: "{{ prg_name }}"
+    build:
+      path: "{{ working_dir }}"
+      args:
+        log_volume: "{{ log_dir }}"
+    force_tag: true
+    force_source: true
+    source: build
+    tag: latest
+  when: changes_in_git_pull is changed
+#
+- name: Job 03 | Deploy skylinewebservice - deploy container
+  vars:
+    working_dir: "{{dckr_bs_pth}}/skylinewebservice-8095/" 
+    log_dir: "{{ working_dir }}logs"
+    prg_name: "tskylinewebservice"
+    con_name: "{{prg_name}}_con"
+  community.docker.docker_compose:
+    project_name: tskylinewebservice
+    definition:
+      version: '3.9'
+      services:
+        tskylinewebservice:
+          hostname: https://{{prg_name}}{{ dmain_pstfx }}"
+          container_name: "{{con_name}}"
+          image: "{{prg_name}}:latest"
+          ports:
+            - 8095:8000 
+          restart: always
+          environment:
+            - TZ=Europe/Berlin
+          user: "${UID}:${GID}"
+          #user: "0:0" # root
+          # volumes:
+          #   - /opt/docker/emby-8096/emby:/config
+          #   - /net/mediafiles/mediaFiles/TV-Shows:/tvshows
+          #   - /net/mediafiles/mediaFiles/Movies:/movies
+  #when: changes_in_git_pull is changed or changes_in_git_pull is succeeded
+  register: output
+  tags:
+    - assert
+    - #test
+#
+- name: Verify that skylinewebservice is running
+  ansible.builtin.assert:
+    that:
+      - "output.services.tskylinewebservice.tskylinewebservice_con.state.running"
+      - #"output.services.mysql.ansiblemysql.state.running"
+  tags:
+    - assert
+    - #test
+#
+#
+#
+# # https://mariushosting.com/how-to-install-emby-on-your-synology-nas/
+
+# git:
+#   repo:  # required. git, SSH, or HTTP(S) protocol address of the git repository.
+#   dest:  # required. The path of where the repository should be checked out. This parameter is required, unless C(clone) is set to C(no).
+#   version: HEAD # not required. What version of the repository to check out.  This can be the literal string C(HEAD), a branch name, a tag name. It can also be a I(SHA-1) hash, in which case C(refspec) needs to be specified if the given revision is not already available.
+#   accept_hostkey: no # not required. if C(yes), ensure that "-o StrictHostKeyChecking=no" is present as an ssh option.
+#   ssh_opts:  # not required. Creates a wrapper script and exports the path as GIT_SSH which git then automatically uses to override ssh arguments. An example value could be "-o StrictHostKeyChecking=no" (although this particular option is better set via C(accept_hostkey)).
+#   key_file:  # not required. Specify an optional private key file path, on the target host, to use for the checkout.
+#   reference:  # not required. Reference repository (see "git clone --reference ...")
+#   remote: origin # not required. Name of the remote.
+#   refspec:  # not required. Add an additional refspec to be fetched. If version is set to a I(SHA-1) not reachable from any branch or tag, this option may be necessary to specify the ref containing the I(SHA-1). Uses the same syntax as the 'git fetch' command. An example value could be "refs/meta/config".
+#   force: no # not required. If C(yes), any modified files in the working repository will be discarded.  Prior to 0.7, this was always 'yes' and could not be disabled.  Prior to 1.9, the default was `yes`
+#   depth:  # not required. Create a shallow clone with a history truncated to the specified number or revisions. The minimum possible value is C(1), otherwise ignored. Needs I(git>=1.9.1) to work correctly.
+#   clone: yes # not required. If C(no), do not clone the repository even if it does not exist locally
+#   update: yes # not required. If C(no), do not retrieve new revisions from the origin repository Operations like archive will work on the existing (old) repository and might not respond to changes to the options version or remote.
+#   executable:  # not required. Path to git executable to use. If not supplied, the normal mechanism for resolving binary paths will be used.
+#   bare: no # not required. if C(yes), repository will be created as a bare repo, otherwise it will be a standard repo with a workspace.
+#   umask:  # not required. The umask to set before doing any checkouts, or any other repository maintenance.
+#   recursive: yes # not required. if C(no), repository will be cloned without the --recursive option, skipping sub-modules.
+#   track_submodules: no # not required. if C(yes), submodules will track the latest commit on their master branch (or other branch specified in .gitmodules).  If C(no), submodules will be kept at the revision specified by the main project. This is equivalent to specifying the --remote flag to git submodule update.
+#   verify_commit: no # not required. if C(yes), when cloning or checking out a C(version) verify the signature of a GPG signed commit. This requires C(git) version>=2.1.0 to be installed. The commit MUST be signed and the public key MUST be present in the GPG keyring.
+#   archive:  # not required. Specify archive file path with extension. If specified, creates an archive file of the specified format containing the tree structure for the source tree. Allowed archive formats ["zip", "tar.gz", "tar", "tgz"] This will clone and perform git archive from local directory as not all git servers support git archive.
+#   separate_git_dir:  # not required. The path to place the cloned repository. If specified, Git repository can be separated from working tree.
+#   gpg_whitelist: [] # not required. A list of trusted GPG fingerprints to compare to the fingerprint of the GPG-signed commit. Only used when I(verify_commit=yes).
+#
+# #
+# docker_image:
+#   name:  # required. Image name. Name format will be one of: name, repository/name, registry_server:port/name. When pushing or pulling an image the name can optionally include the tag by appending ':tag_name'. Note that image IDs (hashes) are not supported.
+#   source: build # not required. choices: build;load;pull;local. Determines where the module will try to retrieve the image from. Use C(build) to build the image from a C(Dockerfile). I(build.path) must be specified when this value is used. Use C(load) to load the image from a C(.tar) file. I(load_path) must be specified when this value is used. Use C(pull) to pull the image from a registry. Use C(local) to make sure that the image is already available on the local docker daemon, i.e. do not try to build, pull or load the image. Before Ansible 2.12, the value of this option will be auto-detected to be backwards compatible, but a warning will be issued if it is not explicitly specified. From Ansible 2.12 on, auto-detection will be disabled and this option will be made mandatory.
+#   build:  # not required. Specifies options used for building images.
+#   archive_path:  # not required. Use with state C(present) to archive an image to a .tar file.
+#   load_path:  # not required. Use with state C(present) to load an image from a .tar file. Set I(source) to C(load) if you want to load the image. The option will be set automatically before Ansible 2.12 if this option is used (except if I(path) is specified as well, in which case building will take precedence). From Ansible 2.12 on, you have to set I(source) to C(load).
+#   dockerfile:  # not required. Use with state C(present) and source C(build) to provide an alternate name for the Dockerfile to use when building an image. This can also include a relative path (relative to I(path)). Please use I(build.dockerfile) instead. This option will be removed in Ansible 2.12.
+#   force:  # not required. Use with state I(absent) to un-tag and remove all images matching the specified name. Use with state C(present) to build, load or pull an image when the image already exists. Also use with state C(present) to force tagging an image. Please stop using this option, and use the more specialized force options I(force_source), I(force_absent) and I(force_tag) instead. This option will be removed in Ansible 2.12.
+#   force_source: False # not required. Use with state C(present) to build, load or pull an image (depending on the value of the I(source) option) when the image already exists.
+#   force_absent: False # not required. Use with state I(absent) to un-tag and remove all images matching the specified name.
+#   force_tag: False # not required. Use with state C(present) to force tagging an image.
+#   http_timeout:  # not required. Timeout for HTTP requests during the image build operation. Provide a positive integer value for the number of seconds. Please use I(build.http_timeout) instead. This option will be removed in Ansible 2.12.
+#   path:  # not required. Use with state 'present' to build an image. Will be the path to a directory containing the context and Dockerfile for building an image. Set I(source) to C(build) if you want to build the image. The option will be set automatically before Ansible 2.12 if this option is used. From Ansible 2.12 on, you have to set I(source) to C(build). Please use I(build.path) instead. This option will be removed in Ansible 2.12.
+#   pull:  # not required. When building an image downloads any updates to the FROM image in Dockerfile. Please use I(build.pull) instead. This option will be removed in Ansible 2.12. The default is currently C(yes). This will change to C(no) in Ansible 2.12.
+#   push: False # not required. Push the image to the registry. Specify the registry as part of the I(name) or I(repository) parameter.
+#   rm: True # not required. Remove intermediate containers after build. Please use I(build.rm) instead. This option will be removed in Ansible 2.12.
+#   nocache: False # not required. Do not use cache when building an image. Please use I(build.nocache) instead. This option will be removed in Ansible 2.12.
+#   repository:  # not required. Full path to a repository. Use with state C(present) to tag the image into the repository. Expects format I(repository:tag). If no tag is provided, will use the value of the C(tag) parameter or I(latest).
+#   state: absent # not required. choices: absent;present;build. Make assertions about the state of an image. When C(absent) an image will be removed. Use the force option to un-tag and remove all images matching the provided name. When C(present) check if an image exists using the provided name and tag. If the image is not found or the force option is used, the image will either be pulled, built or loaded, depending on the I(source) option. By default the image will be pulled from Docker Hub, or the registry specified in the image's name. Note that this will change in Ansible 2.12, so to make sure that you are pulling, set I(source) to C(pull). To build the image, provide a I(path) value set to a directory containing a context and Dockerfile, and set I(source) to C(build). To load an image, specify I(load_path) to provide a path to an archive file. To tag an image to a repository, provide a I(repository) path. If the name contains a repository path, it will be pushed. *Note:* C(state=build) is DEPRECATED and will be removed in Ansible 2.11. Specifying C(build) will behave the same as C(present).
+#   tag: latest # not required. Used to select an image when pulling. Will be added to the image when pushing, tagging or building. Defaults to I(latest). If I(name) parameter format is I(name:tag), then tag value from I(name) will take precedence.
+#   buildargs:  # not required. Provide a dictionary of C(key:value) build arguments that map to Dockerfile ARG directive. Docker expects the value to be a string. For convenience any non-string values will be converted to strings. Requires Docker API >= 1.21. Please use I(build.args) instead. This option will be removed in Ansible 2.12.
+#   container_limits:  # not required. A dictionary of limits applied to each container created by the build process. Please use I(build.container_limits) instead. This option will be removed in Ansible 2.12.
+#   use_tls: no # not required. choices: no;encrypt;verify. DEPRECATED. Whether to use tls to connect to the docker daemon. Set to C(encrypt) to use TLS. And set to C(verify) to use TLS and verify that the server's certificate is valid for the server. *Note:* If you specify this option, it will set the value of the I(tls) or I(validate_certs) parameters if not set to C(no). Will be removed in Ansible 2.11.
+#   docker_host: unix://var/run/docker.sock # not required. The URL or Unix socket path used to connect to the Docker API. To connect to a remote host, provide the TCP connection string. For example, C(tcp://192.0.2.23:2376). If TLS is used to encrypt the connection, the module will automatically replace C(tcp) in the connection URL with C(https). If the value is not specified in the task, the value of environment variable C(DOCKER_HOST) will be used instead. If the environment variable is not set, the default value will be used.
+#   tls_hostname: localhost # not required. When verifying the authenticity of the Docker Host server, provide the expected name of the server. If the value is not specified in the task, the value of environment variable C(DOCKER_TLS_HOSTNAME) will be used instead. If the environment variable is not set, the default value will be used.
+#   api_version: auto # not required. The version of the Docker API running on the Docker Host. Defaults to the latest version of the API supported by Docker SDK for Python and the docker daemon. If the value is not specified in the task, the value of environment variable C(DOCKER_API_VERSION) will be used instead. If the environment variable is not set, the default value will be used.
+#   timeout: 60 # not required. The maximum amount of time in seconds to wait on a response from the API. If the value is not specified in the task, the value of environment variable C(DOCKER_TIMEOUT) will be used instead. If the environment variable is not set, the default value will be used.
+#   ca_cert:  # not required. Use a CA certificate when performing server verification by providing the path to a CA certificate file. If the value is not specified in the task and the environment variable C(DOCKER_CERT_PATH) is set, the file C(ca.pem) from the directory specified in the environment variable C(DOCKER_CERT_PATH) will be used.
+#   client_cert:  # not required. Path to the client's TLS certificate file. If the value is not specified in the task and the environment variable C(DOCKER_CERT_PATH) is set, the file C(cert.pem) from the directory specified in the environment variable C(DOCKER_CERT_PATH) will be used.
+#   client_key:  # not required. Path to the client's TLS key file. If the value is not specified in the task and the environment variable C(DOCKER_CERT_PATH) is set, the file C(key.pem) from the directory specified in the environment variable C(DOCKER_CERT_PATH) will be used.
+#   ssl_version:  # not required. Provide a valid SSL version number. Default value determined by ssl.py module. If the value is not specified in the task, the value of environment variable C(DOCKER_SSL_VERSION) will be used instead.
+#   tls: False # not required. Secure the connection to the API by using TLS without verifying the authenticity of the Docker host server. Note that if I(validate_certs) is set to C(yes) as well, it will take precedence. If the value is not specified in the task, the value of environment variable C(DOCKER_TLS) will be used instead. If the environment variable is not set, the default value will be used.
+#   validate_certs: False # not required. Secure the connection to the API by using TLS and verifying the authenticity of the Docker host server. If the value is not specified in the task, the value of environment variable C(DOCKER_TLS_VERIFY) will be used instead. If the environment variable is not set, the default value will be used.
+#   debug: False # not required. Debug mode
+
+
+#
+# git:
+#   repo:  # required. git, SSH, or HTTP(S) protocol address of the git repository.
+#   dest:  # required. The path of where the repository should be checked out. This parameter is required, unless C(clone) is set to C(no).
+#   version: HEAD # not required. What version of the repository to check out.  This can be the literal string C(HEAD), a branch name, a tag name. It can also be a I(SHA-1) hash, in which case C(refspec) needs to be specified if the given revision is not already available.
+#   accept_hostkey: no # not required. if C(yes), ensure that "-o StrictHostKeyChecking=no" is present as an ssh option.
+#   ssh_opts:  # not required. Creates a wrapper script and exports the path as GIT_SSH which git then automatically uses to override ssh arguments. An example value could be "-o StrictHostKeyChecking=no" (although this particular option is better set via C(accept_hostkey)).
+#   key_file:  # not required. Specify an optional private key file path, on the target host, to use for the checkout.
+#   reference:  # not required. Reference repository (see "git clone --reference ...")
+#   remote: origin # not required. Name of the remote.
+#   refspec:  # not required. Add an additional refspec to be fetched. If version is set to a I(SHA-1) not reachable from any branch or tag, this option may be necessary to specify the ref containing the I(SHA-1). Uses the same syntax as the 'git fetch' command. An example value could be "refs/meta/config".
+#   force: no # not required. If C(yes), any modified files in the working repository will be discarded.  Prior to 0.7, this was always 'yes' and could not be disabled.  Prior to 1.9, the default was `yes`
+#   depth:  # not required. Create a shallow clone with a history truncated to the specified number or revisions. The minimum possible value is C(1), otherwise ignored. Needs I(git>=1.9.1) to work correctly.
+#   clone: yes # not required. If C(no), do not clone the repository even if it does not exist locally
+#   update: yes # not required. If C(no), do not retrieve new revisions from the origin repository Operations like archive will work on the existing (old) repository and might not respond to changes to the options version or remote.
+#   executable:  # not required. Path to git executable to use. If not supplied, the normal mechanism for resolving binary paths will be used.
+#   bare: no # not required. if C(yes), repository will be created as a bare repo, otherwise it will be a standard repo with a workspace.
+#   umask:  # not required. The umask to set before doing any checkouts, or any other repository maintenance.
+#   recursive: yes # not required. if C(no), repository will be cloned without the --recursive option, skipping sub-modules.
+#   track_submodules: no # not required. if C(yes), submodules will track the latest commit on their master branch (or other branch specified in .gitmodules).  If C(no), submodules will be kept at the revision specified by the main project. This is equivalent to specifying the --remote flag to git submodule update.
+#   verify_commit: no # not required. if C(yes), when cloning or checking out a C(version) verify the signature of a GPG signed commit. This requires C(git) version>=2.1.0 to be installed. The commit MUST be signed and the public key MUST be present in the GPG keyring.
+#   archive:  # not required. Specify archive file path with extension. If specified, creates an archive file of the specified format containing the tree structure for the source tree. Allowed archive formats ["zip", "tar.gz", "tar", "tgz"] This will clone and perform git archive from local directory as not all git servers support git archive.
+#   separate_git_dir:  # not required. The path to place the cloned repository. If specified, Git repository can be separated from working tree.
+#   gpg_whitelist: [] # not required. A list of trusted GPG fingerprints to compare to the fingerprint of the GPG-signed commit. Only used when I(verify_commit=yes).
+
+
+
+
+#
+# github_key:
+#   token:  # required. GitHub Access Token with permission to list and create public keys.
+#   name:  # required. SSH key name
+#   pubkey:  # not required. SSH public key value. Required when C(state=present).
+#   state: present # not required. choices: present;absent. Whether to remove a key, ensure that it exists, or update its value.
+#   force: yes # not required. The default is C(yes), which will replace the existing remote key if it's different than C(pubkey). If C(no), the key will only be set if no key with the given C(name) exists.
+
+
+#
+# github_deploy_key:
+#   owner:  # required. The name of the individual account or organization that owns the GitHub repository.
+#   repo:  # required. The name of the GitHub repository.
+#   name:  # required. The name for the deploy key.
+#   key:  # required. The SSH public key to add to the repository as a deploy key.
+#   read_only: yes # not required. If C(true), the deploy key will only be able to read repository contents. Otherwise, the deploy key will be able to read and write.
+#   state: present # not required. choices: present;absent. The state of the deploy key.
+#   force: no # not required. If C(true), forcefully adds the deploy key by deleting any existing deploy key with the same public key or title.
+#   username:  # not required. The username to authenticate with. Should not be set when using personal access token
+#   password:  # not required. The password to authenticate with. Alternatively, a personal access token can be used instead of I(username) and I(password) combination.
+#   token:  # not required. The OAuth2 token or personal access token to authenticate with. Mutually exclusive with I(password).
+#   otp:  # not required. The 6 digit One Time Password for 2-Factor Authentication. Required together with I(username) and I(password).
+
+
+
+
+# docker_compose:
+#   project_src:  # not required. Path to a directory containing a C(docker-compose.yml) or C(docker-compose.yaml) file. Mutually exclusive with I(definition). Required when no I(definition) is provided.
+#   project_name:  # not required. Provide a project name. If not provided, the project name is taken from the basename of I(project_src). Required when I(definition) is provided.
+#   files:  # not required. List of Compose file names relative to I(project_src). Overrides C(docker-compose.yml) or C(docker-compose.yaml). Files are loaded and merged in the order given.
+#   state: absent # not required. choices: absent;present. Desired state of the project. Specifying C(present) is the same as running C(docker-compose up) resp. C(docker-compose stop) (with I(stopped)) resp. C(docker-compose restart) (with I(restarted)). Specifying C(absent) is the same as running C(docker-compose down).
+#   services:  # not required. When I(state) is C(present) run C(docker-compose up) resp. C(docker-compose stop) (with I(stopped)) resp. C(docker-compose restart) (with I(restarted)) on a subset of services. If empty, which is the default, the operation will be performed on all services defined in the Compose file (or inline I(definition)).
+#   scale:  # not required. When I(state) is C(present) scale services. Provide a dictionary of key/value pairs where the key is the name of the service and the value is an integer count for the number of containers.
+#   dependencies: True # not required. When I(state) is C(present) specify whether or not to include linked services.
+#   definition:  # not required. Compose file describing one or more services, networks and volumes. Mutually exclusive with I(project_src) and I(files).
+#   hostname_check: False # not required. Whether or not to check the Docker daemon's hostname against the name provided in the client certificate.
+#   recreate: always # not required. choices: always;never;smart. By default containers will be recreated when their configuration differs from the service definition. Setting to C(never) ignores configuration differences and leaves existing containers unchanged. Setting to C(always) forces recreation of all existing containers.
+#   build: False # not required. Use with I(state) C(present) to always build images prior to starting the application. Same as running C(docker-compose build) with the pull option. Images will only be rebuilt if Docker detects a change in the Dockerfile or build directory contents. Use the I(nocache) option to ignore the image cache when performing the build. If an existing image is replaced, services using the image will be recreated unless I(recreate) is C(never).
+#   pull: False # not required. Use with I(state) C(present) to always pull images prior to starting the application. Same as running C(docker-compose pull). When a new image is pulled, services using the image will be recreated unless I(recreate) is C(never).
+#   nocache: False # not required. Use with the I(build) option to ignore the cache during the image build process.
+#   remove_images: all # not required. choices: all;local. Use with I(state) C(absent) to remove all images or only local images.
+#   remove_volumes: False # not required. Use with I(state) C(absent) to remove data volumes.
+#   stopped: False # not required. Use with I(state) C(present) to stop all containers defined in the Compose file. If I(services) is defined, only the containers listed there will be stopped.
+#   restarted: False # not required. Use with I(state) C(present) to restart all containers defined in the Compose file. If I(services) is defined, only the containers listed there will be restarted.
+#   remove_orphans: False # not required. Remove containers for services not defined in the Compose file.
+#   timeout: 10 # not required. timeout in seconds for container shutdown when attached or when containers are already running.
+#   docker_host: unix://var/run/docker.sock # not required. The URL or Unix socket path used to connect to the Docker API. To connect to a remote host, provide the TCP connection string. For example, C(tcp://192.0.2.23:2376). If TLS is used to encrypt the connection, the module will automatically replace C(tcp) in the connection URL with C(https). If the value is not specified in the task, the value of environment variable C(DOCKER_HOST) will be used instead. If the environment variable is not set, the default value will be used.
+#   tls_hostname: localhost # not required. When verifying the authenticity of the Docker Host server, provide the expected name of the server. If the value is not specified in the task, the value of environment variable C(DOCKER_TLS_HOSTNAME) will be used instead. If the environment variable is not set, the default value will be used.
+#   api_version: auto # not required. The version of the Docker API running on the Docker Host. Defaults to the latest version of the API supported by Docker SDK for Python and the docker daemon. If the value is not specified in the task, the value of environment variable C(DOCKER_API_VERSION) will be used instead. If the environment variable is not set, the default value will be used.
+#   ca_cert:  # not required. Use a CA certificate when performing server verification by providing the path to a CA certificate file. If the value is not specified in the task and the environment variable C(DOCKER_CERT_PATH) is set, the file C(ca.pem) from the directory specified in the environment variable C(DOCKER_CERT_PATH) will be used.
+#   client_cert:  # not required. Path to the client's TLS certificate file. If the value is not specified in the task and the environment variable C(DOCKER_CERT_PATH) is set, the file C(cert.pem) from the directory specified in the environment variable C(DOCKER_CERT_PATH) will be used.
+#   client_key:  # not required. Path to the client's TLS key file. If the value is not specified in the task and the environment variable C(DOCKER_CERT_PATH) is set, the file C(key.pem) from the directory specified in the environment variable C(DOCKER_CERT_PATH) will be used.
+#   ssl_version:  # not required. Provide a valid SSL version number. Default value determined by ssl.py module. If the value is not specified in the task, the value of environment variable C(DOCKER_SSL_VERSION) will be used instead.
+#   tls: False # not required. Secure the connection to the API by using TLS without verifying the authenticity of the Docker host server. Note that if I(validate_certs) is set to C(yes) as well, it will take precedence. If the value is not specified in the task, the value of environment variable C(DOCKER_TLS) will be used instead. If the environment variable is not set, the default value will be used.
+#   validate_certs: False # not required. Secure the connection to the API by using TLS and verifying the authenticity of the Docker host server. If the value is not specified in the task, the value of environment variable C(DOCKER_TLS_VERIFY) will be used instead. If the environment variable is not set, the default value will be used.
+#   debug: False # not required. Debug mode

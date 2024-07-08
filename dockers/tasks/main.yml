@@ -176,11 +176,27 @@
   when: instl_docker_pckg and dckr_dpl_opendot
   tags:
     - opendot
+    - #test  
+#
+- name: Job 32 | import task opendot
+  ansible.builtin.import_tasks:
+    file: 8099-topendot.yml
+  when: instl_docker_pckg and dckr_dpl_opendot
+  tags:
+    - opendot
     - test  
 #
 - name: Job 33 | import task Skylinewebservice
   ansible.builtin.import_tasks:
     file: 8094-skylinewebservice.com.yml
+  when: instl_docker_pckg and dckr_dpl_skyline
+  tags:
+    - skyline
+    - #test  
+#
+- name: Job 33-1 | import task tSkylinewebservice
+  ansible.builtin.import_tasks:
+    file: 8095-tskylinewebservice.com.yml
   when: instl_docker_pckg and dckr_dpl_skyline
   tags:
     - skyline
