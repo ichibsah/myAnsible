@@ -1,0 +1,24 @@
+hostname_additional_hosts:
+  - ip_address: 192.168.1.164
+    hostname: gh-1012-plex.skyline.lan
+    hostname_short: de-1012-plex
+  #
+#
+ansible_become_pass: '{{ localhost_become_pass }}'
+### PRVS | CONFIG ###
+prvs_copy_home: no                       # Copy default user's home files in place
+prvs_root_passwd: yes                    # update root passward
+#
+dkr_copy_def_files: no                   # Copy default docker files to target server
+dkr_copy_etx_files: no                   # Copy extended docker files to target host
+
+crntb_activate_cronjobs: no
+#
+#
+### APT | PACKAGES INSTALL ###
+instl_def_pckg: yes                       # Install complete packages. A 'no' will remove it from the host (apt_def_pckg_lst)
+instl_utl_pckg: yes                       # Install complete packages. A 'no' will remove it from the host (apt_util_lst)
+sysd_strt_srvc: yes                       # Start services
+instl_ansbl_pckg: no                      # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
+instl_docker_pckg: yes                    # Install Docker package (apt_docker_pckg_lst)
+apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)

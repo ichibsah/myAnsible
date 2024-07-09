@@ -7,4 +7,4 @@ clear
 ansible-inventory -y --list
 #
 #ansible-playbook -v run-main.yml # works
-ansible-playbook -v --limit gh-1017-gw run-main.yml # works
+ansible-playbook gh-servers run-main.yml # works
