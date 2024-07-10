@@ -166,7 +166,8 @@ alias gcb="git checkout -b $1 &&  git push --set-upstream origin $1" # git creat
 #alias gcb="git checkout -b $1" # git create new branch and switch to it
 alias gsb="git checkout $1" # git switch to desired branch
 alias gl1="git log --oneline"
-alias grh="git reset --hard" 
+alias grh="git reset --hard"  #git reset --hard origin/master
+#
 # ******************
 alias dmesg="dmesg -w -H"
 alias tsyslog="tail -f /var/log/syslog"
