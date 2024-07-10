@@ -55,7 +55,7 @@ apt_def_pckg_lst:                     # Install Default Packages on All Host
 - resolvconf
 - bash-completion # https://github.com/cykerway/complete-alias
 - cron
-- netstat
+- net-tools
 #
 #apt_packages_list:
 #- python3-apt
