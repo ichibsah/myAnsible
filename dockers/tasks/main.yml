@@ -94,6 +94,14 @@
     file: 32400-plex.yml
   when: instl_docker_pckg and dckr_dpl_plex
 #
+- name: Job 17.1 | import task plex
+  ansible.builtin.import_tasks:
+    file: 32400-plex.yml
+  when: instl_docker_pckg and dckr_dpl_plex_gh
+  tags:
+  - plex
+  - #test  
+#
 - name: Job 18 | import task tubesync
   ansible.builtin.import_tasks:
     file: 4848-tubesync.yml
