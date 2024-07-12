@@ -23,3 +23,4 @@ instl_ansbl_pckg: no                      # Install ansible using PIP (pip_ansbl
 instl_docker_pckg: yes                    # Install Docker package (apt_docker_pckg_lst)
 dckr_dpl_plex_gh: yes
 apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
+addresolv: yes
