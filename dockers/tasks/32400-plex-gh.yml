@@ -67,7 +67,7 @@
       version: "3.3"
       services:
         plex:
-          hostname: plex.skyline.lan
+          hostname: plex-gh.skyline.lan
           container_name: plex_con
           image: plexinc/pms-docker:latest
           ports:
@@ -84,14 +84,14 @@
             - VERSION=docker
             - TZ=Etc/UTC
             - PLEX_CLAIM={{plex_claim}}
-            - ADVERTISE_IP=http://10.0.0.137:32400/
+            - ADVERTISE_IP=http://192.168.1.164:32400/
           #user: "${UID}:${GID}"
           #user: "0:0" # root
           #user: "1354601103:1354600513" # ibrahim@skyline
           volumes:
             - /opt/docker/plex-32400/database:/config
             - /opt/docker/plex-32400/transcode:/transcode
-            - /mnt/4TB/mefiafiles:/data
+            - /mnt/4TB/mediafiles:/data
   #when: instl_docker_pckg and dckr_dpl_plex
   register: output
   tags:
