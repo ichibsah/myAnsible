@@ -219,7 +219,8 @@
 - name: Job 20 | import task docker
   ansible.builtin.import_tasks:
     file: docker.yml
-  #when: apt_host_pckg_lst | contains bind9
+  tags: 
+    - test
 #
 - name: Job 21 | import task ansible
   ansible.builtin.import_tasks:

@@ -100,7 +100,7 @@
   when: instl_docker_pckg and dckr_dpl_plex_gh
   tags:
   - plex
-  - #test  
+  - test  
 #
 - name: Job 18 | import task tubesync
   ansible.builtin.import_tasks:
