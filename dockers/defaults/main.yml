@@ -9,7 +9,9 @@ dckr_fldr_lst:                            # Docker folder list that will be copi
   - { fldr: "none" }
 #
 dsbl_dhcpvsx: no                             # Disable dhcp v6  
-
+#
+dckr_dpl_emby_gh: no
+#
 # /*******/
 # find a way to declare them in the same file where they are needed
 working_dir: "{{dckr_bs_pth}}/meryem-8090/" 

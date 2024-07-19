@@ -1,0 +1,79 @@
+host gh-1018-dc {
+          hardware ethernet 00:f0:m4:6y:89:0g;
+          fixed-address 10.3.0.111;
+  }
+
+# host Babs {
+#          hardware ethernet 08:62:66:80:99:1C;
+#          fixed-address 192.168.77.6;
+#  }
+
+host gh-1012-plex {
+         hardware ethernet D4:AE:52:C9:9D:0A;
+         fixed-address 10.3.0.132;
+ }
+
+# host firewall {
+#          hardware ethernet 00:E0:4C:87:05:95;
+#          fixed-address 192.168.14.254;
+#  }
+
+# host de-babs {
+#          hardware ethernet 08:62:66:80:9d:f4;
+#          fixed-address 10.1.4.4;
+#  }
+# #
+# host NPI7F9525 {
+#          hardware ethernet 3c:77:e6:88:25:ac;
+#          fixed-address 192.168.77.14;
+#  }
+# #
+# host de-1015-hpPTR {
+#          hardware ethernet a0:d3:c1:7f:95:25;
+#          fixed-address 10.1.5.1;
+#  }
+# #
+# host andy-PC {
+#          hardware ethernet 00:0f:00:35:ad:df;
+#          fixed-address 192.168.77.18;
+#  }
+
+# host Ladys-PC {
+#          hardware ethernet 00:10:c6:b1:ee:18;
+#          fixed-address 192.168.77.1;
+#  }
+
+# host TL-SG1016DE {
+#          hardware ethernet 1C:3B:F3:6C:17:49;
+#          fixed-address 10.1.0.1;
+#  }
+
+# host RT-AC68U-123 {
+#          hardware ethernet 1C:87:2C:4A:94:00;
+#          fixed-address 192.168.77.161;
+#  }
+
+# host RT-AC68U-124 {
+#          hardware ethernet 38:D5:47:1F:89:30;
+#          fixed-address 192.168.77.164;
+#  }
+
+# host RT-AC3200 {
+#          hardware ethernet 14:DD:A9:71:8D:20;
+#          fixed-address 192.168.77.163;
+#  }
+
+# host gateway {
+#          hardware ethernet b8:ac:6f:82:bd:78;
+#          fixed-address 192.168.77.199;
+#  }
+
+# host MV45169371 {
+#          hardware ethernet 10:9a:02:b1:3a:db;
+#          fixed-address 192.168.77.219;
+#  }
+
+# host lenovo {
+# 	hardware ethernet 50:7b:9d:cc:27:9b;
+# 	fixed-address 192.168.77.16;
+# }

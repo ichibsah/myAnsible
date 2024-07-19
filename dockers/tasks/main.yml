@@ -132,6 +132,14 @@
     file: 8096-emby.yml
   #when: apt_host_pckg_lst | contains bind9
 #
+- name: Job 23.1 | import task emby
+  ansible.builtin.import_tasks:
+    file: 8096-emby-gh.yml
+  when: instl_docker_pckg and dckr_dpl_emby_gh
+  tags:
+    - emby
+    - test  
+#
 - name: Job 24 | import task invidious
   ansible.builtin.import_tasks:
     file: 7601-invidious.yml

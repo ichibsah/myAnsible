@@ -28,14 +28,14 @@ apt_hst_strt_srvc_lst:                # Ensure Services are running.
   - #psa
 #
 ### APT | PACKAGES INSTALL ###
-instl_def_pckg: yes                       # Install complete packages. A 'no' will remove it from the host (apt_def_pckg_lst)
-instl_utl_pckg: yes                        # Install complete packages. A 'no' will remove it from the host (apt_util_lst)
-sysd_strt_srvc: yes                       # Start services
-instl_ansbl_pckg: no                      # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
-instl_docker_pckg: yes                    # Install Docker package (apt_docker_pckg_lst)
-apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
-  - python3-virtualenv
-  - #bind9
+# instl_def_pckg: yes                       # Install complete packages. A 'no' will remove it from the host (apt_def_pckg_lst)
+# instl_utl_pckg: yes                        # Install complete packages. A 'no' will remove it from the host (apt_util_lst)
+# sysd_strt_srvc: yes                       # Start services
+# instl_ansbl_pckg: no                      # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
+# instl_docker_pckg: yes                    # Install Docker package (apt_docker_pckg_lst)
+# apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
+#   - python3-virtualenv
+#   - #bind9
 dckr_fldr_lst:                            # Docker folder list that will be copied when set in the host variable
 - #{ fldr: "4a999ff" }
 
@@ -52,18 +52,19 @@ addLocalUser: yes                # add a local user to specific host
 #
 #
 ### APT | PACKAGES INSTALL ###
-#instl_def_pckg: yes                       # Install complete packages. A 'no' will remove it from the host (apt_def_pckg_lst)
-#instl_utl_pckg: yes                        # Install complete packages. A 'no' will remove it from the host (apt_util_lst)
-#sysd_strt_srvc: yes                       # Start services
-#instl_ansbl_pckg: yes                      # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
-#instl_docker_pckg: yes                    # Install Docker package (apt_docker_pckg_lst)
-#apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
-#- cifs-utils
-#- isc-dhcp-common
-#- isc-dhcp-server
+instl_def_pckg: yes                       # Install complete packages. A 'no' will remove it from the host (apt_def_pckg_lst)
+instl_utl_pckg: yes                        # Install complete packages. A 'no' will remove it from the host (apt_util_lst)
+sysd_strt_srvc: yes                       # Start services
+instl_ansbl_pckg: yes                      # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
+instl_docker_pckg: yes                    # Install Docker package (apt_docker_pckg_lst)
+apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
+- cifs-utils
+- isc-dhcp-common
+- isc-dhcp-server
+#- python3-virtualenv
 #- kubectx
-#
-#
+
+
 pip_host_pckg_lst:                        # Install Host Specific PIP Packages when ansible is also installed
 #
 #
@@ -84,7 +85,7 @@ dckr_dpl_uptmkm: yes
 #
 #
 #
-instl_dhcp_srvc: no
+instl_dhcp_srvc: yes
 dsbl_dhcpvsx: yes                               # Disable dhcp v6 in DHCP
 dsbl_dhcpvsx_regx: INTERFACESv4='eno1'          # text that should change goes here eg. INTERFACESv4='ens18'
 #

@@ -10,49 +10,49 @@
 #   tags:
 #     - test
 # #
-- name: add user to group
-  user:
-    name: ibrahim@skyline 
-    groups:  sudo, docker 
-  tags:
-    - #test  
-#
-- name: Mount ephemeral SMB volume
-  block:
-  - name: Mount ephemeral SMB volume
-    ansible.posix.mount:
-      src: //10.0.0.131/mediafiles
-      path: /net/mediafiles
-      #opts: "rw,vers=3,file_mode=0640,dir_mode=0740,dom=skyline,username=ibrahim,password={{ localhost_become_pass }}"
-      opts: "rw,vers=3,file_mode=0777,dir_mode=0777,username=ibrahim@skyline,password={{ localhost_become_pass }}"
-      #opts: "rw,vers=3,file_mode=0644,dir_mode=0744,username=root,password={{ localhost_become_pass }}"
-      fstype: cifs
-      #state: present
-      state: ephemeral
-  when: instl_docker_pckg and dckr_dpl_plex
-  # become: false
-  # become_user: ibrahim    
-  tags:
-    - #test
-#
-#
-- name: Mount ephemeral SMB volume
-  block:
-  - name: Mount ephemeral SMB volume
-    ansible.posix.mount:
-      src: //10.1.0.131/users/plex
-      path: /net/plex
-      #opts: "rw,vers=3,file_mode=0640,dir_mode=0740,dom=skyline,username=ibrahim,password={{ localhost_become_pass }}"
-      opts: "rw,vers=3,file_mode=0777,dir_mode=0777,username=ibrahim@skyline,password={{ localhost_become_pass }}"
-      #opts: "rw,vers=3,file_mode=0644,dir_mode=0744,username=root,password={{ localhost_become_pass }}"
-      fstype: cifs
-      #state: present
-      state: ephemeral
-  #when: instl_docker_pckg and dckr_dpl_plex
-  # become: false
-  # become_user: ibrahim    
-  tags:
-    - #test
+# - name: add user to group
+#   user:
+#     name: ibrahim@skyline 
+#     groups:  sudo, docker 
+#   tags:
+#     - #test  
+# #
+# - name: Mount ephemeral SMB volume
+#   block:
+#   - name: Mount ephemeral SMB volume
+#     ansible.posix.mount:
+#       src: //10.0.0.131/mediafiles
+#       path: /net/mediafiles
+#       #opts: "rw,vers=3,file_mode=0640,dir_mode=0740,dom=skyline,username=ibrahim,password={{ localhost_become_pass }}"
+#       opts: "rw,vers=3,file_mode=0777,dir_mode=0777,username=ibrahim@skyline,password={{ localhost_become_pass }}"
+#       #opts: "rw,vers=3,file_mode=0644,dir_mode=0744,username=root,password={{ localhost_become_pass }}"
+#       fstype: cifs
+#       #state: present
+#       state: ephemeral
+#   when: instl_docker_pckg and dckr_dpl_plex
+#   # become: false
+#   # become_user: ibrahim    
+#   tags:
+#     - #test
+# #
+# #
+# - name: Mount ephemeral SMB volume
+#   block:
+#   - name: Mount ephemeral SMB volume
+#     ansible.posix.mount:
+#       src: //10.1.0.131/users/plex
+#       path: /net/plex
+#       #opts: "rw,vers=3,file_mode=0640,dir_mode=0740,dom=skyline,username=ibrahim,password={{ localhost_become_pass }}"
+#       opts: "rw,vers=3,file_mode=0777,dir_mode=0777,username=ibrahim@skyline,password={{ localhost_become_pass }}"
+#       #opts: "rw,vers=3,file_mode=0644,dir_mode=0744,username=root,password={{ localhost_become_pass }}"
+#       fstype: cifs
+#       #state: present
+#       state: ephemeral
+#   #when: instl_docker_pckg and dckr_dpl_plex
+#   # become: false
+#   # become_user: ibrahim    
+#   tags:
+#     - #test
 #
 - name: Job 00 | Deploy Plex
   community.docker.docker_compose:
@@ -62,13 +62,13 @@
     #stopped: True
     #state: absent
     #
-    project_name: Plex
+    project_name: Plex_prj
     definition:
-      version: '3.9'
+      version: "3.3"
       services:
         plex:
-          hostname: plex.skyline.lan
-          container_name: Plex_container
+          hostname: plex-gh.skyline.lan
+          container_name: plex_con
           image: plexinc/pms-docker:latest
           ports:
             - 32400:32400/tcp
@@ -81,16 +81,17 @@
             - 32414:32414/udp
           restart: always
           environment:
-            - TZ=Europe/Berlin
+            - VERSION=docker
+            - TZ=Etc/UTC
             - PLEX_CLAIM={{plex_claim}}
-            - ADVERTISE_IP=http://10.0.0.137:32400/
+            - ADVERTISE_IP=http://192.168.1.164:32400/
           #user: "${UID}:${GID}"
-          user: "0:0" # root
+          #user: "0:0" # root
           #user: "1354601103:1354600513" # ibrahim@skyline
           volumes:
             - /opt/docker/plex-32400/database:/config
             - /opt/docker/plex-32400/transcode:/transcode
-            - /net/mediafiles:/data
+            - /mnt/4TB/mediafiles:/data
   #when: instl_docker_pckg and dckr_dpl_plex
   register: output
   tags:
@@ -106,7 +107,7 @@
 - name: Verify that plex is running
   ansible.builtin.assert:
     that:
-      - "output.services.plex.Plex_container.state.running"
+      - "output.services.plex.plex_con.state.running"
       - #"output.services.mysql.ansiblemysql.state.running"
   #when: instl_docker_pckg and dckr_dpl_plex
   tags:

@@ -6,12 +6,14 @@ source /etc/network/interfaces.d/*
 # The loopback network interface
 auto lo
 iface lo inet loopback
+#LAN
 allow-hotplug eno1
-iface eno1 inet dhcp
-#  address 10.1.0.254
-#  netmask 255.252.0.0
-#  gateway 192.168.0.80
-#  dns-servers 10.0.0.110 10.1.0.110
+##iface eno1 inet dhcp
+ iface eno1 inet static
+  address 10.3.0.254
+  netmask 255.252.0.0
+  gateway 192.168.1.80
+  dns-servers 10.3.0.254 192.168.1.1
 # #
 # allow-hotplug eno1:1
 # iface eno1:1 inet static
@@ -26,11 +28,11 @@ iface eno1 inet dhcp
 #  netmask 255.255.255.0
 #  gateway 192.168.0.80
 #  dns-servers 10.0.0.110 10.1.0.110 192.168.77.254
-# #
-# allow-hotplug enp3s0
-# iface enp3s0 inet static
-#  address 192.168.0.80
-#  netmask 255.255.255.0
-#  gateway 192.168.0.1
-#  dns-servers 10.0.0.110 10.1.0.110 192.168.14.254
+# WAN
+allow-hotplug enp5s0
+ iface enp5s0 inet static
+  address 192.168.1.80
+  netmask 255.255.255.0
+  gateway 192.168.1.1
+  dns-servers 192.168.1.80 192.168.1.1
 # #

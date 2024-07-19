@@ -24,3 +24,4 @@ instl_docker_pckg: yes                    # Install Docker package (apt_docker_p
 dckr_dpl_plex_gh: yes
 apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
 addresolv: yes
+dckr_dpl_emby_gh: yes
