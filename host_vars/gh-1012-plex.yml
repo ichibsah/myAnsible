@@ -1,5 +1,5 @@
 hostname_additional_hosts:
-  - ip_address: 192.168.1.164
+  - ip_address: 10.3.0.132
     hostname: gh-1012-plex.skyline.lan
     hostname_short: de-1012-plex
   #

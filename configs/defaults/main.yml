@@ -16,6 +16,7 @@ instl_swrm_mstr: no                                 # Install Docker swarm Servi
 instl_swrm_node: no                                 # Install Docker swarm Service
 #
 strt_myiptbls_at_boot: no
+myiptbls_flnm: "/root/myiptable.sh"
 #
 upld_fail2bn_cfg: no                                # upload fail2ban config file
 #

@@ -50,7 +50,7 @@
   cron:
     name: "Start myiptables at boot"
     special_time: reboot
-    job: "bash /root/myiptable.sh"
+    job: "bash {{myiptbls_flnm}}" # myiptbls_flnm: "/root/myiptable.sh"
   when: strt_myiptbls_at_boot
   tags: 
     - #test
