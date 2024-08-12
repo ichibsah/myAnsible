@@ -2,6 +2,8 @@
 dckr_bs_pth: /opt/docker
 dmain_pstfx: .home.sawadogo.xyz
 #
+paused: false
+#
 apt_util_lst:                           # # Install utilities packages
   - ack-grep
   - command-not-found

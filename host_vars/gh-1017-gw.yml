@@ -92,6 +92,8 @@ dsbl_dhcpvsx_regx: INTERFACESv4='eno1'          # text that should change goes h
 copy_iptables: yes                                   # Copy iptables to /root folder
 strt_myiptbls_at_boot: yes
 myiptbls_flnm: "/root/myiptable-gh.sh"
+strt_mygw_at_boot: yes
+mygw_flnm: "/root/gw-gh.sh"
 #
 # interfaces:
 #   - iface: eth1

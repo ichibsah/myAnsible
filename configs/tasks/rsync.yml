@@ -1,0 +1,134 @@
+- name: Synchronize two directories on one remote host.
+  ansible.posix.synchronize:
+    mode: pull
+    src: rsync://194.164.62.97:/home/
+    dest: /test/home/
+    checksum: true    
+    delete: false
+    recursive: true    
+  #delegate_to: "{{ inventory_hostname }}"
+#
+# - name: Synchronization of src on the control machine to dest on the remote hosts
+#   ansible.posix.synchronize:
+#     src: some/relative/path
+#     dest: /some/absolute/path
+
+# - name: Synchronization using rsync protocol (push)
+#   ansible.posix.synchronize:
+#     src: some/relative/path/
+#     dest: rsync://somehost.com/path/
+
+# - name: Synchronization using rsync protocol (pull)
+#   ansible.posix.synchronize:
+#     mode: pull
+#     src: rsync://somehost.com/path/
+#     dest: /some/absolute/path/
+
+# - name:  Synchronization using rsync protocol on delegate host (push)
+#   ansible.posix.synchronize:
+#     src: /some/absolute/path/
+#     dest: rsync://somehost.com/path/
+#   delegate_to: delegate.host
+
+# - name: Synchronization using rsync protocol on delegate host (pull)
+#   ansible.posix.synchronize:
+#     mode: pull
+#     src: rsync://somehost.com/path/
+#     dest: /some/absolute/path/
+#   delegate_to: delegate.host
+
+# - name: Synchronization without any --archive options enabled
+#   ansible.posix.synchronize:
+#     src: some/relative/path
+#     dest: /some/absolute/path
+#     archive: false
+
+# - name: Synchronization with --archive options enabled except for --recursive
+#   ansible.posix.synchronize:
+#     src: some/relative/path
+#     dest: /some/absolute/path
+#     recursive: false
+
+# - name: Synchronization with --archive options enabled except for --times, with --checksum option enabled
+#   ansible.posix.synchronize:
+#     src: some/relative/path
+#     dest: /some/absolute/path
+#     checksum: true
+#     times: false
+
+# - name: Synchronization without --archive options enabled except use --links
+#   ansible.posix.synchronize:
+#     src: some/relative/path
+#     dest: /some/absolute/path
+#     archive: false
+#     links: true
+
+# - name: Synchronization of two paths both on the control machine
+#   ansible.posix.synchronize:
+#     src: some/relative/path
+#     dest: /some/absolute/path
+#   delegate_to: localhost
+
+# - name: Synchronization of src on the inventory host to the dest on the localhost in pull mode
+#   ansible.posix.synchronize:
+#     mode: pull
+#     src: some/relative/path
+#     dest: /some/absolute/path
+
+# - name: Synchronization of src on delegate host to dest on the current inventory host.
+#   ansible.posix.synchronize:
+#     src: /first/absolute/path
+#     dest: /second/absolute/path
+#   delegate_to: delegate.host
+
+# - name: Synchronize two directories on one remote host.
+#   ansible.posix.synchronize:
+#     src: /first/absolute/path
+#     dest: /second/absolute/path
+#   delegate_to: "{{ inventory_hostname }}"
+
+# - name: Synchronize and delete files in dest on the remote host that are not found in src of localhost.
+#   ansible.posix.synchronize:
+#     src: some/relative/path
+#     dest: /some/absolute/path
+#     delete: true
+#     recursive: true
+
+# # This specific command is granted su privileges on the destination
+# - name: Synchronize using an alternate rsync command
+#   ansible.posix.synchronize:
+#     src: some/relative/path
+#     dest: /some/absolute/path
+#     rsync_path: su -c rsync
+
+# # Example .rsync-filter file in the source directory
+# # - var       # exclude any path whose last part is 'var'
+# # - /var      # exclude any path starting with 'var' starting at the source directory
+# # + /var/conf # include /var/conf even though it was previously excluded
+
+# - name: Synchronize passing in extra rsync options
+#   ansible.posix.synchronize:
+#     src: /tmp/helloworld
+#     dest: /var/www/helloworld
+#     rsync_opts:
+#       - "--no-motd"
+#       - "--exclude=.git"
+
+# # Hardlink files if they didn't change
+# - name: Use hardlinks when synchronizing filesystems
+#   ansible.posix.synchronize:
+#     src: /tmp/path_a/foo.txt
+#     dest: /tmp/path_b/foo.txt
+#     link_dest: /tmp/path_a/
+
+# # Specify the rsync binary to use on remote host and on local host
+# - hosts: groupofhosts
+#   vars:
+#     ansible_rsync_path: /usr/gnu/bin/rsync
+
+#   tasks:
+#     - name: copy /tmp/localpath/ to remote location /tmp/remotepath
+#       ansible.posix.synchronize:
+#         src: /tmp/localpath/
+#         dest: /tmp/remotepath
+#         rsync_path: /usr/gnu/bin/rsync

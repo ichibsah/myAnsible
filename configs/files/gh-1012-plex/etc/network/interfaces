@@ -14,9 +14,9 @@ allow-hotplug eno1
   gateway 10.3.0.254
   dns-servers 10.3.0.110 10.3.0.111 10.3.0.254
 # #
-allow-hotplug eno1:1
+allow-hotplug enp2s0
 #iface eno1:1 inet dhcp
- iface eno1:1 inet static
+ iface enp2s0 inet static
   address 10.3.0.132
   netmask 255.252.0.0
   gateway 10.3.0.254

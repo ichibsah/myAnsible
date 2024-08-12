@@ -44,6 +44,8 @@ dckr_dpl_anasse: no
 ##
 addresolv: yes                            # add cloudflare ad dns resolv address temporary to resolv.conf
 #
+start_rsync: yes                          # rsync files
+#
 addLocalUser: yes 
 ##
 localusers:

@@ -7,13 +7,13 @@ source /etc/network/interfaces.d/*
 auto lo
 iface lo inet loopback
 #LAN
-allow-hotplug eno1
-##iface eno1 inet dhcp
- iface eno1 inet static
+allow-hotplug ens18
+##iface ens18 inet dhcp
+ iface ens18 inet static
   address 10.3.0.150
   netmask 255.252.0.0
   gateway 10.3.0.254
   dns-servers 10.3.0.110 10.3.0.111 10.3.0.254
 # #
-allow-hotplug eno1:1
-iface eno1:1 inet dhcp
+# allow-hotplug ens18:1
+# iface ens18:1 inet dhcp
