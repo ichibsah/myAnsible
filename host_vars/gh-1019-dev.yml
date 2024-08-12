@@ -1,0 +1,84 @@
+hostname_additional_hosts:
+  - ip_address: 10.3.0.150
+    hostname: gh-1019-dev.imsawadogo.com
+    hostname_short: "gh-1019-dev"
+  # - ip_address: 5.6.7.8
+  #   hostname: b.example.com
+  #   hostname_short: b
+#
+apt_hst_strt_srvc_lst:                # Ensure Services are running.
+  - chronyd
+  - #bind9
+  - #psa
+#
+### PRVS | CONFIG ###
+prvs_copy_home: yes                       # Copy default user's home files in place
+prvs_root_passwd: yes                     # update root passward
+#
+dkr_copy_def_files: no                   # Copy default docker files to target server
+dkr_copy_etx_files: no                   # # Copy extended docker files to target host
+
+crntb_activate_cronjobs: no
+#
+ansible_become_pass: '{{ localhost_become_pass }}'
+#
+#
+### APT | PACKAGES INSTALL ###
+instl_def_pckg: yes                       # Install complete packages. A 'no' will remove it from the host (apt_def_pckg_lst)
+instl_utl_pckg: yes                        # Install complete packages. A 'no' will remove it from the host (apt_util_lst)
+sysd_strt_srvc: yes                       # Start services
+instl_ansbl_pckg: no                      # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
+instl_docker_pckg: yes                    # Install Docker package (apt_docker_pckg_lst)
+apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
+  - python3-virtualenv
+  - #bind9
+dckr_fldr_lst:                            # Docker folder list that will be copied when set in the host variable
+- #{ fldr: "4a999ff" }
+
+crntb_fldr_lst:                            # Crontab folder list that will be copied when set in the host variable
+- #{ fldr: "4a999ff" }
+
+crntb_actvt_crnjbs_mrym: no
+dckr_dpl_meryem: no
+dckr_dpl_anasse: no
+##
+addresolv: yes                            # add cloudflare ad dns resolv address temporary to resolv.conf
+#
+addLocalUser: yes 
+##
+localusers:
+  - name: joe
+    shell: /bin/bash
+    group: joe
+    groups: 
+      - sudo
+      - docker
+    append: True
+    state: present
+    key: joe.pub
+    gen_ssh_key: True
+    create_home: True
+    local: True
+    hosts: deb1202
+    bashrc: /home/ibrahim/sandbox/myAnsible/configs/files/home/ibrahim/.bashrc
+  - name: thelma
+    shell: /bin/bash
+    group: thelma
+    groups: 
+      - sudo
+      - docker
+    append: True
+    state: present
+    key: thelma.pub
+    gen_ssh_key: True
+    create_home: True
+    local: True
+    hosts: deb1202
+    bashrc: /home/ibrahim/sandbox/myAnsible/configs/files/home/ibrahim/.bashrc
+#
+start_prtd: no
+prtd:
+  - dvc: "/dev/sdb"
+  - lbl: "backup"
+  - strt: "0%"
+  - end: "100%"

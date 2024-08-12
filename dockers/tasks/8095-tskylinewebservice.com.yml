@@ -12,6 +12,7 @@
     clone: yes
     update: yes
     remote: origin
+    version: new-changes
     key_file: /home/ibrahim/.ssh/id_rsa # file must exist on remote server
     accept_hostkey: yes
   check_mode: false

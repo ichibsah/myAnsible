@@ -15,12 +15,12 @@ allow-hotplug eno1
   dns-servers 10.3.0.110 10.3.0.111 10.3.0.254
 # #
 allow-hotplug eno1:1
-iface eno1:1 inet dhcp
-# iface eno1:1 inet static
-#  address 192.168.14.254
-#  netmask 255.255.255.0
-#  gateway 192.168.0.80
-#  dns-servers 192.168.14.64 192.168.14.254
+#iface eno1:1 inet dhcp
+ iface eno1:1 inet static
+  address 10.3.0.132
+  netmask 255.252.0.0
+  gateway 10.3.0.254
+  dns-servers 10.3.0.110 10.3.0.111 10.3.0.254
 # #
 # allow-hotplug enp1s0
 # iface enp1s0 inet static

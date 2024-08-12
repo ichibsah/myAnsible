@@ -82,3 +82,11 @@
   ansible.builtin.import_tasks:
     file: fail2ban.yml
   #when: apt_host_pckg_lst | contains bind9
+#
+- name: Job 16 | import task parted
+  ansible.builtin.import_tasks:
+    file: parted.yml
+  when: start_prtd
+  tags:
+    - parted
+    - test

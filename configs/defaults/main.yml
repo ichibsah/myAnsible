@@ -23,6 +23,12 @@ upld_fail2bn_cfg: no                                # upload fail2ban config fil
 #
 addLocalUser: no                # add a local user to specific host
 #
+start_prtd: no
+prtd:
+  - dvc: "/dev/sdb"
+  - lbl: "backup"
+  - strt: "0%"
+  - end: "100%"
 #
 ipsets:
   - name: swarm_nodes
