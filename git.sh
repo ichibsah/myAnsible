@@ -14,7 +14,8 @@
 #git push -u origin main
 #git push -u origin master
 
-
+git status
+git pull
 git add .
 git commit -am "$(date)"
 git push
