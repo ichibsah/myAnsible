@@ -60,14 +60,14 @@
   when: instl_grafana
   tags:
     - grafana
-    - #test
+    #- #test
 #
 - name: Job 13 | import task docker swarm - master
   ansible.builtin.import_tasks:
     file: swarm_master.yml
   when: instl_swrm_mstr
   tags:
-    - #test
+    #- #test
     - swarm
 #
 - name: Job 14 | import task docker swarm - node
@@ -75,10 +75,26 @@
     file: swarm_node.yml
   when: instl_swrm_node
   tags:
-    - #test
+    #- test
     - swarm
 #
 - name: Job 15 | import task fail2ban
   ansible.builtin.import_tasks:
     file: fail2ban.yml
   #when: apt_host_pckg_lst | contains bind9
+#
+- name: Job 16 | import task parted
+  ansible.builtin.import_tasks:
+    file: parted.yml
+  when: start_prtd
+  tags:
+    - parted
+    #- test
+#
+- name: Job 17 | import task rsync
+  ansible.builtin.import_tasks:
+    file: rsync.yml # work in progress. reman to 
+  when: start_rsync and paused
+  tags:
+    - test
+    - rsync

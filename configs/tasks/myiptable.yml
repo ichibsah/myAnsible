@@ -50,7 +50,16 @@
   cron:
     name: "Start myiptables at boot"
     special_time: reboot
-    job: "bash /root/myiptable.sh"
+    job: "bash {{myiptbls_flnm}}" # myiptbls_flnm: "/root/myiptable.sh"
   when: strt_myiptbls_at_boot
+  tags: 
+    - #test
+#
+- name: Job 02 | Refresh gw at reboot
+  cron:
+    name: "Start gw at boot"
+    special_time: reboot
+    job: "bash {{mygw_flnm}}" # mygw_flnm: "/root/gw-gh.sh"
+  when: strt_mygw_at_boot
   tags: 
     - #test

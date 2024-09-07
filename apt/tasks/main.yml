@@ -63,6 +63,10 @@
 #     apt_packages_list: "{{ apt_default_packages }} + {{ apt_default_packages_pre20 }}"
 #   when: ansible_os_family == 'Ubuntu' and ansible_facts['distribution_version'] is version('20.04', '<')
 #
+- name: Job 00 | import task resolv
+  ansible.builtin.import_tasks:
+    file: resolv.yml
+
 #TODO: find out why others fail here (d86df44 de-jump deb1202 112e275)
 - name: Job 05 | INSTALL default packages
   package:
@@ -99,6 +103,10 @@
     validate_certs: no
   when: ansible_os_family == "Debian"
 #
+- name: Job 00 | import task resolv
+  ansible.builtin.import_tasks:
+    file: resolv.yml
+#
 # Todo: Invalid data passed to ''loop'', it requires a list, got this instead: None.
 - name: Job 08 | Install Host Specific Packages
   ansible.builtin.package:
@@ -111,6 +119,10 @@
   tags: 
     - #test
 #
+- name: Job 00 | import task resolv
+  ansible.builtin.import_tasks:
+    file: resolv.yml
+#
 #  09.1.1 and  09.1.2 is not wrking properly.
 - name: Job 09.1.1 | Install Utilities Packages (method once)
   ansible.builtin.package:
@@ -122,6 +134,10 @@
   #failed_when: "'no package' in result"
   #when: result is succeeded and instl_utl_pckg
   #tags: test
+#
+- name: Job 00 | import task resolv
+  ansible.builtin.import_tasks:
+    file: resolv.yml
 #
 - name: Job 09.1.2 | Install Utilities Packages (method loop)
   ansible.builtin.package:
@@ -219,7 +235,8 @@
 - name: Job 20 | import task docker
   ansible.builtin.import_tasks:
     file: docker.yml
-  #when: apt_host_pckg_lst | contains bind9
+  tags: 
+    - #test
 #
 - name: Job 21 | import task ansible
   ansible.builtin.import_tasks:

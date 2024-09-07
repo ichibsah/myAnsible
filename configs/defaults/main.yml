@@ -15,13 +15,25 @@ instl_swrm_mstr: no                                 # Install Docker swarm Servi
 #
 instl_swrm_node: no                                 # Install Docker swarm Service
 #
+strt_mygw_at_boot: no
+mygw_flnm: "/root/gw-gh.sh"
+#
 strt_myiptbls_at_boot: no
+myiptbls_flnm: "/root/myiptable.sh"
 #
 upld_fail2bn_cfg: no                                # upload fail2ban config file
+#
+start_rsync: no                                     # rsync files
 #
 #
 addLocalUser: no                # add a local user to specific host
 #
+start_prtd: no
+prtd:
+  - dvc: "/dev/sdb"
+  - lbl: "backup"
+  - strt: "0%"
+  - end: "100%"
 #
 ipsets:
   - name: swarm_nodes

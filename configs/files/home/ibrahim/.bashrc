@@ -141,6 +141,7 @@ unset env
 #eval "$(ssh-agent -s)"
 #ssh-add ~/.ssh/id_rsa
 ssh-add ~/.ssh/id_rsa
+ssh-add ~/.ssh/id2_rsa
 ssh-add ~/.ssh/ibrahim@4a999ff.key 
 #ssh-add -L
 #

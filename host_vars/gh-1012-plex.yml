@@ -1,5 +1,5 @@
 hostname_additional_hosts:
-  - ip_address: 192.168.1.164
+  - ip_address: 10.3.0.132
     hostname: gh-1012-plex.skyline.lan
     hostname_short: de-1012-plex
   #
@@ -24,3 +24,4 @@ instl_docker_pckg: yes                    # Install Docker package (apt_docker_p
 dckr_dpl_plex_gh: yes
 apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
 addresolv: yes
+dckr_dpl_emby_gh: yes

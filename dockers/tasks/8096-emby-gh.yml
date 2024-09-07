@@ -1,0 +1,59 @@
+---
+#
+- name: Job 00 | Deploy Emby
+  community.docker.docker_compose:
+    #working_dir: "/opt/docker/emby-8096/"
+    #remove_images: all
+    #remove_volumes: True
+    #stopped: True
+    #state: absent
+    #
+    project_name: emby_prj
+    definition:
+      version: '3.3'
+      services:
+        emby:
+          hostname: emby-gh.skyline.lan
+          container_name: emby_con
+          image: emby/embyserver:latest
+          ports:
+            - 1900:1900
+            - 7359:7359
+            - 8096:8096 
+            - 8920:8920 
+          restart: always
+          environment:
+            - TZ=Etc/UTC
+            #- UID=1000 # The UID to run emby as (default: 2)
+            #- GID=1000 # The GID to run emby as (default 2)
+          user: "${UID}:${GID}"
+          #user: "0:0" # root
+          volumes:
+            - /opt/docker/emby-8096/emby:/config
+            - /mnt/4TB/mediafiles/mediaFiles/TV-Shows:/tvshows
+            - /mnt/4TB/mediafiles/mediaFiles/Movies:/movies
+            #- /mnt/4TB/mediafiles:/data            
+  #when: instl_docker_pckg and dckr_dpl_emby_gh
+  register: output
+  tags:
+    - assert
+    - #test
+  #
+  # for debug purpose only - disabled in the meantime
+# - name: Show results
+#   ansible.builtin.debug:
+#     var: output
+#   #tags: test
+  #
+- name: Verify that emby is running
+  ansible.builtin.assert:
+    that:
+      - "output.services.emby.emby_con.state.running"
+      - #"output.services.mysql.ansiblemysql.state.running"
+  #when: instl_docker_pckg and dckr_dpl_emby
+  tags:
+    - assert
+    - #test
+
+# # https://mariushosting.com/how-to-install-emby-on-your-synology-nas/
+
