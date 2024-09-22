@@ -157,7 +157,7 @@ alias apv='ansible-playbook --vault-id ~/.ssh/.jenkins-vault.pw'
 alias azlogin='az login --allow-no-subscriptions --use-device-code'
 alias a=alias d=ls ds="ls -al" drt="ls -lart" g="grep -i --color=yes" gc="grep --color=yes" 
 alias e=echo l=less t="type -a" ..="cd .." r="su -m root" 
-alias md=mkdir rd=rmdir dfh="df -h" ll="ls -l" la="ls -la"
+alias md=mkdir rd=rmdir dfh="df -h" ll="ls -lh" la="ls -lah"
 # ******************
 alias gpom="git push -u origin master"
 alias grv="git remote -v"
