@@ -216,6 +216,8 @@ alias audit='aureport -au -i | more && aureport -au -i --success | more && aurep
 # ******************
 export GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
 # ******************
+alias pweb='python3 -m http.server'
+# ******************
 
 
 

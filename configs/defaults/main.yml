@@ -25,6 +25,8 @@ upld_fail2bn_cfg: no                                # upload fail2ban config fil
 #
 start_rsync: no                                     # rsync files
 #
+servercleanup: no                                     # server clean up
+#
 #
 addLocalUser: no                # add a local user to specific host
 #

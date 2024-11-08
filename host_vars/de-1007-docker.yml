@@ -19,6 +19,8 @@ dkr_copy_def_files: no                   # Copy default docker files to target s
 #
 crntb_activate_cronjobs: no
 #
+servercleanup: yes                                     # server clean up
+#
 #
 ### APT | PACKAGES INSTALL ###
 instl_def_pckg: yes                       # Install complete packages. A 'no' will remove it from the host (apt_def_pckg_lst)
