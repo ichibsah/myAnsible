@@ -49,6 +49,17 @@
       #state: present
       state: ephemeral
   when: servercleanup
-  tags:
-    - #servercleanup
 #
+- name: Mount ephemeral SMB volume
+  block:
+  - name: Mount ephemeral SMB volume
+    ansible.posix.mount:
+      src: //10.1.0.131/winUsers
+      path: /net/winUsers
+      #opts: "rw,vers=3,file_mode=0640,dir_mode=0740,dom=skyline,username=ibrahim,password={{ localhost_become_pass }}"
+      opts: "rw,vers=3,file_mode=0777,dir_mode=0777,username=ibrahim@skyline,password={{ localhost_become_pass }}"
+      #opts: "rw,vers=3,file_mode=0644,dir_mode=0744,username=root,password={{ localhost_become_pass }}"
+      fstype: cifs
+      #state: present
+      state: ephemeral
+  when: servercleanup
