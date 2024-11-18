@@ -1,0 +1,134 @@
+---
+#
+- name: Job 00 | Deploy gpt - pull from git
+  vars:
+    working_dir: "{{dckr_bs_pth}}/gpt-3003/" 
+    log_dir: "{{ working_dir }}logs"
+    prg_name: "gpt"
+  ansible.builtin.git:
+    repo: git@github.com:ichibsah/chatbot-ui.git #https://github.com/ichibsah/chatbot-ui.git
+    dest: "{{ working_dir }}"
+    force: yes
+    clone: yes
+    update: yes
+    remote: origin
+    key_file: /home/ibrahim/.ssh/id_rsa # file must exist on remote server
+    accept_hostkey: yes
+  check_mode: false
+  register: changes_in_git_pull
+#
+#
+- name: Run only if the task that registered the "result" variable fails
+  ansible.builtin.debug:
+    msg: "Directory is failed"
+  when: changes_in_git_pull is failed
+
+- name: Run only if the task that registered the "result" variable succeeds # just the green color
+  ansible.builtin.debug:
+    msg: "Directory is succeeded"
+  when: changes_in_git_pull is succeeded
+
+- name: Run only if the task that registered the "result" variable is skipped
+  ansible.builtin.debug:
+    msg: "Directory is skipped"
+  when: changes_in_git_pull is skipped
+
+- name: Run only if the task that registered the "result" variable changed something.
+  ansible.builtin.debug:
+    msg: "Directory is changed"
+  when: changes_in_git_pull is changed
+#
+#
+- name: Job 01 | Delete container
+  vars:
+    prg_name: "gpt"
+    con_name: "{{prg_name}}_con"
+  community.docker.docker_compose:
+    remove_images: all
+    remove_volumes: True
+    stopped: True
+    state: absent
+    project_name: "{{ prg_name }}"
+    definition:
+      version: '3.9'
+      services:
+        gpt:
+          container_name: "{{con_name}}"
+          image: "{{ prg_name }}:latest"
+  when: changes_in_git_pull is changed
+#
+- name: Job 01 | Delete old image
+  vars:
+    prg_name: "gpt"
+  docker_image:
+    name:  "{{ prg_name }}"
+    force_absent: True
+    state: absent
+  when: changes_in_git_pull is changed
+#
+- name: Job 02 | Deploy gpt - build image
+  vars:
+    working_dir: "{{dckr_bs_pth}}/gpt-3003/" 
+    log_dir: "{{ working_dir }}logs"
+    prg_name: "gpt"
+  community.docker.docker_image:
+    name: "{{ prg_name }}"
+    build:
+      path: "{{ working_dir }}"
+      args:
+        log_volume: "{{ log_dir }}"
+    force_tag: true
+    force_source: true
+    source: build
+    tag: latest
+  when: changes_in_git_pull is changed
+#
+- name: Job 03 | Deploy gpt - deploy container
+  vars:
+    working_dir: "{{dckr_bs_pth}}/gpt-3003/" 
+    log_dir: "{{ working_dir }}logs"
+    prg_name: "gpt"
+    con_name: "{{prg_name}}_con"
+  community.docker.docker_compose:
+    project_name: "{{prg_name}}"
+    definition:
+      version: '3.9'
+      services:
+        gpt:
+          hostname: https://{{prg_name}}{{ dmain_pstfx }}"
+          container_name: "{{con_name}}"
+          image: "{{prg_name}}:latest"
+          ports:
+            - 3003:3003 
+          restart: always
+          environment:
+            - TZ=Europe/Berlin
+            - #OPENAI_API_KEY={{openai_api_key}}
+            - OPENAI_API_KEY={{OPENAI_API_KEY}}
+          user: "${UID}:${GID}"
+          #user: "0:0" # root
+          # volumes:
+          #   - /opt/docker/emby-8096/emby:/config
+          #   - /net/mediafiles/mediaFiles/TV-Shows:/tvshows
+          #   - /net/mediafiles/mediaFiles/Movies:/movies
+  #when: changes_in_git_pull is changed or changes_in_git_pull is succeeded
+  register: output
+  tags:
+    - assert
+#
+- name: Verify that gpt is running
+  ansible.builtin.assert:
+    that:
+      - "output.services.gpt.gpt_con.state.running"
+      - #"output.services.mysql.ansiblemysql.state.running"
+  tags:
+    - assert
+#
+#
+#
+#
+git clone https://github.com/ichibsah/chatbot-ui.git
+cd chatbot-ui
+#https://github.com/ichibsah/chatbot-ui.git
+docker build -t chatgpt-ui .
+docker run -d --restart=always -e OPENAI_API_KEY=OPENAI_API_KEY -p 3003:3000 chatgpt-ui

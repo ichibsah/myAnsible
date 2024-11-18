@@ -266,12 +266,20 @@
     - spotube
     - #test
 #
-- name: Job 38 | import task spotube
+- name: Job 39 | import task spotube
   ansible.builtin.import_tasks:
     file: 8108-jmj.yml
   when: instl_docker_pckg and dckr_dpl_jmj
   tags:
     - jmj
+    - #test
+#
+- name: Job 40 | import task gpt
+  ansible.builtin.import_tasks:
+    file: 3003-gpt.yml
+  when: instl_docker_pckg and dckr_dpl_gpt
+  tags:
+    - gpt
     - #test
 #
 #
