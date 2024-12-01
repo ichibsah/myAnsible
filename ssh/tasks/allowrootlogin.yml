@@ -1,0 +1,34 @@
+---
+# tasks file for ssh
+# Use secure and encrypted communication.
+- name: SSH | Allow sshd to listen on tcp port 22.
+  seport:
+    ports: 22
+    proto: tcp
+    setype: ssh_port_t
+    state: present
+  when: ansible_selinux.status == 'enabled'
+
+- name: SSH | Update SSH configuration to be more secure.
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    validate: 'sshd -t -f %s'
+  with_items:
+    - regexp: "^PasswordAuthentication"
+      line: "PasswordAuthentication yes"
+    - regexp: "^PermitRootLogin"
+      line: "PermitRootLogin yes"
+    - regexp: "^Port"
+      line: "Port 22"
+    - regexp: "^PubkeyAuthentication"
+      line: "PubkeyAuthentication yes"
+    - regexp: "^ChallengeResponseAuthentication"
+      line: "ChallengeResponseAuthentication no"
+    - regexp: "^PermitEmptyPasswords"
+      line: "PermitEmptyPasswords no"    
+    - regexp: "^AllowAgentForwarding"
+      line: "AllowAgentForwarding yes"         
+  notify: restart ssh

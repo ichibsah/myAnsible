@@ -6,7 +6,9 @@
     log_dir: "{{ working_dir }}logs"
     prg_name: "gpt"
   ansible.builtin.git:
-    repo: git@github.com:ichibsah/chatbot-ui.git #https://github.com/ichibsah/chatbot-ui.git
+    #repo: git@github.com:ichibsah/chatbot-ui.git #https://github.com/ichibsah/chatbot-ui.git
+    repo: https://github.com/ichibsah/chatbot-ui.git
+    #repo: https://github.com/mckaywrigley/chatbot-ui
     dest: "{{ working_dir }}"
     force: yes
     clone: yes
@@ -99,13 +101,13 @@
           container_name: "{{con_name}}"
           image: "{{prg_name}}:latest"
           ports:
-            - 3003:3003 
+            - 3003:3000 
           restart: always
           environment:
             - TZ=Europe/Berlin
-            - #OPENAI_API_KEY={{openai_api_key}}
+            #- OPENAI_API_KEY={{openai_api_key}}
             - OPENAI_API_KEY={{OPENAI_API_KEY}}
-          user: "${UID}:${GID}"
+          #user: "${UID}:${GID}"
           #user: "0:0" # root
           # volumes:
           #   - /opt/docker/emby-8096/emby:/config
@@ -127,8 +129,8 @@
 #
 #
 #
-git clone https://github.com/ichibsah/chatbot-ui.git
-cd chatbot-ui
-#https://github.com/ichibsah/chatbot-ui.git
-docker build -t chatgpt-ui .
-docker run -d --restart=always -e OPENAI_API_KEY=OPENAI_API_KEY -p 3003:3000 chatgpt-ui
+# git clone https://github.com/ichibsah/chatbot-ui.git
+# cd chatbot-ui
+# #https://github.com/ichibsah/chatbot-ui.git
+# docker build -t chatgpt-ui .
+# docker run -d --restart=always -e OPENAI_API_KEY=OPENAI_API_KEY -p 3003:3000 chatgpt-ui

@@ -1,34 +1,15 @@
 ---
-# tasks file for ssh
-# Use secure and encrypted communication.
-- name: SSH | Allow sshd to listen on tcp port 22.
-  seport:
-    ports: 22
-    proto: tcp
-    setype: ssh_port_t
-    state: present
-  when: ansible_selinux.status == 'enabled'
-
-- name: SSH | Update SSH configuration to be more secure.
-  lineinfile:
-    dest: /etc/ssh/sshd_config
-    regexp: "{{ item.regexp }}"
-    line: "{{ item.line }}"
-    state: present
-    validate: 'sshd -t -f %s'
-  with_items:
-    - regexp: "^PasswordAuthentication"
-      line: "PasswordAuthentication no"
-    - regexp: "^PermitRootLogin"
-      line: "PermitRootLogin no"
-    - regexp: "^Port"
-      line: "Port 22"
-    - regexp: "^PubkeyAuthentication"
-      line: "PubkeyAuthentication yes"
-    - regexp: "^ChallengeResponseAuthentication"
-      line: "ChallengeResponseAuthentication no"
-    - regexp: "^PermitEmptyPasswords"
-      line: "PermitEmptyPasswords no"    
-    - regexp: "^AllowAgentForwarding"
-      line: "AllowAgentForwarding yes"         
-  notify: restart ssh
+#
+- name: Job 01 | import task lockdown
+  ansible.builtin.import_tasks:
+    file: lockdown.yml
+  tags:
+    - #test  
+#
+- name: Job 02 | import task allowRootLogin
+  ansible.builtin.import_tasks:
+    file: allowrootlogin.yml
+  when: allowrootlogin
+  tags:
+    - allowrootlogin
+    - #test  
