@@ -36,4 +36,4 @@ crntb_fldr_lst:                            # Crontab folder list that will be co
 allowrootlogin: no                         # for migration purpose
 #
 crntb_actvt_crnjbs_mrym: no
-dckr_dpl_meryem: yes
+dckr_dpl_meryem: no
