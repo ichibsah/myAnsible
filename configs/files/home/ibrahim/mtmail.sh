@@ -41,5 +41,7 @@ multitail -e Login "/var/log/maillog" -e dovecot "/var/log/maillog" -e smtpd "/v
 
 multitail -e Login "/var/log/maillog" -e dovecot "/var/log/maillog" -e smtpd "/var/log/maillog" "/var/log/auth.log"
 
+multitail -e Login "/var/log/auth.log" -e fail "/var/log/auth.log" -e ssh "/var/log/auth.log" "/var/log/auth.log"
 
-multitail -e ban "/var/log/fail2ban.log" -e unban "/var/log/fail2ban.log" -e ssh "/var/log/fail2ban.log" "/var/log/fail2ban.log"
+
+sudo multitail -e ban "/var/log/fail2ban.log" -e unban "/var/log/fail2ban.log" -e ssh "/var/log/fail2ban.log" "/var/log/fail2ban.log"
