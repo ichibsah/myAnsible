@@ -1,2 +1,11 @@
 ---
 # vars file for configs
+webpages:
+  - url: "https://example.com/login"
+    username: "user1"
+    password: "password1"
+    logout_url: "https://example.com/logout"
+  - url: "https://another-site.com/login"
+    username: "user2"
+    password: "password2"
+    logout_url: "https://another-site.com/logout"

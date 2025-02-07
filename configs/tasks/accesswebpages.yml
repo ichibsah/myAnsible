@@ -1,0 +1,64 @@
+- name: Ensure dependencies are installed (Python requests)
+  ansible.builtin.pip:
+    name: requests
+  delegate_to: localhost
+
+- name: Iterate through each webpage
+  loop: "{{ webpages }}"
+  loop_control:
+    loop_var: site
+  rescue:
+    - name: Log failure for {{ site.url }}
+      ansible.builtin.shell: echo "$(date) - ERROR: Could not access {{ site.url }}" >> ~/var/log/ansible_webpage_access.log
+  always:
+    - name: Log final status for {{ site.url }}
+      ansible.builtin.shell: echo "$(date) - INFO: Finished processing {{ site.url }}" >> ~/var/log/ansible_webpage_access.log
+
+  block:
+    - name: Access login page
+      ansible.builtin.uri:
+        url: "{{ site.url }}"
+        method: GET
+        return_content: yes
+        status_code: 200
+      register: access_result
+      ignore_errors: no
+
+    - name: Confirm webpage was reached
+      ansible.builtin.shell: echo "$(date) - INFO: Accessed {{ site.url }} - Status: {{ access_result.status }}" >> /var/log/ansible_webpage_access.log
+
+    - name: Log in to the webpage
+      ansible.builtin.uri:
+        url: "{{ site.url }}"
+        method: POST
+        body:
+          username: "{{ site.username }}"
+          password: "{{ site.password }}"
+        body_format: form-urlencoded
+        return_content: yes
+        status_code: 200
+      register: login_result
+      ignore_errors: no
+
+    - name: Validate login success
+      ansible.builtin.assert:
+        that:
+          - "'success' in login_result.json"
+        fail_msg: "❌ Login failed for {{ site.url }}"
+      when: login_result.json is defined
+      ignore_errors: yes  # Prevents full stop on failure
+
+    - name: Report login status
+      ansible.builtin.shell: echo "$(date) - INFO: Login successful for {{ site.url }} - Response: {{ login_result.status }}" >> /var/log/ansible_webpage_access.log
+
+    - name: Logout from the webpage
+      ansible.builtin.uri:
+        url: "{{ site.logout_url }}"
+        method: GET
+        return_content: yes
+        status_code: 200
+      register: logout_result
+      ignore_errors: yes
+
+    - name: Report logout status
+      ansible.builtin.shell: echo "$(date) - INFO: Logout successful for {{ site.url }} - Status: {{ logout_result.status }}" >> /var/log/ansible_webpage_access.log
