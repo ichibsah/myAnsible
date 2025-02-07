@@ -1,0 +1,191 @@
+---
+all:
+  hosts:
+    d86df44:
+      ansible_host: 217.160.100.194
+    #112e275:
+      #ansible_host: 217.160.144.31
+    #a35a0d3:
+      #ansible_host: 217.160.100.209
+    4a999ff:
+      ansible_host: 212.227.191.142
+    de-jump:
+      ansible_host: 212.227.151.179
+    deb1202:
+      ansible_host: 212.227.166.233
+    de-1006-dns:
+      ansible_host: 10.0.0.136
+    de-1007-docker:
+      ansible_host: 10.0.0.137
+    md-2005-gw:
+      ansible_host: 10.3.0.254
+    md-2007-docker:
+      ansible_host: 10.3.0.137
+    de-1005-gw:
+      ansible_host: localhost
+      #ansible_host: 10.1.0.254
+    de-1010-xl:
+      ansible_host: 85.215.157.19
+    gh-dev-xl:
+      ansible_host: 194.164.62.97
+    gh-1017-gw:
+      ansible_host: 10.3.0.254
+    gh-1012-plex:
+      ansible_host: 10.3.0.132
+      #ansible_host: 10.3.0.202
+    gh-leila:
+      ansible_host: 192.168.1.156
+    gh-1019-dev:
+      #ansible_host: 10.3.0.224      
+      ansible_host: 10.3.0.150      
+#
+ionos:
+  hosts:
+    # d86df44:
+    #   ansible_host: 217.160.100.194
+    #112e275:
+      #ansible_host: 217.160.144.31
+    #a35a0d3:
+      #ansible_host: 217.160.100.209
+    4a999ff:
+      ansible_host: 212.227.191.142
+    ##de-jump:                          needs fixing
+      ##ansible_host: 212.227.151.179
+    #deb1202:
+      #ansible_host: 212.227.166.233
+    de-1010-xl:
+      ansible_host: 85.215.157.19
+    gh-dev-xl:
+      ansible_host: 194.164.62.97
+  vars:
+    ansible_ssh_common_args: '-o ProxyCommand="ssh -p 22 -W %h:%p -q ibrahim@212.227.191.142"'    
+#
+swarm_nodes:
+  hosts:
+    d86df44:
+    #112e275:
+    #de-jump:
+    deb1202:
+#
+windows_users:
+  hosts: 
+    lenevo.skyline.lan:
+    andy.skyline.lan:
+      ansible_host: 192.168.77.18
+    lady.skyline.lan:
+      ansible_host: 192.168.77.1
+    babs.skyline.lan:
+      ansible_host: 192.168.77.6
+  vars:
+    ansible_remote_user: ibrahim@skyline
+    ansible_ssh_user: ibrahim@skyline
+    ansible_user: ibrahim@skyline
+    ansible_ssh_pass: '{{localhost_become_pass}}'
+#
+firstimeonly:
+  hosts: #(when user "ibrahim" does not exist, turn off "ansible_ssh_common_args: '-o ProxyCommand="ssh -p 22 -W %h:%p -q ibrahim@212.227.191.142")
+    #gh-dev-xl:
+      #ansible_ssh_pass: '{{de_suse_xl_become_pass}}'
+    #de-1010-xl:
+      #ansible_ssh_pass: '{{de_1010_xl_become_pass}}'
+    #d86df44:
+      #ansible_host: 217.160.100.194
+    #112e275:
+      #ansible_host: 217.160.144.31
+      #ansible_ssh_pass: '{{d112e275_become_pass}}'
+      #ansible_ssh_user: root            
+      #ansible_ssh_pass: '{{localhost_become_pass}}'          
+    #a35a0d3
+      #ansible_ssh_pass: '{{localhost_become_pass}}'
+      #ansible_ssh_pass: '{{a35a0d3_become_pass}}'
+    #4a999ff:
+      #ansible_host: 212.227.191.142
+      #ansible_ssh_user: root
+      #ansible_remote_user: root
+      #ansible_ssh_pass: '{{localhost_become_pass}}'    
+    #de-jump:
+      #ansible_ssh_pass: '{{localhost_become_pass}}'
+      #ansible_ssh_pass: '{{deb12_01_become_pass}}'
+    #deb12_02
+      #ansible_ssh_pass: '{{localhost_become_pass}}'
+      #ansible_ssh_pass: '{{deb12_02_become_pass}}'
+    #pve01.skyline.lan:
+      #ansible_ssh_pass: '{{localhost_become_pass}}'
+      #ansible_host: 192.168.77.95
+    #mgmt.skyline.lan:
+      #ansible_ssh_pass: '{{localhost_become_pass}}'
+      #ansible_host: 192.168.77.244              
+    #docker.skyline.lan:
+      #ansible_ssh_pass: '{{localhost_become_pass}}'
+      #ansible_host: 192.168.77.212
+    #mdsrvr.skyline.lan:
+      #ansible_ssh_pass: '{{localhost_become_pass}}'
+      #ansible_host: 192.168.77.213
+    #pve2.skyline.lan:
+      #ansible_host: 192.168.77.97
+    #home-1006-vm-dns:
+    #de-1007-docker:
+    #md-2005-gw:
+    #md-2007-docker:
+    # gh-1019-dev:
+    #   ansible_host: 10.3.0.224
+    #   ansible_ssh_pass: '{{localhost_become_pass}}'
+    #   ansible_ssh_user: ibrahim
+    #   ansible_remote_user: root
+      #ansible_ssh_user: root
+    #de-1005-gw:
+      #ansible_host: 10.1.0.253
+      #ansible_ssh_pass: '{{localhost_become_pass}}'
+      #ansible_ssh_pass: '{{deb12_01_become_pass}}'
+  vars:
+    #ansible_ssh_pass: '{{112e275_become_pass}}'
+    #ansible_ssh_pass: '{{d86df44_become_pass}}'
+    #ansible_ssh_user: root
+    #ansible_ssh_pass: '{{localhost_become_pass}}'
+    #ansible_remote_user: root
+    #ansible_remote_user: ibrahim
+    #ansible_ssh_user: root            
+    #ansible_ssh_user: ibrahim
+    #ansible_remote_user: root
+    #ansible_ssh_user: root
+#
+allservers:
+  hosts:
+    de-1006-dns:
+      ansible_host: 10.0.0.136
+    de-1007-docker:
+      ansible_host: 10.0.0.137
+    # md-2005-gw:
+    #   ansible_host: 10.3.0.254
+    # md-2007-docker:
+    #   ansible_host: 10.3.0.137
+    de-1005-gw:
+      #ansible_host: localhost
+      #ansible_host: 10.1.0.254
+  children:
+    ionos:  
+    gh-servers:
+#
+plesk_install:
+  hosts:
+    de-1010-xl:        
+#
+ds_install: # here is for .rpm distro
+  hosts:
+    #gh-dev-xl:        
+#
+gh-servers:
+  hosts:
+    gh-1017-gw:
+    #gh-1012-plex:
+    gh-1019-dev:
+    #gh-leila:
+
+all:
+  children:
+    servers:
+      hosts:
+        sername.example.com:
+          ansible_user: root
+          ansible_host: 192.168.1.156
+          

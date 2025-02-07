@@ -96,10 +96,18 @@
     file: rsync.yml # work in progress. reman to 
   when: start_rsync and paused
   tags:
-    - test
+    #- test
     - rsync
+##
+- name: Job 18 | import task healthcheck_io
+  ansible.builtin.import_tasks:
+    file: healthcheck_io.yml
+  #when: start_rsync and paused
+  tags:
+    - test
+    - healthcheck
 #
-- name: Job 18 | import task server clean up
+- name: Job 99 | import task server clean up
   ansible.builtin.import_tasks:
     file: servercleanup.yml
   when: servercleanup

@@ -1,0 +1,25 @@
+- name: Create check
+  ansible.builtin.uri:
+    url: "https://healthchecks.io/api/v3/checks/"
+    headers:
+      X-API-Key: "{{ healthchecks_io_api_key }}"
+    method: POST
+    body_format: json
+    body:
+      name: "{{ inventory_hostname }}-uptime"
+      timeout: 300
+    status_code: 
+      - 200
+      - 201
+  delegate_to: localhost
+  register: created_check
+
+- name: Print check creation
+  ansible.builtin.debug:
+    msg: "{{ created_check }}"
+
+- name: Set check variables for newly created check
+  ansible.builtin.set_fact:
+    healthcheck_io_pause_url: "{{ created_check.json.pause_url }}"
+    healthcheck_io_resume_url: "{{ created_check.json.resume_url }}"
+

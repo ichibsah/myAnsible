@@ -1,7 +1,14 @@
 #!/bin/bash
 #
 clear
+#
+ansible all -m ansible.builtin.setup --flush-cache
+rm -rf ~/.ansible/facts_cache/
+rm -rf ~/.ansible/tmp/
+rm -rf /tmp/.ansible-*
+#
 ansible-inventory -y --list
+
 # Multi-server tests for the orchestration example.
 #set -e
 ##ansible-inventory -y --list
@@ -12,7 +19,9 @@ ansible-inventory -y --list
 #ansible-playbook -v -i test-inv.yml run-main.yml # works
 #ansible-playbook -vv --tags test run-main.yml # works
 #ansible-playbook -vv --tags servercleanup run-main.yml # works
-ansible-playbook -vv --tags gpt run-main.yml # works
+#ansible-playbook -vv --tags gpt run-main.yml # works
+#ansible-playbook --tags healthcheck --limit 4a999ff run-main.yml # works
+ansible-playbook --tags healthcheck run-main.yml # works
 #ansible-playbook -v --tags test -i test-inv.yml run-main.yml # works
 #ansible-playbook -v --tags test run-provisions.yml # works
 #ansible-playbook -v run-anydesk.yml # works
