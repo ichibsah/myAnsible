@@ -1,25 +1,88 @@
-- name: Create check
-  ansible.builtin.uri:
-    url: "https://healthchecks.io/api/v3/checks/"
-    headers:
-      X-API-Key: "{{ healthchecks_io_api_key }}"
-    method: POST
-    body_format: json
-    body:
-      name: "{{ inventory_hostname }}-uptime"
-      timeout: 300
-    status_code: 
-      - 200
-      - 201
-  delegate_to: localhost
-  register: created_check
+- name: Health checks
+  block:
+  # get checks
+  - name: Get checks
+    ansible.builtin.uri:
+      url: "https://healthchecks.io/api/v3/checks/"
+      headers:
+        X-API-Key: "{{ healthchecks_io_api_key }}"
+      method: GET
+      status_code: 200
+    delegate_to: localhost
+    register: all_checks
 
-- name: Print check creation
-  ansible.builtin.debug:
-    msg: "{{ created_check }}"
+  - name: Print checks
+    ansible.builtin.debug:
+      msg: "{{ all_checks }}"
 
-- name: Set check variables for newly created check
-  ansible.builtin.set_fact:
-    healthcheck_io_pause_url: "{{ created_check.json.pause_url }}"
-    healthcheck_io_resume_url: "{{ created_check.json.resume_url }}"
+  - name: Set check variables if check exists
+    ansible.builtin.set_fact:
+      healthcheck_io_pause_url: "{{ all_checks.json | community.general.json_query(pause_url_query) | last }}"
+      #healthcheck_io_pause_url: "{{ all_checks.json | community.general.json_query(pause_url_query) }}"
+      healthcheck_io_resume_url: "{{ all_checks.json | community.general.json_query(resume_url_query) | last }}"
+      #healthcheck_io_resume_url: "{{ all_checks.json | community.general.json_query(resume_url_query) }}"
+      healthcheck_io_ping_url: "{{ all_checks.json | community.general.json_query(ping_url_query) | last }}"
+    vars:
+      pause_url_query: "checks[?name=='{{inventory_hostname}}-uptime'].pause_url"
+      resume_url_query: "checks[?name=='{{inventory_hostname}}-uptime'].resume_url"
+      ping_url_query: "checks[?name=='{{inventory_hostname}}-uptime'].ping_url"
 
+  - name: Print ping URL
+    ansible.builtin.debug:
+      msg: "{{ healthcheck_io_ping_url }}"
+
+  - name: Fail if healthcheck URLs are not found
+    ansible.builtin.fail:
+      msg: "❌ No healthcheck URLs found for {{ inventory_hostname }}"
+    when: healthcheck_io_pause_url | length == 0 or healthcheck_io_resume_url | length == 0 or healthcheck_io_ping_url | length == 0
+    failed_when: true  # Ensures this task registers as a failure (so rescue runs)
+
+  #
+  # Create checks
+  #
+  rescue:
+  - name: Create check
+    ansible.builtin.uri:
+      url: "https://healthchecks.io/api/v3/checks/"
+      headers:
+        X-API-Key: "{{ healthchecks_io_api_key }}"
+      method: POST
+      body_format: json
+      body:
+        name: "{{ inventory_hostname }}-uptime"
+        timeout: 300
+      status_code: 
+        - 200
+        - 201
+    delegate_to: localhost
+    register: created_check
+
+  - name: Print check creation
+    ansible.builtin.debug:
+      msg: "{{ created_check }}"
+
+  - name: Set check variables for newly created check
+    ansible.builtin.set_fact:
+      healthcheck_io_pause_url: "{{ created_check.json.pause_url }}"
+      healthcheck_io_resume_url: "{{ created_check.json.resume_url }}"
+      healthcheck_io_ping_url: "{{ created_check.json.ping_url }}"
+  #
+  # crontab setup
+  #
+  always:
+  - name: Crontab | HealthCheck.io
+    cron:
+      name: "Starting HealthCheck cronjob {{ inventory_hostname }}"
+      user: ibrahim
+      #job: "curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/your-uuid-here"
+      job: "curl -fsS -m 10 --retry 5 -o /dev/null {{ healthcheck_io_ping_url }}"
+      #job: "/root/ansible.sh > /dev/null 2>&1"
+      state: present
+      backup: False 
+      minute: "*/5" # Minute when the job should run ( 0-59, *, */2, etc )
+      hour: "*" # Hour when the job should run ( 0-23, *, */2, etc )
+      day: "*" # Day of the month the job should run ( 1-31, *, */2, etc )
+      month: "*" # Month of the year the job should run ( 1-12, *, */2, etc )
+      weekday: "*" # Day of the week that the job should run ( 0-6 for Sunday-Saturday, *, etc )
+      disabled: true # If the job should be disabled (commented out) in the crontab. Only has effect if C(state=present).
+    #when: crntb_activate_cronjobs
