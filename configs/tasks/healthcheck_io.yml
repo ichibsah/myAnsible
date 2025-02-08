@@ -72,7 +72,7 @@
   always:
   - name: Crontab | HealthCheck.io
     cron:
-      name: "Starting HealthCheck cronjob {{ inventory_hostname }}"
+      name: "Starting HealthCheck cronjob for {{ inventory_hostname }}"
       user: ibrahim
       #job: "curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/your-uuid-here"
       job: "curl -fsS -m 10 --retry 5 -o /dev/null {{ healthcheck_io_ping_url }}"
@@ -84,5 +84,5 @@
       day: "*" # Day of the month the job should run ( 1-31, *, */2, etc )
       month: "*" # Month of the year the job should run ( 1-12, *, */2, etc )
       weekday: "*" # Day of the week that the job should run ( 0-6 for Sunday-Saturday, *, etc )
-      disabled: true # If the job should be disabled (commented out) in the crontab. Only has effect if C(state=present).
+      disabled: false # If the job should be disabled (commented out) in the crontab. Only has effect if C(state=present).
     #when: crntb_activate_cronjobs
