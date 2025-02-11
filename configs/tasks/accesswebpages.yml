@@ -9,10 +9,10 @@
     loop_var: site
   rescue:
     - name: Log failure for {{ site.url }}
-      ansible.builtin.shell: echo "$(date) - ERROR: Could not access {{ site.url }}" >> ~/var/log/ansible_webpage_access.log
+      #ansible.builtin.shell: echo "$(date) - ERROR: Could not access {{ site.url }}" >> ~/var/log/ansible_webpage_access.log
   always:
     - name: Log final status for {{ site.url }}
-      ansible.builtin.shell: echo "$(date) - INFO: Finished processing {{ site.url }}" >> ~/var/log/ansible_webpage_access.log
+      #ansible.builtin.shell: echo "$(date) - INFO: Finished processing {{ site.url }}" >> ~/var/log/ansible_webpage_access.log
 
   block:
     - name: Access login page
@@ -25,7 +25,7 @@
       ignore_errors: no
 
     - name: Confirm webpage was reached
-      ansible.builtin.shell: echo "$(date) - INFO: Accessed {{ site.url }} - Status: {{ access_result.status }}" >> /var/log/ansible_webpage_access.log
+      #ansible.builtin.shell: echo "$(date) - INFO: Accessed {{ site.url }} - Status: {{ access_result.status }}" >> /var/log/ansible_webpage_access.log
 
     - name: Log in to the webpage
       ansible.builtin.uri:
@@ -49,7 +49,7 @@
       ignore_errors: yes  # Prevents full stop on failure
 
     - name: Report login status
-      ansible.builtin.shell: echo "$(date) - INFO: Login successful for {{ site.url }} - Response: {{ login_result.status }}" >> /var/log/ansible_webpage_access.log
+      #ansible.builtin.shell: echo "$(date) - INFO: Login successful for {{ site.url }} - Response: {{ login_result.status }}" >> /var/log/ansible_webpage_access.log
 
     - name: Logout from the webpage
       ansible.builtin.uri:
@@ -61,4 +61,4 @@
       ignore_errors: yes
 
     - name: Report logout status
-      ansible.builtin.shell: echo "$(date) - INFO: Logout successful for {{ site.url }} - Status: {{ logout_result.status }}" >> /var/log/ansible_webpage_access.log
+      #ansible.builtin.shell: echo "$(date) - INFO: Logout successful for {{ site.url }} - Status: {{ logout_result.status }}" >> /var/log/ansible_webpage_access.log
