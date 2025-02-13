@@ -7,6 +7,7 @@
 # https://docs.ansible.com/ansible/latest/collections/community/docker/docker_compose_module.html
 - name: Job 00 | Deploy semaphore
   community.docker.docker_compose:
+  #community.docker.docker_compose_v2:
     #working_dir: "/opt/docker/semaphore-3002/"
     project_name: semaphore
     definition:
@@ -49,6 +50,7 @@
             - /opt/docker/semaphore-3002/inventory:/inventory:ro
             - /opt/docker/semaphore-3002/authorized-keys:/authorized-keys:ro
             - /opt/docker/semaphore-3002/config:/etc/semaphore:rw
+            - /opt/docker/semaphore-3002/tmp:/tmp:rw
           restart: always
           depends_on:
             - mysql

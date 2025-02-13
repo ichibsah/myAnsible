@@ -6,4 +6,5 @@ clear
 #
 ansible-inventory -y --list
 #
-ansible-playbook -v --limit !gh-servers run-dockers.yml # works
+#ansible-playbook -v --limit !gh-servers run-dockers.yml # works
+ansible-playbook -v run-dockers.yml # works
