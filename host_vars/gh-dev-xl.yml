@@ -75,3 +75,17 @@ localusers:
     local: True
     hosts: deb1202
     bashrc: /home/ibrahim/sandbox/myAnsible/configs/files/home/ibrahim/.bashrc
+  - name: valentina
+    shell: /bin/bash
+    group: valentina
+    groups: 
+      - sudo
+      - docker
+    append: True
+    state: present
+    key: valentina.pub
+    gen_ssh_key: True
+    create_home: True
+    local: True
+    hosts: deb1202
+    bashrc: /home/ibrahim/sandbox/myAnsible/configs/files/home/ibrahim/.bashrc
