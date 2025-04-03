@@ -1,0 +1,96 @@
+- name: Find healthcheck URLs (https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-elasticsearch-on-ubuntu-14-04)
+  
+  block:
+    - name: Get checks
+      ansible.builtin.uri:
+        url: "https://healthchecks.io/api/v3/checks/"
+        headers:
+          X-API-Key: "{{ healthchecks_io_api_key }}"
+        method: GET
+        status_code: 200
+      delegate_to: localhost
+      register: all_checks
+
+    - name: Print checks
+      ansible.builtin.debug:
+        msg: "{{ all_checks }}"
+
+    - name: Set check variables if check exists
+      ansible.builtin.set_fact:
+        #healthcheck_io_pause_url: "{{ all_checks.json | community.general.json_query(pause_url_query) | last }}"
+        healthcheck_io_pause_url: "{{ all_checks.json | community.general.json_query(pause_url_query) }}"
+        #healthcheck_io_resume_url: "{{ all_checks.json | community.general.json_query(resume_url_query) | last }}"
+        healthcheck_io_resume_url: "{{ all_checks.json | community.general.json_query(resume_url_query) }}"
+      vars:
+        pause_url_query: "checks[?name=='{{inventory_hostname}}-uptime'].pause_url"
+        resume_url_query: "checks[?name=='{{inventory_hostname}}-uptime'].resume_url"
+
+    - name: Print pause URL
+      ansible.builtin.debug:
+        msg: "{{ healthcheck_io_pause_url }}"
+
+    - name: Fail if healthcheck URLs are not found
+      ansible.builtin.fail:
+        msg: "No healthcheck URLs found for {{ inventory_hostname }}"
+      when: healthcheck_io_pause_url | length == 0 or healthcheck_io_resume_url | length == 0
+      failed_when: true  # Ensures this task registers as a failure (so rescue runs)
+
+  rescue:
+    - name: Create check
+      ansible.builtin.uri:
+        url: "https://healthchecks.io/api/v3/checks/"
+        headers:
+          X-API-Key: "{{ healthchecks_io_api_key }}"
+        method: POST
+        body_format: json
+        body:
+          name: "{{ inventory_hostname }}-uptime"
+          timeout: 300
+        status_code: 
+          - 200
+          - 201
+      delegate_to: localhost
+      register: created_check
+
+    - name: Print check creation
+      ansible.builtin.debug:
+        msg: "{{ created_check }}"
+
+    - name: Set check variables for newly created check
+      ansible.builtin.set_fact:
+        healthcheck_io_pause_url: "{{ created_check.json.pause_url }}"
+        healthcheck_io_resume_url: "{{ created_check.json.resume_url }}"
+
+    - name: Patch and reboot host
+      block:
+      - name: Pause healthcheck
+        ansible.builtin.uri:
+          url: "{{ healthcheck_io_pause_url }}"
+          headers:
+            X-API-Key: "{{ healthchecks_io_api_key }}"
+          method: POST
+          status_code: 200
+        delegate_to: localhost
+
+    - name: Patch server
+      ansible.builtin.package:
+        name: "*"
+        state: latest
+
+    - name: Reboot host
+      debug:
+        msg: "Reboot Host {{inventory_hostname}}"
+      #ansible.builtin.reboot:
+      #  connect_timeout: 30
+      #  reboot_timeout: 30
+      #timeout: 30
+
+  always:
+    - name: Enable healthcheck
+      ansible.builtin.uri:
+        url: "{{ healthcheck_io_resume_url }}"
+        headers:
+          X-API-Key: "{{ healthchecks_io_api_key }}"
+        method: POST
+        status_code: 200
+      delegate_to: localhost
