@@ -1,0 +1,97 @@
+# - name: Find healthcheck URLs
+  
+# - name: Get the project badges
+#   community.healthchecksio.badges_info:
+#     state: present
+#     api_key: "{{ healthchecks_io_api_key }}"
+
+# - name: Get a list of integrations
+#   community.healthchecksio.channels_info:
+#     state: present
+#     api_key: "{{ healthchecks_io_api_key }}"
+
+# - name: Create a check named "test" #{{inventory_hostname}}-uptime
+#   community.healthchecksio.checks:
+#     state: present
+#     api_key: "{{ healthchecks_io_api_key }}"
+#     name: test
+#     unique: ["name"]
+
+# - name: Create a check named "test hourly"
+#   community.healthchecksio.checks:
+#     state: present
+#     api_key: "{{ healthchecks_io_api_key }}"
+#     name: "test hourly"
+#     unique: ["name"]
+#     tags: ["test", "hourly"]
+#     desc: "my hourly test check"
+#     schedule: "0 * * * *"
+
+- name: Returns all of the checks
+  community.healthchecksio.checks_info:
+    state: present
+    api_key: "{{ healthchecks_io_api_key }}"
+  register: all_checks
+
+# - name: Print checks
+#   ansible.builtin.debug:
+#     msg: "{{ all_checks }}"
+#
+- name: Set check variables if check exists
+  ansible.builtin.set_fact:
+    healthcheck_io_pause_url: "{{ all_checks.json | community.general.json_query(pause_url_query) | last }}"
+    #healthcheck_io_pause_url: "{{ all_checks.json | community.general.json_query(pause_url_query) }}"
+    healthcheck_io_resume_url: "{{ all_checks.json | community.general.json_query(resume_url_query) | last }}"
+    #healthcheck_io_resume_url: "{{ all_checks.json | community.general.json_query(resume_url_query) }}"
+    healthcheck_io_ping_url: "{{ all_checks.json | community.general.json_query(ping_url_query) | last }}"
+    healthcheck_io_check_uuid: "{{ all_checks.json | community.general.json_query(uuid_query) | last }}"
+  vars:
+    pause_url_query: "checks[?name=='{{inventory_hostname}}-uptime'].pause_url"
+    resume_url_query: "checks[?name=='{{inventory_hostname}}-uptime'].resume_url"
+    ping_url_query: "checks[?name=='{{inventory_hostname}}-uptime'].ping_url"
+    uuid_query: "checks[?name=='{{inventory_hostname}}-uptime'].uuid"
+
+- name: Print ping URL
+  ansible.builtin.debug:
+    msg: "{{ healthcheck_io_check_uuid }}"
+#
+# - name: Pause a check by uuid
+#   community.healthchecksio.checks:
+#     state: pause
+#     api_key: "{{ healthchecks_io_api_key }}"
+#     uuid: "{{ check_uuid }}"
+
+# - name: Delete a check by uuid
+#   community.healthchecksio.checks:
+#     state: absent
+#     api_key: "{{ healthchecks_io_api_key }}"
+#     uuid: "{{ check_uuid }}"
+
+# - name: Get a list of checks pings
+#   community.healthchecksio.checks_pings_info:
+#     state: pings
+#     api_key: "{{ healthchecks_io_api_key }}"
+#     uuid: "{{ check_uuid }}"
+
+# - name: Get a list of checks flips
+#   community.healthchecksio.checks_flips_info:
+#     state: flips
+#     api_key: "{{ healthchecks_io_api_key }}"
+#     uuid: "{{ check_uuid }}"
+
+# #Ping API
+# - name: Send a success signal
+#   community.healthchecksio.ping:
+#     state: present
+#     uuid: "{{ check_uuid }}"
+#     signal: success
+# - name: Send a fail signal
+#   community.healthchecksio.ping:
+#     state: present
+#     uuid: "{{ check_uuid }}"
+#     signal: fail
+# - name: Send a start signal
+#   community.healthchecksio.ping:
+#     state: present
+#     uuid: "{{ check_uuid }}"
+#     signal: start

@@ -86,3 +86,6 @@
       weekday: "*" # Day of the week that the job should run ( 0-6 for Sunday-Saturday, *, etc )
       disabled: false # If the job should be disabled (commented out) in the crontab. Only has effect if C(state=present).
     #when: crntb_activate_cronjobs
+
+# https://github.com/ansible-collections/community.healthchecksio
+# https://healthchecks.io/docs/resources/

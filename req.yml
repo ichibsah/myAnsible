@@ -1,10 +1,4 @@
----
 # ansible-galaxy collection install -r 
-# ansible-galaxy collection install community.healthchecksio --upgrade
-roles:
-  - name: community.docker
-  #- src: https://github.com/
-
-#
+---
 collections:
   - name: community.healthchecksio  # ansible-galaxy collection install community.healthchecksio

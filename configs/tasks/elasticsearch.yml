@@ -1,4 +1,4 @@
-- name: Find healthcheck URLs (https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-elasticsearch-on-ubuntu-14-04)
+- name: Find healthcheck URLs #(https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-elasticsearch-on-ubuntu-14-04)
   
   block:
     - name: Get checks
