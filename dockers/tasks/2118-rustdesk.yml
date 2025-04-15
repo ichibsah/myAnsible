@@ -1,0 +1,35 @@
+- name: Job 00 | Deploy rustdesk
+  community.docker.docker_compose:
+    #working_dir: "/opt/docker/invidious-7601/"
+    #remove_images: all
+    #remove_volumes: True
+    #stopped: True
+    #state: absent
+    #
+    project_name: rustdesk
+    definition:
+      version: '3.9'
+      services:
+        hbbs:
+          container_name: hbbs
+          image: rustdesk/rustdesk-server:latest
+          environment:
+            - ALWAYS_USE_RELAY=Y
+          command: hbbs
+          volumes:
+            - ./data:/root
+          network_mode: "host"
+
+          depends_on:
+            - hbbr
+          restart: unless-stopped
+
+        hbbr:
+          container_name: hbbr
+          image: rustdesk/rustdesk-server:latest
+          command: hbbr
+          volumes:
+            - ./data:/root
+          network_mode: "host"
+          restart: unless-stopped
+       

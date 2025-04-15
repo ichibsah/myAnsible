@@ -107,12 +107,12 @@
     #- test
     - healthcheck
 #
-- name: Job 19 | import task healthcheck_io
+- name: Job 19 | import task healthcheck_io_v2
   ansible.builtin.import_tasks:
     file: healthcheck_io_v2.yml
   #when: start_rsync and paused
   tags:
-    - test
+    - #test
     - healthcheck
 #
 # - name: Job 20 | import task accesswebpages

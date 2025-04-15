@@ -282,6 +282,14 @@
     - gpt
     - #test
 #
+- name: Job 41 | import task rustdesk
+  ansible.builtin.import_tasks:
+    file: 2118-rustdesk.yml
+  when: instl_docker_pckg and dckr_dpl_rustdesk
+  tags:
+    - rustdesk
+    - test
+#
 #
 # keep this last
 - name: Job 99 | import task prune

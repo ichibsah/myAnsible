@@ -37,3 +37,4 @@ allowrootlogin: no                         # for migration purpose
 #
 crntb_actvt_crnjbs_mrym: no
 dckr_dpl_meryem: no
+dckr_dpl_rustdesk: yes
