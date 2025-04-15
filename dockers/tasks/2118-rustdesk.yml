@@ -1,4 +1,9 @@
-- name: Job 00 | Deploy rustdesk
+- name: Job 03 | Deploy rustdesk | deploy container
+  vars:
+    working_dir: "{{dckr_bs_pth}}/rustdesk-21118/" 
+    log_dir: "{{ working_dir }}logs"
+    prg_name: "rustdesk-21118"
+    con_name: "{{prg_name}}_con"
   community.docker.docker_compose:
     #working_dir: "/opt/docker/invidious-7601/"
     #remove_images: all
@@ -6,7 +11,7 @@
     #stopped: True
     #state: absent
     #
-    project_name: rustdesk
+    project_name: "{{prg_name}}"
     definition:
       version: '3.9'
       services:
@@ -17,7 +22,8 @@
             - ALWAYS_USE_RELAY=Y
           command: hbbs
           volumes:
-            - ./data:/root
+            - "{{working_dir}}/data:/root"
+            #- ./data:/root
           network_mode: "host"
 
           depends_on:
@@ -29,7 +35,32 @@
           image: rustdesk/rustdesk-server:latest
           command: hbbr
           volumes:
-            - ./data:/root
+            - "{{working_dir}}/data:/root"
+            #- ./data:/root
           network_mode: "host"
           restart: unless-stopped
-       
+  register: output
+  tags:
+    - assert
+#
+- name: Verify that rustdesk is running
+  ansible.builtin.assert:
+    that:
+      - "output.services.hbbs.hbbs.state.running"
+      - "output.services.hbbr.hbbr.state.running"
+      #- #"output.services.mysql.ansiblemysql.state.running"
+  tags:
+    - assert
+
+
+# Be sure to open these ports in the firewall:
+
+# hbbs:
+# 21114 (TCP): used for web console, only available in Pro version.
+# 21115 (TCP): used for the NAT type test.
+# 21116 (TCP/UDP): Please note that 21116 should be enabled both for TCP and UDP. 21116/UDP is used for the ID registration and heartbeat service. 21116/TCP is used for TCP hole punching and connection service.
+# 21118 (TCP): used to support web clients.
+# hbbr:
+# 21117 (TCP): used for the Relay services.
+# 21119 (TCP): used to support web clients.
+# If you do not need web client support, the corresponding ports 21118, 21119 can be disabled.

@@ -1,0 +1,38 @@
+---
+#
+- name: Job 03 | Deploy uptimekuma | deploy container
+  vars:
+    working_dir: "{{dckr_bs_pth}}/uptimekuma-3444/" 
+    log_dir: "{{ working_dir }}logs"
+    prg_name: "uptimekuma"
+    con_name: "{{prg_name}}_con"
+  community.docker.docker_compose:
+    project_name: "{{prg_name}}"
+    definition:
+      version: '3.9'
+      services:
+        uptimekuma:
+          hostname: "https://{{prg_name}}{{ dmain_pstfx }}"
+          container_name: "{{con_name}}"
+          image: louislam/uptime-kuma
+          ports:
+            - 3444:3001 
+          restart: always
+          environment:
+            - TZ=Europe/Berlin
+          #user: "${UID}:${GID}"
+          user: "0:0" # root
+          volumes:
+            - "{{working_dir}}uptimekuma:/app/data"
+            - /var/run/docker.sock:/var/run/docker.sock
+  register: output
+  tags:
+    - assert
+#
+- name: Verify that uptimekuma is running
+  ansible.builtin.assert:
+    that:
+      - "output.services.uptimekuma.uptimekuma_con.state.running"
+      - #"output.services.mysql.ansiblemysql.state.running"
+  tags:
+    - assert
