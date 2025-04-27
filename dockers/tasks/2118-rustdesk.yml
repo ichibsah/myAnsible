@@ -40,8 +40,6 @@
           network_mode: "host"
           restart: unless-stopped
   register: output
-  tags:
-    - assert
 #
 - name: Verify that rustdesk is running
   ansible.builtin.assert:
