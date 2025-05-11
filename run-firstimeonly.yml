@@ -4,12 +4,22 @@
   ignore_errors: true
   ignore_unreachable: true
   remote_user: root
-  #remote_user: ibrahim
+  # remote_user: ibrahim
   become: true
   become_user: root
   become_method: su
 
   pre_tasks:
+    - name: PRE TASK | Check if ansible is installed
+      command: ansible --version
+      register: ansible_check
+      ignore_errors: true
+      pkg:
+        name: 
+          - python3
+          - sudo
+        state: present
+      #when: ansible_check.rc != 0
     - name: PRE TASK | Install adm packages before starting roles
       apt:
         name:  
