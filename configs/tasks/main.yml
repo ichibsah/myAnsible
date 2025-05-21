@@ -122,6 +122,13 @@
 #   tags:
 #     - test
 #     - accesswebpages
+- name: Job 98 | import task backups
+  ansible.builtin.import_tasks:
+    file: backups.yml
+  when: backup_home
+  tags:
+    #- test
+    - backup
 #
 - name: Job 99 | import task server clean up
   ansible.builtin.import_tasks:

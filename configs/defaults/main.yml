@@ -27,6 +27,8 @@ start_rsync: no                                     # rsync files
 #
 servercleanup: no                                     # server clean up
 #
+backup_home: no                                     # backup home folder from server
+#
 #
 addLocalUser: no                # add a local user to specific host
 #
