@@ -6,3 +6,7 @@ ansible-inventory -y --list
 #ansible-playbook --limit "gh-servers" run-main.yml # works
 #ansible-playbook -v --limit gh-servers run-main.yml --list-host # works
 ansible-playbook -v --limit gh-servers run-main.yml # works
+#ansible-playbook -v gh-servers run-main.yml # works
+#
+ansible-galaxy collection install -r requirements.yml
+ansible-galaxy collection install community.healthchecksio --upgrade

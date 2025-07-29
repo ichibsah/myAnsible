@@ -89,3 +89,5 @@
 
 # https://github.com/ansible-collections/community.healthchecksio
 # https://healthchecks.io/docs/resources/
+
+# ansible-galaxy collection install -r requirements.yml
