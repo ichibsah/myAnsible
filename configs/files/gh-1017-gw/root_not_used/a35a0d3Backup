@@ -1,0 +1,22 @@
+#!/bin/bash
+#filename: 4a999ffBackup
+#ssh root@4a999ff.online-server.cloud -o PubkeyAuthentication=no
+source="ibrahim@a35a0d3.online-server.cloud:/opt/docker/"
+output="/mnt/v-Host/a35a0d3/backup/docker/"
+#source1="root@4a999ff.online-server.cloud:/var/www/vhosts/"
+#output1="/mnt/v-Host/4a999ff/vhost/"
+# checking if script is run as root
+#if [ $(id -u) -ne 0 ]
+#then
+#    echo script is not run as root, exiting...
+#    exit
+#
+#else
+echo "rSync $source ==> $output"
+# add n for dryrun
+#rsync -vrn --progress $source $output
+rsync -vrumpg --del --progress $source $output
+echo "rSync $source1 ==> $output1"
+#rsync -vrumpg --del --progress $source1 $output1
+#fi
+

@@ -1,0 +1,17 @@
+#!/bin/bash
+#filename: v-HostBackup
+source="/mnt/v-Host/"
+output="/mnt/vHost-Backup/v-Host/"
+# checking if script is run as root
+if [ $(id -u) -ne 0 ]
+then
+    echo script is not run as root, exiting...
+    exit
+#
+else
+echo "rSync $source to $output"
+# add n for dryrun
+#rsync -vrn --progress $source $output
+rsync -vrumpg --del --progress $source $output
+fi
+

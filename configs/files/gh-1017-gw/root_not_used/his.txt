@@ -1,0 +1,1000 @@
+ 1006  syslog
+ 1007  a
+ 1008  tailsyslog
+ 1009  sudo tailsyslog
+ 1010  cd scripts/
+ 1011  cat restart.sh 
+ 1012  r
+ 1013  r
+ 1014  tailmylog 
+ 1015  cd /root/logs/
+ 1016  ll
+ 1017  tail -f mylog-2022-10-05
+ 1018  ..
+ 1019  ll
+ 1020  cat 1min.sh 
+ 1021  ll
+ 1022  cd logs/
+ 1023  ll
+ 1024  goaccess /var/log/nginx/access.log -c
+ 1025  goaccess /var/log/nginx/access.log -o report.html
+ 1026  goaccess /var/log/nginx/access.log --log-format=COMBINED -o report.html
+ 1027  ll
+ 1028  goaccess mylog -c
+ 1029  goaccess mylog --log-format=COMBINED -o report.html
+ 1030  cat mylog
+ 1031  cd /root/logs/
+ 1032  ll
+ 1033  accessgo 
+ 1034  goaccess
+ 1035  ..
+ 1036  ll
+ 1037  crontab -e
+ 1038  ./allBackups 
+ 1039  ./money-balancer.sh 
+ 1040  ./cloudbeaver.sh 
+ 1041  ip neigh
+ 1042  ip addr | grep -i speed
+ 1043  ip addr | grep -i sp
+ 1044  ip addr | grep -i s
+ 1045  ip addr | grep -i link
+ 1046  ip addr
+ 1047  ping -q -w10 www.google.com | grep -o "[0-9]*%" | tr -d %
+ 1048  ping -q -w3 www.google.com | grep -o "[0-9]*%" | tr -d %
+ 1049  ping google.com
+ 1050  ping 192.168.0.1
+ 1051  ping 192.168.0.80
+ 1052  r
+ 1053  apt update
+ 1054  cd scripts/
+ 1055  ll
+ 1056  cat update.sh 
+ 1057  chmod +x update.sh 
+ 1058  ./update.sh 
+ 1059  apt full-upgrade
+ 1060  uname
+ 1061  uname -a
+ 1062  cd plex/
+ 1063  ./latest.filebot.sh 
+ 1064  tailmylog 
+ 1065  sudo apt install unbound
+ 1066  nano /etc/unbound/unbound.conf.d/pi-hole.conf
+ 1067  sudo service unbound restart
+ 1068  dig pi-hole.net @127.0.0.1 -p 5335
+ 1069  nano /etc/dnsmasq.d/99-edns.conf
+ 1070  dig sigfail.verteiltesysteme.net @127.0.0.1 -p 5335
+ 1071  dig sigok.verteiltesysteme.net @127.0.0.1 -p 5335
+ 1072  systemctl status unbound
+ 1073  sudo systemctl status unbound-resolvconf.service
+ 1074  cat /etc/resolv.conf
+ 1075  nano /etc/unbound/unbound.conf.d/pi-hole.conf
+ 1076  sudo mkdir -p /var/log/unbound
+ 1077  sudo touch /var/log/unbound/unbound.log
+ 1078  sudo chown unbound /var/log/unbound/unbound.log
+ 1079  sudo service unbound restart
+ 1080  tail -f /var/log/unbound/unbound.log
+ 1081  systemctl status unbound
+ 1082  cd /var/log/
+ 1083  ll
+ 1084  ll unbound/
+ 1085  mkdir -p undound
+ 1086  mkdir -p unbound
+ 1087  cd unbound/
+ 1088  ll
+ 1089  cat unbound.log 
+ 1090  tailmylog 
+ 1091  dig sigfail.verteiltesysteme.net @127.0.0.1 -p 5335
+ 1092  dig sigok.verteiltesysteme.net @127.0.0.1 -p 5335
+ 1093  sudo systemctl status unbound-resolvconf.service
+ 1094  sudo systemctl disable unbound-resolvconf.service
+ 1095  sudo systemctl stop unbound-resolvconf.service
+ 1096  sudo systemctl restart dhcpcd
+ 1097  cat /etc/resolv.conf
+ 1098  sudo mkdir -p /var/log/unbound
+ 1099  ll
+ 1100  sudo service unbound restart
+ 1101  ll
+ 1102  dig pi-hole.net @127.0.0.1 -p 5335
+ 1103  cat /var/lib/unbound/root.hints
+ 1104  wget https://www.internic.net/domain/named.root -qO- | sudo tee /var/lib/unbound/root.hints
+ 1105  sudo service unbound restart
+ 1106  cat /var/lib/unbound/root.hints
+ 1107  systemctl status unbound
+ 1108  systemctl restart unbound
+ 1109  systemctl status unbound
+ 1110  ll
+ 1111  ..
+ 1112  ll
+ 1113  chown unbound:unbound unbound -R
+ 1114  systemctl restart unbound
+ 1115  systemctl status unbound
+ 1116  ll unbound/
+ 1117  ll
+ 1118  rm undound/
+ 1119  rm undound
+ 1120  rd undound
+ 1121  ll
+ 1122  cd unbound/
+ 1123  ll
+ 1124  chmod 777 unbound.log 
+ 1125  systemctl restart unbound
+ 1126  systemctl status unbound
+ 1127  ll
+ 1128  cat unbound.log 
+ 1129  ..
+ 1130  ll
+ 1131  chmod 777 unbound
+ 1132  systemctl restart unbound
+ 1133  systemctl status unbound
+ 1134  systemctl stop unbound
+ 1135  systemctl start unbound
+ 1136  systemctl enable unbound
+ 1137  systemctl status unbound
+ 1138  cd unbound/
+ 1139  ll
+ 1140  cd
+ 1141  cd scripts/plex/
+ 1142  ./latest.filebot.sh 
+ 1143  ./plex-automated.sh 
+ 1144  r
+ 1145  tailmylog 
+ 1146  sudo apt-get install iperf3
+ 1147  iperf
+ 1148  iperf -s
+ 1149  iperfs -s
+ 1150  cat /proc/net/dev
+ 1151  cd /root/
+ 1152  nano speed.sh
+ 1153  ll
+ 1154  chmod +x speed.sh 
+ 1155  ./speed.sh 
+ 1156  nano speed.sh
+ 1157  ./speed.sh 
+ 1158  ip link set enp2s0f1 down
+ 1159  ip link set enp2s0f1 up
+ 1160  cd logs/
+ 1161  ll
+ 1162  sudo apt-get uninstall iperf3
+ 1163  sudo apt-get remove iperf3
+ 1164  cd /etc/nginx/
+ 1165  ll
+ 1166  cd conf.d/
+ 1167  ll
+ 1168  ..
+ 1169  nano nginx.conf 
+ 1170  ll
+ 1171  cd sites-enabled/
+ 1172  ll
+ 1173  nano default 
+ 1174  ..
+ 1175  cd conf.d/
+ 1176  ll
+ 1177  cp plex2.conf skyline.conf
+ 1178  nano skyline.conf 
+ 1179  restart nginx
+ 1180  ll
+ 1181  ..
+ 1182  cd sites-enabled/
+ 1183  nano default 
+ 1184  restart nginx
+ 1185  a
+ 1186  cat restart
+ 1187  dcu
+ 1188  dcd
+ 1189  dcu
+ 1190  dcd
+ 1191  cd
+ 1192  r
+ 1193  cd /var/log/
+ 1194  ll
+ 1195  cat syslog |grep -i cron
+ 1196  cat syslog |grep -i allbackups
+ 1197  cd /root/
+ 1198  ll
+ 1199  cd logs/
+ 1200  ll
+ 1201  ..
+ 1202  cat allBackups 
+ 1203  cd logs/
+ 1204  cat mylog* | grep -i down
+ 1205  ..
+ 1206  cat 1min.sh 
+ 1207  echo -e "`date` - ${RED} $googleIP-DOWN! ${NOCOLOR}" >> $LOG
+ 1208  ll
+ 1209  ./1min.sh 
+ 1210  echo -e "`date` - ${RED} $googleIP-DOWN! ${NOCOLOR}" >> $LOG
+ 1211  cd
+ 1212  ll
+ 1213  cd scripts/plex/
+ 1214  ./latest.filebot.sh 
+ 1215  ./plex-automated.sh 
+ 1216  rm config.json/
+ 1217  touch config.json
+ 1218  ll
+ 1219  ..
+ 1220  chown ibrahim:ibrahim * -R
+ 1221  ll
+ 1222  ./nginx-proxy-manager.sh 
+ 1223  cd docker/npm/
+ 1224  ll
+ 1225  chmod +w config.json/
+ 1226  ll
+ 1227  chmod +w config.json
+ 1228  ll
+ 1229  chmod 777 config.json
+ 1230  ll
+ 1231  ..
+ 1232  ./nginx-proxy-manager.sh 
+ 1233  ll
+ 1234  cd docker/
+ 1235  ll
+ 1236  cd npm/
+ 1237  ll
+ 1238  rm -rf config.json
+ 1239  touch config.json
+ 1240  ll
+ 1241  chown ibrahim:ibrahim config.json 
+ 1242  ll
+ 1243  exit
+ 1244  ./cherry.sh 
+ 1245  ./nginx-proxy-manager.sh 
+ 1246  touch docker/npm/config.json
+ 1247  ll
+ 1248  cd docker/
+ 1249  ll
+ 1250  cd npm/
+ 1251  ll
+ 1252  r
+ 1253  ..
+ 1254  ./nginx-proxy-manager.sh 
+ 1255  ./filebot.sh 
+ 1256  ip link set enp2s0f1 down
+ 1257  r
+ 1258  ip link set enp2s0f1 down
+ 1259  ip link set enp2s0f1 up
+ 1260  tailmylog 
+ 1261  ping 1.1.1.1
+ 1262  ping embik.com
+ 1263  sudo shutdown -r now
+ 1264  r
+ 1265  ./nginx-proxy-manager.sh 
+ 1266  cd /etc/nginx/conf.d/
+ 1267  ll
+ 1268  cp plex2.conf sawadogo.conf
+ 1269  nano sawadogo.conf 
+ 1270  restart nginx
+ 1271  nano sawadogo.conf 
+ 1272  restart nginx
+ 1273  cat restart
+ 1274  restart | cat
+ 1275  cat | restart
+ 1276  ll
+ 1277  systemctl stop nginx.service 
+ 1278  systemctl disable nginx.service 
+ 1279  nano .bashrc 
+ 1280  tailmylog 
+ 1281  nano .bashrc 
+ 1282  catmylog 
+ 1283  git status
+ 1284  r
+ 1285  cd /root/
+ 1286  ll
+ 1287  cat allBackups 
+ 1288  crontab -e
+ 1289  cat 1min.sh 
+ 1290  crontab -e
+ 1291  ll
+ 1292  cd logs/
+ 1293  ll
+ 1294  dmesg 
+ 1295  tailsyslog 
+ 1296  ll
+ 1297  crontab -e
+ 1298  ll
+ 1299  ps -aux
+ 1300  ps -aux | cron
+ 1301  ps -aux | grep -i cron
+ 1302  history |grep cat
+ 1303  tailmylog 
+ 1304  cat /root/logs/mylog* | grep -i down
+ 1305  ll
+ 1306  dfh
+ 1307  ll
+ 1308  crontab -e
+ 1309  ..
+ 1310  ll
+ 1311  cat allBackups 
+ 1312  crontab -e
+ 1313  nano allBackups 
+ 1314  ./allBackups 
+ 1315  cd logs/
+ 1316  ll
+ 1317  cat 4a999ffBackup.log-2022-10-14 
+ 1318  ll
+ 1319  r
+ 1320  sudo shutdown -r now
+ 1321  ./homebox.sh 
+ 1322  ./assetgrid.sh 
+ 1323  a
+ 1324  exit
+ 1325  cd /root/
+ 1326  ll
+ 1327  cd logs/
+ 1328  ll
+ 1329  cat 4a999ffBackup.log-2022-10-14 
+ 1330  crontab -e
+ 1331  ll
+ 1332  crontab -e
+ 1333  ll
+ 1334  cat 4a999ffBackup.log-2022-10-16
+ 1335  cat homeBackup.log-2022-10-16
+ 1336  ..
+ 1337  ll
+ 1338  cat homeBackup 
+ 1339  ll
+ 1340  cd logs/
+ 1341  ll
+ 1342  catmylog 
+ 1343  ll
+ 1344  rm mylog
+ 1345  rm mylog1
+ 1346  catmylog 
+ 1347  ll
+ 1348  exit
+ 1349  ll
+ 1350  r
+ 1351  exit
+ 1352  rmlint
+ 1353  sudo apt install rmlint
+ 1354  rmlint -g .
+ 1355  rmlint -D -gp -S pOma -s 1M .
+ 1356  rmlint -D -g -p -S pOma -s 7M .
+ 1357  ll
+ 1358  ./rmlint.sh 
+ 1359  a
+ 1360  exit
+ 1361  nano .bashrc 
+ 1362  exit
+ 1363  ll
+ 1364  mail
+ 1365  exit
+ 1366  a
+ 1367  r
+ 1368  ./sshwifty.sh 
+ 1369  who
+ 1370  usera
+ 1371  users
+ 1372  user
+ 1373  tty
+ 1374  cd /etc/ssh/
+ 1375  ll
+ 1376  nanp sshd_config
+ 1377  nano sshd_config
+ 1378  sudo shutdown -r now
+ 1379  cd /root/logs/
+ 1380  ll
+ 1381  catmylog 
+ 1382  ll
+ 1383  cat homeBackup.log-2022-10-17
+ 1384  ll
+ 1385  sudo shutdown -r now
+ 1386  cd scripts/plex/
+ 1387  ./latest.filebot.sh 
+ 1388  exit
+ 1389  cd scripts/plex/
+ 1390  ll
+ 1391  ./latest.filebot.sh 
+ 1392  ..
+ 1393  ./mntReddot.sh 
+ 1394  cd plex/
+ 1395  ./latest.filebot.sh 
+ 1396  cd scripts/plex/
+ 1397  ./latest.filebot.sh 
+ 1398  top -aux
+ 1399  ps -aux
+ 1400  htop
+ 1401  ./latest.filebot.sh 
+ 1402  ./plex-automated.sh 
+ 1403  ./latest.filebot.sh 
+ 1404  ./plex-automated.sh 
+ 1405  cd scripts/plex/
+ 1406  r
+ 1407  ll
+ 1408  ./rmlint.sh 
+ 1409  ll
+ 1410  exit
+ 1411  catmylog 
+ 1412  a
+ 1413  cd /root/logs/
+ 1414  ll
+ 1415  dfh
+ 1416  catmylog 
+ 1417  cd
+ 1418  cd scripts/plex/
+ 1419  ./latest.filebot.sh 
+ 1420  ./plex-automated.sh 
+ 1421  ll
+ 1422  rm -rf .
+ 1423  rm -rf *
+ 1424  ll
+ 1425  ..
+ 1426  ll
+ 1427  rmdir '5 Seconds Of Summer'
+ 1428  ./latest.filebot.sh 
+ 1429  ./plex-automated.sh 
+ 1430  ll
+ 1431  ./latest.filebot.sh 
+ 1432  ./plex-automated.sh 
+ 1433  cd /root/logs/
+ 1434  ll
+ 1435  a
+ 1436  catmylog 
+ 1437  ll
+ 1438  cat 4a999ffBackup.log-2022-10-26
+ 1439  cat homeBackup.log-2022-10-26
+ 1440  ll
+ 1441  ..
+ 1442  ll
+ 1443  ./4a999ffBackup 
+ 1444  ll
+ 1445  ./v-HostBackup 
+ 1446  cd /root/
+ 1447  ll
+ 1448  nano 1min.sh 
+ 1449  nano allBackups 
+ 1450  nano 4a999ffBackup 
+ 1451  nano  homeBackup 
+ 1452  nano 4a999ffBackup 
+ 1453  nano v-HostBackup 
+ 1454  cd /root/
+ 1455  ll
+ 1456  cd
+ 1457  ll
+ 1458  cd scripts/
+ 1459  ll
+ 1460  cd
+ 1461  cd sandbox/
+ 1462  ll
+ 1463  cd /etc/
+ 1464  ll
+ 1465  cd network/
+ 1466  ll
+ 1467  cat interfaces
+ 1468  cd interfaces.d/
+ 1469  ll
+ 1470  cat default 
+ 1471  cd /etc/
+ 1472  nmtui
+ 1473  ip -c link show
+ 1474  sudo lshw -class network -short
+ 1475  man interfaces
+ 1476  restart network
+ 1477  ip -c link show
+ 1478  ip -c addr show enp2s0f1
+ 1479  sudo systemctl restart networking.service
+ 1480  sudo systemctl status networking.service
+ 1481  sudo shutdown now
+ 1482  ip -c link show
+ 1483  nmtui
+ 1484  ip -c link show
+ 1485  ip -c addr show enp4s0
+ 1486  cd /home/ibrahim/sandbox/linux_scripts
+ 1487  ll
+ 1488  chmod +x myiptable.sh 
+ 1489  ll
+ 1490  ./myiptable.sh 
+ 1491  restart network
+ 1492  cd /root/
+ 1493  ll
+ 1494  nano 1min.sh 
+ 1495  cat gw.sh 
+ 1496  ip -c addr show enp4s0
+ 1497  ip addr
+ 1498  catmylog 
+ 1499  ./gw.sh 
+ 1500  cat ./gw.sh 
+ 1501  ip route delete default
+ 1502  ./gw.sh 
+ 1503  ping 192.168.0.80
+ 1504  ping 192.168.0.1
+ 1505  systemctl restart docker.service 
+ 1506  catmylog 
+ 1507  tailmylog 
+ 1508  nmtui
+ 1509  tailmylog 
+ 1510  nmtui
+ 1511  update
+ 1512  update.sh
+ 1513  cd
+ 1514  cd scripts/
+ 1515  ll
+ 1516  ./update.sh 
+ 1517  cat  ./update.sh 
+ 1518  apt update
+ 1519  apt upgrade
+ 1520  dpkg-reconfigure tzdata
+ 1521  sudo shutdown -r now
+ 1522  dpkg-reconfigure tzdata
+ 1523  apt dpkg-reconfigure tzdata
+ 1524  cat /etc/timezone  
+ 1525  echo "Europe/Berlin" > /etc/timezone
+ 1526  dpkg-reconfigure -f noninteractive tzdata
+ 1527  apt install dpkg-reconfigure
+ 1528  apt install dpkg
+ 1529  dpkg -reconfigure -f noninteractive tzdata
+ 1530  dpkg -reconfigure tzdata
+ 1531  dpkg --reconfigure tzdata
+ 1532  dpkg --help
+ 1533  dpkg-reconfigure tzdata
+ 1534  diff -s /etc/localtime /usr/share/zoneinfo/`cat /etc/timezone`
+ 1535  cd /share/zoneinfo/Europe
+ 1536  cd /share/zoneinfo/
+ 1537  cd /usr/share/zoneinfo/Europe/
+ 1538  ll
+ 1539  sudo dpkg-reconfigure tzdata
+ 1540  diff -s /etc/localtime /usr/share/zoneinfo/`cat /etc/timezone`
+ 1541  ll
+ 1542  time
+ 1543  date
+ 1544  cd scripts/
+ 1545  ./mntReddot.sh 
+ 1546  cd plex/
+ 1547  ./latest.filebot.sh 
+ 1548  ./plex-automated.sh 
+ 1549  cd scripts/plex/
+ 1550  ./latest.filebot.sh 
+ 1551  ./plex-automated.sh 
+ 1552  exit
+ 1553  ll
+ 1554  ./rmlint.sh 
+ 1555  exit
+ 1556  cd /etc/ssh/sshd_config.d/
+ 1557  ll
+ 1558  ..
+ 1559  nano sshd_config
+ 1560  cd /root/
+ 1561  ll
+ 1562  cat allBackups 
+ 1563  cat 4a999ffBackup 
+ 1564  ll
+ 1565  cd logs/
+ 1566  ll
+ 1567  a
+ 1568  catmylog 
+ 1569  a
+ 1570  tailsyslog 
+ 1571  a
+ 1572  ..
+ 1573  ll
+ 1574  ./allBackups 
+ 1575  history
+ 1576  history | grep -i nmap
+ 1577  nmap -sS 95.222.31.202
+ 1578  cd /root/
+ 1579  ll
+ 1580  cat 4a999ffBackup 
+ 1581  ssh-add -L
+ 1582  ssh root@4a999ff.online-server.cloud
+ 1583  nano 4a999ffBackup 
+ 1584  cat 4a999ffBackup 
+ 1585  ssh root@4a999ff.online-server.cloud -o PubkeyAuthentication=no
+ 1586  ssh root@4a999ff.online-server.cloud
+ 1587  cd scripts/
+ 1588  ./mntReddot.sh 
+ 1589  cat ./mntReddot.sh 
+ 1590  ll /net/reddot/fDrive
+ 1591  cd plex/
+ 1592  ll
+ 1593  ./latest.filebot.sh 
+ 1594  cd /etc/dhcp/
+ 1595  ll
+ 1596  nano dhcpd.conf 
+ 1597  uptime
+ 1598  a
+ 1599  catmylog 
+ 1600  cd /root/
+ 1601  cd logs/
+ 1602  ll
+ 1603  a
+ 1604  ll
+ 1605  exit
+ 1606  nmtui
+ 1607  nmcli
+ 1608  nmtui
+ 1609  nmcli
+ 1610  systemctl status NetworkManager
+ 1611  systemctl status networking
+ 1612  exit
+ 1613  apt update 
+ 1614  apt upgrade
+ 1615  ll
+ 1616  dcd
+ 1617  ./mastodon.sh 
+ 1618  ll
+ 1619  ./mastodon.sh 
+ 1620  ll
+ 1621  exit
+ 1622  ./invidious.sh 
+ 1623  ll
+ 1624  exit
+ 1625  ./immich.sh 
+ 1626  ll
+ 1627  exit
+ 1628  ./immich.sh 
+ 1629  exit
+ 1630  cd /root/
+ 1631  ll
+ 1632  cd linux_scripts/
+ 1633  ll
+ 1634  git pull
+ 1635  cd crontab/
+ 1636  ll
+ 1637  cat 11min.sh 
+ 1638  ll
+ 1639  crontab -e
+ 1640  ll /home/ibrahim/mnt/vHost-Backup/v-Host/root
+ 1641  ll /root/
+ 1642  crontab -e
+ 1643  ll
+ 1644  ..
+ 1645  ll
+ 1646  ./myiptable.sh 
+ 1647  sudo shutdown -r now
+ 1648  a
+ 1649  catmylog
+ 1650  tailmylog
+ 1651  catmylog
+ 1652  tailmylog
+ 1653  cd /etc/dhcp/
+ 1654  nano dhcpd.conf 
+ 1655  restart dhcp
+ 1656  a
+ 1657  cat ~/scripts/restart.sh
+ 1658  systemctl restart dhcpd
+ 1659  cat dhcpd.conf 
+ 1660  systemctl restart dhcp
+ 1661  ps
+ 1662  ps -aux
+ 1663  ps -aux | grep dhcp
+ 1664  service dhcpd restart
+ 1665  systemctl restart isc-dhcp-server.service 
+ 1666  systemctl status isc-dhcp-server.service 
+ 1667  nmcli
+ 1668  nmtui
+ 1669  nano dhcpd.
+ 1670  nano dhcpd.conf 
+ 1671  systemctl restart isc-dhcp-server.service 
+ 1672  systemctl status isc-dhcp-server.service 
+ 1673  cd /root/
+ 1674  ll
+ 1675  ./allBackups 
+ 1676  a
+ 1677  catmylog
+ 1678  a
+ 1679  tailmylog
+ 1680  sudo shutdown -r now
+ 1681  a
+ 1682  catmylog
+ 1683  a
+ 1684  tailmylog
+ 1685  a
+ 1686  tailmylog
+ 1687  catmylog
+ 1688  a
+ 1689  tailsyslog
+ 1690  cd /root/
+ 1691  ll
+ 1692  ./allBackups 
+ 1693  exit
+ 1694  tailmylog
+ 1695  exit
+ 1696  cd /root/
+ 1697  ll
+ 1698  ./allBackups 
+ 1699  ./rmlint.sh
+ 1700  ../mntReddot.sh 
+ 1701  ./latest.filebot.sh 
+ 1702  ./plex-automated.sh 
+ 1703  cat ./plex-automated.sh 
+ 1704  cd /root/
+ 1705  ll
+ 1706  ./allBackups 
+ 1707  cd
+ 1708  cd scripts/plex/
+ 1709  ./latest.filebot.sh 
+ 1710  ./plex-automated.sh 
+ 1711  dfh
+ 1712  cd /home/ibrahim/mnt/vHost-Backup/acc-MediaFiles
+ 1713  ll
+ 1714  a
+ 1715  myrmlint
+ 1716  ./rmlint.sh 
+ 1717  cd
+ 1718  cd scripts/pl
+ 1719  cd scripts/plex/
+ 1720  ll
+ 1721  ./latest.deployAcc2Prod.sh 
+ 1722  dfh
+ 1723  dfh | grep -i sd*
+ 1724  cd /root/
+ 1725  ll
+ 1726  ./allBackups 
+ 1727  cd /root/
+ 1728  ll
+ 1729  ./dhcpLease.sh 
+ 1730  a
+ 1731  catmylog
+ 1732  restart dhcp
+ 1733  sudo systemctl restart dhcpd.service
+ 1734  systemctl restart dhcp
+ 1735  systemctl restart isc-dhcp-server.service 
+ 1736  ./dhcpLease.sh 
+ 1737  dmesg
+ 1738  cd /etc/
+ 1739  git diff
+ 1740  cd
+ 1741  apt update
+ 1742  apt upgrade
+ 1743  apt -h
+ 1744  apt full-upgrade 
+ 1745  catmylog
+ 1746  a
+ 1747  tailmylog
+ 1748  cd /mnt/
+ 1749  ll
+ 1750  cd prod-MediaFiles/
+ 1751  ll
+ 1752  chown ibrahim:ibrahim *
+ 1753  ll
+ 1754  cd mediaFiles/
+ 1755  ll
+ 1756  cd Music/
+ 1757  ll
+ 1758  exit
+ 1759  cd /etc/dhcp/
+ 1760  ll
+ 1761  nano dhcpd.conf 
+ 1762  restart dhcp
+ 1763  cd
+ 1764  exit
+ 1765  cd /root/
+ 1766  ll
+ 1767  ./dhcpLease.sh 
+ 1768  exit
+ 1769  a
+ 1770  myrmlint
+ 1771  ll
+ 1772  cat rmlint.sh 
+ 1773  ./rmlint.sh 
+ 1774  cd scripts/
+ 1775  ll
+ 1776  cd plex/
+ 1777  ll
+ 1778  ./latest.reworks.sh 
+ 1779  ./latest.filebot.sh 
+ 1780  cd scripts/
+ 1781  ll
+ 1782  cat ./diskdup.sh 
+ 1783  ./diskdup.sh 
+ 1784  dfh
+ 1785  ll
+ 1786  ./mntReddot.sh 
+ 1787  cd plex/
+ 1788  ./latest.filebot.sh 
+ 1789  ./plex-automated.sh 
+ 1790  crontab -e
+ 1791  cd /root/
+ 1792  ll
+ 1793  ./allBackups 
+ 1794  cd scripts/plex/
+ 1795  ll
+ 1796  ./latest.filebot.sh 
+ 1797  ./plex-automated.sh 
+ 1798  ./latest.filebot.sh 
+ 1799  ./plex-automated.sh 
+ 1800  cd scripts/plex/
+ 1801  ./plex-automated.sh 
+ 1802  cd scripts/plex/
+ 1803  ./latest.filebot.sh 
+ 1804  ./opensubtitles.sh 
+ 1805  [A
+ 1806  exit
+ 1807  myrmlint
+ 1808  ll
+ 1809  ./rmlint.sh 
+ 1810  cd scripts/plex/
+ 1811  ./plex-automated.sh 
+ 1812  cd scripts/plex/
+ 1813  ./latest.filebot.sh 
+ 1814  ./plex-automated.sh 
+ 1815  ./latest.filebot.sh 
+ 1816  ./plex-automated.sh 
+ 1817  exit
+ 1818  rsync -aP 8080-pihole ibrahim@a35a0d3.online-server.cloud:/opt/docker/
+ 1819  rsync -vraPn 8080-pihole ibrahim@a35a0d3.online-server.cloud:/opt/docker/
+ 1820  rsync -vraPn 8080-pihole a35a0d3.online-server.cloud:/opt/docker/
+ 1821  docker system prune -af
+ 1822  exit
+ 1823  cd scripts/plex/
+ 1824  ./plex-automated.sh 
+ 1825  ./latest.filebot.sh 
+ 1826  ./plex-automated.sh 
+ 1827  a
+ 1828  catmylog
+ 1829  a
+ 1830  tailmylog
+ 1831  sudo shutdown -r now
+ 1832  a
+ 1833  catmylog
+ 1834  a
+ 1835  tailmylog
+ 1836  cd scripts/
+ 1837  ./mntReddot.sh 
+ 1838  cd plex/
+ 1839  ./latest.filebot.sh 
+ 1840  ./plex-automated.sh 
+ 1841  a
+ 1842  catmylog
+ 1843  exit
+ 1844  cd scripts/plex/
+ 1845  ll
+ 1846  ./latest.filebot.sh 
+ 1847  ./plex-automated.sh 
+ 1848  ./latest.filebot.sh 
+ 1849  ./plex-automated.sh 
+ 1850  a
+ 1851  tailsyslog
+ 1852  cd /var/log/
+ 1853  ll
+ 1854  cat lastlog 
+ 1855  cat user.log
+ 1856  ll
+ 1857  cd unattended-upgrades/
+ 1858  ll
+ 1859  cat unattended-upgrades-shutdown.log
+ 1860  ..
+ 1861  ll
+ 1862  cat auth.log
+ 1863  ll
+ 1864  cat faillog 
+ 1865  cat fail2ban.log
+ 1866  cat messages
+ 1867  dmesg 
+ 1868  dmesg | grep crontab
+ 1869  systemctl status cron
+ 1870  cat syslog | grep crontab
+ 1871  cat syslog | grep -i crontab
+ 1872  ll syslog
+ 1873  cat syslog
+ 1874  cat syslog | grep -i cron
+ 1875  cat syslog | grep -i allbackups
+ 1876  grep -ic cron /var/log/* | grep -v :0
+ 1877  grep cron /etc/rsyslog.conf
+ 1878  cat /etc/default/cron
+ 1879  nano /etc/rsyslog.conf
+ 1880  grep cron /etc/rsyslog.conf
+ 1881  grep -i debian-sa1 syslog | tail -1
+ 1882  nano /etc/default/cron
+ 1883  cd /home/ibrahim/mnt/vHost-Backup/acc-MediaFiles/mediaFiles
+ 1884  ll
+ 1885  a
+ 1886  myrmlint
+ 1887  ll
+ 1888  ll rmlint.sh 
+ 1889  cat rmlint.sh 
+ 1890  ll
+ 1891  ./rmlint.sh 
+ 1892  cd Music/
+ 1893  a
+ 1894  rmlint -D -g -p -S pOma -s 1M .
+ 1895  rmlint -D -g -p -S pOma -s 1K .
+ 1896  rmlint -D -g -p -S pOma .
+ 1897  ll
+ 1898  ..
+ 1899  ll
+ 1900  cd Movies/
+ 1901  ll
+ 1902  cd scripts/plex/
+ 1903  ./latest.filebot.sh 
+ 1904  ./plex-automated.sh 
+ 1905  ..
+ 1906  ll
+ 1907  cd plex/
+ 1908  ll
+ 1909  chmod +x latest.permReset.Acc.sh 
+ 1910  ./latest.permReset.Acc.sh 
+ 1911  ll
+ 1912  sudo chmod +x latest.permReset.Acc.sh 
+ 1913  ll
+ 1914  ./latest.permReset.Acc.sh 
+ 1915  ll
+ 1916  sudo chmod +x latest.permReset.Acc.sh 
+ 1917  ll
+ 1918  ./latest.permReset.Acc.sh 
+ 1919  sudo chmod +x *
+ 1920  ll
+ 1921  ./plex-automated.sh 
+ 1922  ./latest.filebot.sh 
+ 1923  ./plex-automated.sh 
+ 1924  cd /var/log/
+ 1925  ll
+ 1926  systemctl restart cron
+ 1927  systemctl status cron
+ 1928  grep -ic cron /var/log/* | grep -v :0
+ 1929  grep -i debian-sa1 syslog | tail -1
+ 1930  systemctl restart docker.service 
+ 1931  ./prune.sh 
+ 1932  cd scripts/plex/
+ 1933  ./latest.filebot.sh 
+ 1934  ./plex-automated.sh 
+ 1935  cd scripts/plex/
+ 1936  ./latest.reworks.sh 
+ 1937  grep -i debian-sa1 syslog | tail -1
+ 1938  cd /var/log
+ 1939  grep -i debian-sa1 syslog | tail -1
+ 1940  grep -ic cron /var/log/* | grep -v :0
+ 1941  ll
+ 1942  systemctl restart cron.service 
+ 1943  systemctl restart cron
+ 1944  grep -ic cron /var/log/* | grep -v :0
+ 1945  systemctl status cron.service 
+ 1946  grep cron /etc/rsyslog.conf
+ 1947  cd /home/mobile/
+ 1948  cd .ssh/
+ 1949  chown mobile:mobile authorized_keys 
+ 1950  chmod 700 authorized_keys 
+ 1951  ls
+ 1952  ls -la
+ 1953  exit
+ 1954  ll
+ 1955  chmod +x creatruser.sh 
+ 1956  ./creatruser.sh 
+ 1957  cp /home/ibrahim/mnt/v-Host/fromMediaServerBackup/users/mobile/.ssh/authorized_keys /home/mobile/.ssh/
+ 1958  ll /home/mobile/
+ 1959  ll /home/mobile/.ssh/
+ 1960  ll /home/mobile/
+ 1961  ll /home/mobile/stuffs/
+ 1962  ll /home/mobile/stuffs/DCIM/
+ 1963  la /home/mobile/stuffs/DCIM/
+ 1964  la /home/mobile/stuffs/DCIM/.thumbnails/
+ 1965  la /home/mobile/stuffs/DCIM/
+ 1966  la /home/mobile/stuffs/DCIM/.thumbnails/
+ 1967  ps aux |grep -i ssh
+ 1968  ps aux |grep ssh
+ 1969  ps aux
+ 1970  systemctl restart docker.service 
+ 1971  la /home/mobile/stuffs/DCIM/.thumbnails/
+ 1972  la /home/mobile/stuffs/DCIM/
+ 1973  la /home/mobile/stuffs/DCIM/Screenshots/
+ 1974  ll
+ 1975  cp .bashrc /home/mobile/
+ 1976  su mobile
+ 1977  exit
+ 1978  rm -rf docker
+ 1979  ll
+ 1980  rm dashdot.sh 
+ 1981  exit
+ 1982  cd /root/
+ 1983  ll
+ 1984  ./dhcpLease.sh 
+ 1985  a
+ 1986  nmap http://192.168.77.219/
+ 1987  nmap 192.168.77.219
+ 1988  ll
+ 1989  exit
+ 1990  cd /root/
+ 1991  ./dhcpLease.sh 
+ 1992  nano /etc/dhcp/hosts 
+ 1993  restart dhcp
+ 1994  ./dhcpLease.sh 
+ 1995  systemctl status isc-dhcp-server.service 
+ 1996  ./dhcpLease.sh 
+ 1997  nmap 192.168.77.213
+ 1998  nmap 192.168.77.207
+ 1999  nmap -Pn 192.168.77.207
+ 2000  ./dhcpLease.sh 
+ 2001  cd /root/
+ 2002  ll
+ 2003  ./dhcpLease.sh 
+ 2004  history
+ 2005  history > his.txt
