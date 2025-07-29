@@ -22,14 +22,14 @@ allow-hotplug eno1
 #  gateway 192.168.0.80
 #  dns-servers 192.168.14.64 192.168.14.254
 # #
-# allow-hotplug enp1s0
+# allow-hotplug enp5s0
 # iface enp1s0 inet static
 #  address 192.168.77.254
 #  netmask 255.255.255.0
 #  gateway 192.168.0.80
 #  dns-servers 10.0.0.110 10.1.0.110 192.168.77.254
 # WAN
-allow-hotplug enp5s0
+allow-hotplug enp2s0
  iface enp5s0 inet static
   address 192.168.1.80
   netmask 255.255.255.0
