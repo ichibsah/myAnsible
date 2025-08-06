@@ -23,3 +23,10 @@ ip route get 192.168.1.1
 # 172.20.0.0/16 dev br-4e682374d1f5 proto kernel scope link src 172.20.0.1 linkdown 
 # 172.23.0.0/16 dev br-cc49d750dcc9 proto kernel scope link src 172.23.0.1 
 # 192.168.1.0/24 dev enp2s0 proto kernel scope link src 192.168.1.80
+
+# ibrahim@gh-1017-gw:~/sandbox/myAnsible$ ip route get 8.8.8.8
+# 8.8.8.8 via 192.168.1.1 dev enp2s0 src 192.168.1.80 uid 1000 
+
+# ibrahim@gh-1017-gw:~/sandbox/myAnsible$ ip route get 192.168.1.1
+# 192.168.1.1 dev enp2s0 src 192.168.1.80 uid 1000 
+#     cache 
