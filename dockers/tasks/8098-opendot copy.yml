@@ -60,7 +60,7 @@
     source: build
   # when: instl_docker_pckg and dckr_dpl_opendot    
   # tags:
-  #   - test    
+  #   - #test    
 #
 #- name: Job 02 | Deploy opendot - remove old image
 #  community.docker.docker_image:

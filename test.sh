@@ -21,7 +21,7 @@ ansible-inventory -y --list
 #ansible-playbook -vv --tags servercleanup run-main.yml # works
 #ansible-playbook -vv --tags gpt run-main.yml # works
 #ansible-playbook --tags healthcheck --limit 4a999ff run-main.yml # works
-ansible-playbook -v --tags test run-main.yml # works
+ansible-playbook -v --tags test --limit !gh-servers run-main.yml # works
 #ansible-playbook -v --tags test -i test-inv.yml run-main.yml # works
 #ansible-playbook -v --tags test run-provisions.yml # works
 #ansible-playbook -v run-anydesk.yml # works

@@ -62,7 +62,7 @@
     file: 3002-semaphore.yml
   tags:
     - semaphore
-    - test  
+    - #test  
 #
 - name: Job 12 | import task semaphore
   ansible.builtin.import_tasks:
@@ -100,7 +100,7 @@
   when: instl_docker_pckg and dckr_dpl_plex_gh
   tags:
   - plex
-  - test  
+  - #test  
 #
 - name: Job 18 | import task tubesync
   ansible.builtin.import_tasks:
@@ -138,7 +138,7 @@
   when: instl_docker_pckg and dckr_dpl_emby_gh
   tags:
     - emby
-    - test  
+    - #test  
 #
 - name: Job 24 | import task invidious
   ansible.builtin.import_tasks:
@@ -200,7 +200,7 @@
   when: instl_docker_pckg and dckr_dpl_opendot
   tags:
     - opendot
-    - test  
+    - #test  
 #
 - name: Job 33 | import task Skylinewebservice
   ansible.builtin.import_tasks:
@@ -288,7 +288,7 @@
   when: instl_docker_pckg and dckr_dpl_rustdesk
   tags:
     - rustdesk
-    - test
+    - #test
 #
 #
 # keep this last

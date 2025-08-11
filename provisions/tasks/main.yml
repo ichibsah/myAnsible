@@ -145,7 +145,7 @@
     file: github_key.yml
   when: instl_docker_pckg and instl_gthb_ky
   tags:
-    - test  
+    - #test  
 #
 #
 - name: Job 99 | Check if reboot required

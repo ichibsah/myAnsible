@@ -79,7 +79,7 @@
   when: changes_in_git_pull is changed
   # when: instl_docker_pckg and dckr_dpl_Skylinewebservice    
   # tags:
-  #   - test    
+  #   - #test    
 #
 #- name: Job 02 | Deploy Skylinewebservice - remove old image
 #  community.docker.docker_image:
