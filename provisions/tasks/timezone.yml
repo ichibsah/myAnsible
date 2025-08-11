@@ -1,8 +1,8 @@
-- name: Job 00 | Set timezone to {{ default_timezone }}
+- name: timezone | Job 00 | Set timezone to {{ default_timezone }}
   community.general.timezone:
     name: "{{ default_timezone }}"
 #
-- name: Job 01 | Set locales
+- name: timezone | Job 01 | Set locales
   community.general.locale_gen:
     name:
       - en_GB.UTF-8
