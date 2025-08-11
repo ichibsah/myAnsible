@@ -15,6 +15,8 @@ dckr_dmain_nme_pstfx: home.sawadogo.xyz
 #ansible_connection: local # this will overwrite any other type of connections. its needed here.
 ansible_become_pass: '{{ localhost_become_pass }}'
 #
+default_timezone: Africa/Accra  # default timezone
+#
 ### PRVS | CONFIG ###
 prvs_copy_home: no                       # Copy default user's home files in place
 prvs_root_passwd: no                     # update root passward

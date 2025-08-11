@@ -1,7 +1,11 @@
-# tasks file for provisions
-- name: Job 00 | Set timezone to Europe/Berlin
-  community.general.timezone:
-    name: Europe/Berlin
+---
+# tasks file for configs
+- name: Job 01 | import task anydesk
+  ansible.builtin.import_tasks:
+    file: timezone.yml
+  tags:
+    - timezone
+    - test
 #
 - name: Job 01 | Create group
   group:

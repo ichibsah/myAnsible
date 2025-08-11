@@ -5,6 +5,9 @@ hostname_additional_hosts:
   #
 #
 ansible_become_pass: '{{ localhost_become_pass }}'
+#
+default_timezone: Africa/Accra  # default timezone
+#
 ### PRVS | CONFIG ###
 prvs_copy_home: no                       # Copy default user's home files in place
 prvs_root_passwd: yes                    # update root passward

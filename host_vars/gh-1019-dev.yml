@@ -11,6 +11,8 @@ apt_hst_strt_srvc_lst:                # Ensure Services are running.
   - #bind9
   - #psa
 #
+default_timezone: Africa/Accra  # default timezone
+#
 ### PRVS | CONFIG ###
 prvs_copy_home: yes                       # Copy default user's home files in place
 prvs_root_passwd: yes                     # update root passward
