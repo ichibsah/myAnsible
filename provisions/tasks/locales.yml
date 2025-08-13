@@ -1,5 +1,5 @@
 ---
-- name: Debconf set default locale Ubuntu
+- name: locales | Job 01 | Debconf set default locale Ubuntu
   ansible.builtin.debconf:
     name: locales
     question: locales/default_environment_locale
@@ -7,46 +7,50 @@
     vtype: select
   #when: ansible_distribution == 'Ubuntu'
 
-- name: Locales package present Ubuntu
+- name: locales | Job 01 | Locales package present Ubuntu
   ansible.builtin.apt:
     pkg:
       - locales
   #when: ansible_distribution == 'Ubuntu'
 
-- name: set as default locale Ubuntu
+- name: locales | Job 01 | set as default locale {{ansible_distribution}}
   ansible.builtin.command: localectl set-locale LANG=en_GB.UTF-8
   #when: ansible_distribution == 'Ubuntu'
 
-- name: set as default x11-keymap Ubuntu
+- name: locales | Job 01 | set as default x11-keymap Ubuntu
   ansible.builtin.command: localectl --no-convert set-x11-keymap de
   #when: ansible_distribution == 'Ubuntu'
 
-- name: create vconsole.conf for VC Keymap Ubuntu
+- name: locales | Job 01 | create vconsole.conf for VC Keymap Ubuntu
   ansible.builtin.copy:
     dest: /etc/vconsole.conf
     content: |
       KEYMAP=de
   #when: ansible_distribution == 'Ubuntu'
 ###########
-- name: Get existing debconf values for locales 
+- name: locales | Job 01 | Get existing debconf values for locales 
   ansible.builtin.debconf:
     name: locales 
   register: locale_dcnf
 
-- name: Set a variable for the current locales
+- name: locales | Job 01 | Set a variable for the current locales
   ansible.builtin.set_fact:
     locale_dcnf_locale: "{{ locale_dcnf | community.general.json_query(locale_dcnf_jpq) }}"
   vars:
     locale_dcnf_jpq: 'current.["locales/default_environment_locale"]|[0]'
   
-- name: Debug existing debconf value for locales/default_environment_locale
+- name: locales | Job 01 | Debug existing debconf value for locales/default_environment_locale
   ansible.builtin.debug:
     var: locale_dcnf_locale
   
-- name: Debconf set default locale
+- name: locales | Job 01 | Debconf set default locale
   ansible.builtin.debconf:
     name: locales 
     question: locales/default_environment_locale
     value: "{{ locale_lang }}"
     vtype: select
   when: locale_dcnf_locale != locale_lang
+#
+- name: locales | Job 01 | check mode
+  community.general.locale_gen:
+  check_mode: on
