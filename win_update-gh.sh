@@ -2,7 +2,8 @@ clear
 #
 ansible-inventory -y --list
 #
-ansible-playbook -v --limit gh-windows_users run-windows.yml # works
+#ansible-playbook -v --limit gh-windows_users run-windows.yml # works
+ansible-playbook -v --limit gh-windows_users run-windows-winrm.yml # works
 #
 #
 # things that have to be setup on windows pcs for this to work
