@@ -51,6 +51,3 @@
     vtype: select
   when: locale_dcnf_locale != locale_lang
 #
-- name: locales | Job 01 | check mode
-  community.general.locale_gen:
-  check_mode: on
