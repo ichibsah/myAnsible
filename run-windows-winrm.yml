@@ -1,0 +1,25 @@
+---
+- name: PROVISIONS | First time Initialisation
+  hosts: windows_users
+
+#
+  gather_facts: true
+
+  vars:
+    ansible_shell_type: cmd
+    logpath: C:\ansible-log
+    filename: "{{ lookup('pipe', 'date +%Y%m%d') }}.log"
+
+  roles:
+    - win_update
+
+# ansible_user: username@MY.DOMAIN.COM
+# ansible_password: Password
+
+# # psrp
+# ansible_connection: psrp
+# ansible_psrp_auth: negotiate  # or kerberos to disable ntlm fallback
+
+# # winrm
+# ansible_connection: winrm
+# ansible_winrm_transport: kerberos
