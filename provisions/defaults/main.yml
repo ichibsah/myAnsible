@@ -2,8 +2,9 @@
 # defaults file for provisions
 #
 default_timezone: Europe/Berlin  # default timezone
-default_locale: en_US.UTF-8       # default locale
-default_lang: en_US.UTF-8         # default language
+default_locale: en_GB.UTF-8       # default locale
+locale_lang: en_GB.UTF-8
+default_lang: en_GB.UTF-8         # default language
 prvs_copy_home: yes             # Copy default user's home files in place
 prvs_root_passwd: no            # update root passward
 addLocalUser: no                # add a local user to specific host

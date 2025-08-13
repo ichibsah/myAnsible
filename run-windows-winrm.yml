@@ -23,3 +23,9 @@
 # # winrm
 # ansible_connection: winrm
 # ansible_winrm_transport: kerberos
+
+#RESOURCES
+# https://docs.ansible.com/ansible/latest/os_guide/windows_winrm.html#windows-winrm
+# https://www.bing.com/search?FORM=U523DF&PC=U779&q=ansible+connection+to+windows+11&ntref=1
+# https://woshub.com/ansible-manage-windows-machines/
+# 

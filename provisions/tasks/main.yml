@@ -1,10 +1,18 @@
 ---
 # tasks file for configs
-- name: Job 01 | import task anydesk
+- name: Job 01 | import task timezone
   ansible.builtin.import_tasks:
     file: timezone.yml
   tags:
     - timezone
+    - #test
+#
+- name: Job 01.01 | import task locales
+  ansible.builtin.import_tasks:
+    file: locales.yml
+  when: ansible_distribution == 'Debian'
+  tags:
+    - locales
     - test
 #
 - name: Job 01 | Create group
