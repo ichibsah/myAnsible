@@ -168,6 +168,11 @@ alias gcb="git checkout -b $1 &&  git push --set-upstream origin $1" # git creat
 alias gsb="git checkout $1" # git switch to desired branch
 alias gl1="git log --oneline"
 alias grh="git reset --hard"  #git reset --hard origin/master
+git config --global alias.pull-force '!git fetch origin && git reset --hard FETCH_HEAD'
+# the alt is above. the nuke version
+# git fetch origin && git reset --hard origin/main
+
+
 #
 # ******************
 alias dmesg="dmesg -w -H"
