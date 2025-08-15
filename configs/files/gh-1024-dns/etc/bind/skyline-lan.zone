@@ -3,7 +3,7 @@ $TTL 2d
 $ORIGIN skyline.lan.
 
 @                   IN      SOA     ns.skyline.lan. info.sawadogo.com (
-                                    2025081501      ; serial
+                                    2025081502      ; serial
                                     12h             ; refresh
                                     15m             ; retry
                                     3w              ; expire
@@ -28,9 +28,14 @@ gh-1017-gw          IN      A       10.3.0.254
 de-1004-babs        IN      A       10.1.4.14
 de-1006-dns         IN      A       10.3.0.136
 de-1007-docker      IN      A       10.0.0.137
-de-1020-dc          IN      A       10.3.0.111
+gh-1020-dc          IN      A       10.3.0.111
 gh-1023-dc          IN      A       10.3.0.110
 
 ; -- add docker dns record below
 
 *                   IN      A       10.3.0.254
+
+; -- SRV
+
+_kerberos._tcp.SKYLINE.LAN. SRV 10 100 88 gh-1020-dc.skyline.lan.
+_kerberos._tcp.SKYLINE.LAN. SRV 20 100 88 gh-1023-dc.skyline.lan.
