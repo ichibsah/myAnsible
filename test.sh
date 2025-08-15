@@ -8,6 +8,11 @@ rm -rf ~/.ansible/tmp/
 rm -rf /tmp/.ansible-*
 #
 ansible-inventory -y --list
+# ***
+# To see the ‘raw’ information as gathered, run this command at the command line:
+# ansible <hostname> -m ansible.builtin.setup
+# https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_vars_facts.html
+# ***
 
 # Multi-server tests for the orchestration example.
 #set -e
