@@ -16,7 +16,7 @@ ns                  IN      A       10.3.0.136
 
 ; -- add dns record below
 
-de-1001-nas         IN      A       10.0.0.131
+gh-1014-nas         IN      A       10.3.0.131
 de-1013-nas         IN      A       10.1.0.131
 mgmt-1001-nas       IN      A       10.0.0.135
 de-1001-pve         IN      A       10.1.0.135
