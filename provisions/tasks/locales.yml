@@ -51,3 +51,4 @@
     vtype: select
   when: locale_dcnf_locale != locale_lang
 #
+# https://cloudspinx.com/list-of-ansible-os-family-os-distribution-facts/
