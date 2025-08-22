@@ -5,7 +5,7 @@
     file: timezone.yml
   tags:
     - timezone
-    - #test
+    #- test
 #
 - name: Job 01.01 | import task locales
   ansible.builtin.import_tasks:
@@ -13,7 +13,7 @@
   when: ansible_distribution == 'Debian'
   tags:
     - locales
-    - test
+    #- test
 #
 - name: Job 01 | Create group
   group:
