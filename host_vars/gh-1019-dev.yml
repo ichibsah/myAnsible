@@ -58,7 +58,7 @@ localusers:
       - sudo
       - docker
     append: True
-    state: present
+    state: absent
     key: joe.pub
     gen_ssh_key: True
     create_home: True
@@ -72,7 +72,7 @@ localusers:
       - sudo
       - docker
     append: True
-    state: present
+    state: absent
     key: thelma.pub
     gen_ssh_key: True
     create_home: True
