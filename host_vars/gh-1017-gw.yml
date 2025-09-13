@@ -71,6 +71,8 @@ apt_host_pckg_lst:                        # Install Host Specific Packages (keep
 pip_host_pckg_lst:                        # Install Host Specific PIP Packages when ansible is also installed
 #
 #
+getflix_cronjob: yes                           # Install getflix cronjob
+#
 # docker containers
 dckr_dpl_pihole: yes
 dckr_dpl_iSpy: no

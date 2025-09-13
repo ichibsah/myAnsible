@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+URL="{{ url_monitor_target_url }}"
+LOG_DIR="{{ url_monitor_log_dir }}"
+ENV_FILE="{{ url_monitor_env_file }}"
+TIMEOUT="{{ url_monitor_http_timeout }}"
+
+CURL="$(command -v curl || echo /usr/bin/curl)"
+DATE="$(command -v date || echo /bin/date)"
+HOSTNAME_CMD="$(command -v hostname || echo /bin/hostname)"
+
+# Load webhook secret if present (root-only file)
+if [[ -f "$ENV_FILE" ]]; then
+  # shellcheck disable=SC1090
+  source "$ENV_FILE"
+fi
+day="$($DATE +%F)"  # e.g. 2025-09-13
+logfile="${LOG_DIR}/${day}.log"
+
+ts="$($DATE --iso-8601=seconds)"
+host="$($HOSTNAME_CMD -f 2>/dev/null || $HOSTNAME_CMD)"
+
+# Perform request and capture HTTP status + elapsed time
+# If curl fails, fallback to "curl_error 0"
+read -r http_code time_total < <(
+  "$CURL" -sS -o /dev/null -w "%{http_code} %{time_total}" --max-time "$TIMEOUT" "$URL" 2>/dev/null \
+  || echo "curl_error 0"
+)
+
+# Log every attempt
+echo "$ts $host $URL -> $http_code (elapsed=${time_total}s)" >> "$logfile"
+
+# Alert to Teams if not 200
+if [[ "{{ url_monitor_enable_teams_alerts | bool }}" == "True" && "$http_code" != "200" ]]; then
+  if [[ -n "${WEBHOOK_URL:-}" ]]; then
+    # Build a Markdown message
+    msg=":rotating_light: URL check failed
+Host: $host
+URL: $URL
+Status: $http_code
+Elapsed: ${time_total}s
+Time: $ts"
+
+    # JSON escape helper (escape \, ", and newlines)
+    escape_json() {
+      local s="$1"
+      s="${s//\\/\\\\}"         # backslashes
+      s="${s//\"/\\\"}"         # double quotes
+      s="${s//$'\n'/\\n}"       # newlines
+      printf '%s' "$s"
+    }
+
+    safe_msg="$(escape_json "$msg")"
+    payload="{\"text\":\"$safe_msg\"}"
+
+    # Post to Teams Incoming Webhook
+    "$CURL" -sS -X POST -H 'Content-Type: application/json' -d "$payload" "$WEBHOOK_URL" >/dev/null || true
+  fi
+fi

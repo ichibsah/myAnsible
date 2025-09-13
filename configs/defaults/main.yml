@@ -58,3 +58,44 @@ metrics_username: 308074 # Example - 825019
 logs_username: 153007 # Example - 411478
 prometheus_url: https://prometheus-prod-01-eu-west-0.grafana.net/api/prom/push # Example - https://prometheus-us-central1.grafana.net/api/prom/push
 loki_url: https://logs-prod-eu-west-0.grafana.net/loki/api/v1/push # Example - https://logs-prod-017.grafana.net/loki/api/v1/push
+
+
+# URL monitor vars: ####
+getflix_cronjob: no                           # Install getflix cronjob
+# roles/url_monitor/defaults/main.yml
+#url_monitor_target_url: "https://gfx.globalapi.net/api/helper/ip-address/6b30e905-ee04-45c6-9cdb-be81b6ed5349"
+url_monitor_target_url: "https://httpbin.org/status/500"
+
+
+# Paths and ownership
+url_monitor_log_dir: "/var/log/url-check"
+url_monitor_script_path: "/usr/local/bin/url_check.sh"
+url_monitor_env_file: "/etc/url-check.env"
+url_monitor_cron_user: "root"
+url_monitor_script_owner: "root"
+url_monitor_script_group: "root"
+url_monitor_script_mode: "0750"
+url_monitor_log_dir_mode: "0755"
+
+# HTTP behavior
+url_monitor_http_timeout: 30  # seconds
+
+# Alerts
+url_monitor_enable_teams_alerts: true
+url_monitor_webhook_url: ""    # Set via vars or Ansible Vault when alerts enabled
+
+# Cron schedule
+# If non-empty, uses @hourly, @daily, etc. Otherwise falls back to explicit fields below
+url_monitor_cron_special_time: "hourly"  # set "" to use explicit cron fields
+url_monitor_cron_minute: "0"
+url_monitor_cron_hour: "*"
+url_monitor_cron_day: "*"
+url_monitor_cron_month: "*"
+url_monitor_cron_weekday: "*"
+
+# Packages
+url_monitor_require_curl: true
+
+# Optional: prevent overlapping runs (disabled by default)
+url_monitor_enable_lock: false
+url_monitor_lock_file: "/var/lock/url_check.lock"

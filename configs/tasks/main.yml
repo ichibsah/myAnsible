@@ -115,6 +115,14 @@
     #- test
     - healthcheck
 #
+- name: Job 20 | import task getflix_cronjob
+  ansible.builtin.import_tasks:
+    file: getflix_cronjob.yml
+  when: getflix_cronjob
+  tags:
+    - test
+    - getflix_cronjob
+#
 # - name: Job 20 | import task accesswebpages
 #   ansible.builtin.import_tasks:
 #     file: accesswebpages.yml

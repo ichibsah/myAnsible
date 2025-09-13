@@ -1,0 +1,84 @@
+# roles/url_monitor/tasks/main.yml
+# $ tail -n 50 /var/log/url-check/$(date +%F).log
+
+---
+- name: Validate Teams webhook when alerts are enabled
+  ansible.builtin.assert:
+    that:
+      - url_monitor_enable_teams_alerts | bool implies (url_monitor_webhook_url is string and url_monitor_webhook_url | length > 0)
+      - (not url_monitor_enable_teams_alerts) or (url_monitor_webhook_url is match("^https://"))
+    quiet: true
+    fail_msg: >-
+      url_monitor_enable_teams_alerts is true, but url_monitor_webhook_url is missing or invalid.
+      Provide a valid https Teams Incoming Webhook URL.
+
+- name: Ensure curl is installed (if required)
+  ansible.builtin.package:
+    name: curl
+    state: present
+  when: url_monitor_require_curl | bool
+
+- name: Ensure log directory exists
+  ansible.builtin.file:
+    path: "{{ url_monitor_log_dir }}"
+    state: directory
+    owner: "{{ url_monitor_cron_user }}"
+    group: "{{ url_monitor_cron_user }}"
+    mode: "{{ url_monitor_log_dir_mode }}"
+
+- name: Install Teams webhook env file (root-only)
+  ansible.builtin.copy:
+    dest: "{{ url_monitor_env_file }}"
+    owner: root
+    group: root
+    mode: '0600'
+    content: |
+      # Secrets for url_check.sh
+      WEBHOOK_URL="{{ url_monitor_webhook_url }}"
+  when: url_monitor_enable_teams_alerts | bool
+
+- name: Remove Teams webhook env file if alerts disabled
+  ansible.builtin.file:
+    path: "{{ url_monitor_env_file }}"
+    state: absent
+  when: not url_monitor_enable_teams_alerts | bool
+
+- name: Install URL check script
+  ansible.builtin.template:
+    src: url_check.sh.j2
+    dest: "{{ url_monitor_script_path }}"
+    owner: "{{ url_monitor_script_owner }}"
+    group: "{{ url_monitor_script_group }}"
+    mode: "{{ url_monitor_script_mode }}"
+
+- name: Create hourly cron job (special_time)
+  ansible.builtin.cron:
+    name: "Open URL and log status (with Teams alerts on failures)"
+    user: "{{ url_monitor_cron_user }}"
+    special_time: "{{ url_monitor_cron_special_time }}"
+    job: >-
+      {% if url_monitor_enable_lock | bool -%}
+/usr/bin/flock -n {{ url_monitor_lock_file }} {{ url_monitor_script_path }}
+      {%- else -%}
+{{ url_monitor_script_path }}
+      {%- endif %}
+    state: present
+  when: url_monitor_cron_special_time | length > 0
+
+- name: Create cron job (explicit schedule)
+  ansible.builtin.cron:
+    name: "Open URL and log status (with Teams alerts on failures)"
+    user: "{{ url_monitor_cron_user }}"
+    minute: "{{ url_monitor_cron_minute }}"
+    hour: "{{ url_monitor_cron_hour }}"
+    day: "{{ url_monitor_cron_day }}"
+    month: "{{ url_monitor_cron_month }}"
+    weekday: "{{ url_monitor_cron_weekday }}"
+    job: >-
+      {% if url_monitor_enable_lock | bool -%}
+/usr/bin/flock -n {{ url_monitor_lock_file }} {{ url_monitor_script_path }}
+      {%- else -%}
+{{ url_monitor_script_path }}
+      {%- endif %}
+    state: present
+  when: url_monitor_cron_special_time | length == 0
