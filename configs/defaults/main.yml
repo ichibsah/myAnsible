@@ -63,8 +63,8 @@ loki_url: https://logs-prod-eu-west-0.grafana.net/loki/api/v1/push # Example - h
 # URL monitor vars: ####
 getflix_cronjob: no                           # Install getflix cronjob
 # roles/url_monitor/defaults/main.yml
-#url_monitor_target_url: "https://gfx.globalapi.net/api/helper/ip-address/6b30e905-ee04-45c6-9cdb-be81b6ed5349"
-url_monitor_target_url: "https://httpbin.org/status/500"
+url_monitor_target_url: "https://gfx.globalapi.net/api/helper/ip-address/6b30e905-ee04-45c6-9cdb-be81b6ed5349"
+#url_monitor_target_url: "https://httpbin.org/status/500"
 
 
 # Paths and ownership
@@ -82,7 +82,7 @@ url_monitor_http_timeout: 30  # seconds
 
 # Alerts
 url_monitor_enable_teams_alerts: true
-url_monitor_webhook_url: ""    # Set via vars or Ansible Vault when alerts enabled
+#url_monitor_webhook_url: ""    # Set via vars or Ansible Vault when alerts enabled
 
 # Cron schedule
 # If non-empty, uses @hourly, @daily, etc. Otherwise falls back to explicit fields below

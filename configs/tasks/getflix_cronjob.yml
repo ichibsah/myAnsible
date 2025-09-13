@@ -58,9 +58,9 @@
     special_time: "{{ url_monitor_cron_special_time }}"
     job: >-
       {% if url_monitor_enable_lock | bool -%}
-/usr/bin/flock -n {{ url_monitor_lock_file }} {{ url_monitor_script_path }}
+      /usr/bin/flock -n {{ url_monitor_lock_file }} {{ url_monitor_script_path }}
       {%- else -%}
-{{ url_monitor_script_path }}
+      {{ url_monitor_script_path }}
       {%- endif %}
     state: present
   when: url_monitor_cron_special_time | length > 0
@@ -76,9 +76,9 @@
     weekday: "{{ url_monitor_cron_weekday }}"
     job: >-
       {% if url_monitor_enable_lock | bool -%}
-/usr/bin/flock -n {{ url_monitor_lock_file }} {{ url_monitor_script_path }}
+      /usr/bin/flock -n {{ url_monitor_lock_file }} {{ url_monitor_script_path }}
       {%- else -%}
-{{ url_monitor_script_path }}
+      {{ url_monitor_script_path }}
       {%- endif %}
     state: present
   when: url_monitor_cron_special_time | length == 0
