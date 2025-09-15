@@ -1,0 +1,45 @@
+---
+- name: Iterate over URLs and submit form login
+  vars:
+    site_targets:
+      - { url: 'https://boboconsult.odoo.com/odoo/web/login', username: 'website@opendotsolutions.com', password: 'Qwertzuiop123', login_path: '/post' }
+      - { url: 'https://httpbin.org', username: 'bob', password: 'secret2', login_path: '/post' }
+    #site_targets: "{{ site_targets | default([]) }}"
+    # Global defaults (can be overridden per target)
+    form_login_path: "/login"
+    username_field: "login"
+    password_field: "password"
+    extra_fields: {}                # e.g., { csrf_token: "..." }
+
+    validate_certs: false
+    connection_timeout: 10
+    follow_redirects: none          # keep redirects visible (often 302 after login)
+  ansible.builtin.uri:
+    url: >-
+      {{ (item.url | regex_replace('/$', '')) + (item.login_path | default(form_login_path)) }}
+    method: POST
+    body_format: form-urlencoded
+    body: >-
+      {{
+        {
+          (item.username_field | default(username_field)): item.username,
+          (item.password_field | default(password_field)): item.password
+        }
+        | combine(extra_fields)
+        | combine(item.extra_fields | default({}))
+      }}
+    validate_certs: "{{ validate_certs }}"
+    timeout: "{{ connection_timeout }}"
+    return_content: false
+    follow_redirects: "{{ follow_redirects }}"
+  loop: "{{ site_targets }}"
+  loop_control:
+    label: "{{ (item.url | regex_replace('/$', '')) + (item.login_path | default(form_login_path)) }}"
+  register: login_results
+  failed_when: false
+  changed_when: false
+
+- name: Show status codes
+  ansible.builtin.debug:
+    msg: "URL={{ item.item.url }} | Login Path={{ item.item.login_path | default(form_login_path) }} | Status={{ item.status }}"
+  loop: "{{ login_results.results }}"

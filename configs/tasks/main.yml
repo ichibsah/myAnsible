@@ -120,8 +120,25 @@
     file: getflix_cronjob.yml
   when: getflix_cronjob
   tags:
-    - test
+    #- test
     - getflix_cronjob
+#
+# - name: Job 21 | import task odoo_keep_alive
+#   ansible.builtin.import_tasks:
+#     file: odoo_keep_alive.yml
+#   when: odoo_keep_alive
+#   tags:
+#     #- test
+#     - odoo_keep_alive
+#
+- name: Job 22 | import task wol
+  ansible.builtin.import_tasks:
+    file: wol.yml
+  #when: odoo_keep_alive
+  tags:
+    - test
+    - wol
+#
 #
 # - name: Job 20 | import task accesswebpages
 #   ansible.builtin.import_tasks:

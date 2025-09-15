@@ -29,6 +29,9 @@ servercleanup: no                                     # server clean up
 #
 backup_home: no                                     # backup home folder from server
 #
+odoo_keep_alive: no                                 # Install Odoo keep alive cronjob
+#
+#
 #
 addLocalUser: no                # add a local user to specific host
 #

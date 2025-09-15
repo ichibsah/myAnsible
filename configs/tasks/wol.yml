@@ -1,0 +1,34 @@
+---
+- name: Wake on LAN Playbook
+  ansible.builtin.set_fact:
+    macs:
+      - "00:11:22:33:44:55"
+      - "AA:BB:CC:DD:EE:FF"
+    wol_broadcast: "255.255.255.255"  # or e.g., "192.168.1.255"
+    wol_port: 9
+#
+#
+# roles/wol/tasks/main.yml
+
+# This role expects:
+#   macs            - list of MAC addresses (required)
+#   wol_broadcast   - broadcast address (default: 255.255.255.255)
+#   wol_port        - UDP port for WOL (default: 9)
+
+- name: Validate required inputs
+  ansible.builtin.assert:
+    that:
+      - macs is defined
+      - macs | length > 0
+      - macs is iterable
+    fail_msg: "Provide a non-empty list of MAC addresses via the 'macs' variable."
+
+- name: Send Wake-on-LAN magic packets (delegated to localhost)
+  ansible.builtin.wakeonlan:
+    mac: "{{ item }}"
+    broadcast: "{{ wol_broadcast | default('255.255.255.255') }}"
+    port: "{{ wol_port | default(9) }}"
+  loop: "{{ macs }}"
+  delegate_to: "localhost"
+  run_once: true
+  tags: ['wol']

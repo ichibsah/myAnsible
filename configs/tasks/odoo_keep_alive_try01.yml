@@ -1,0 +1,132 @@
+---
+# Role: login_status
+# Purpose: Iterate over URLs with distinct credentials, attempt login,
+# capture HTTP status, and continue without failing mid-loop.
+
+- name: Iterate over URLs and capture login status codes
+  vars:
+        # Example with HTTP Basic Auth against httpbin (change to your URLs/creds)
+    site_targets:
+      - { url: 'https://boboconsult.odoo.com/odoo', username: 'website@opendotsolutions.com', password: 'Qwertzuiop123' }
+      - { url: 'https://httpbin.org/basic-auth/bob/secret2',   username: 'bob',   password: 'secret2' }
+
+    login_method: basic          # or 'form' (see the form settings below)
+    validate_certs: true
+    connection_timeout: 10
+    expected_status_codes: [200] # OK only
+
+    # Optional reporting
+    write_report: true
+    report_path: "./login_status_report.json"
+
+    # If you need form-based auth, set:
+    # login_method: form
+    # form_login_path: "/login"
+    # form_username_field: "username"
+    # form_password_field: "password"
+    # form_extra_fields: { csrf_token: "..." }
+    #
+    # Inline variables (override these from your play or via --extra-vars)
+#
+    # site_targets: "{{ site_targets | default([
+    #   # Example entries — replace with your real endpoints & credentials or override via extra_vars.
+    #   # { url: 'https://example1.test/protected', username: 'alice', password: 'secret1' },
+    #   # { url: 'https://example2.test/protected', username: 'bob',   password: 'secret2'  },
+    #   ]) }}"
+    # connection_timeout: "{{ connection_timeout | default(15) }}"
+    # validate_certs: "{{ validate_certs | default(true) }}"
+    # login_method: "{{ login_method | default('basic') }}"   # 'basic' or 'get' (same), or 'form'
+
+    # For form logins (optional), override these as needed
+    form_login_path: "{{ form_login_path | default('/login') }}"
+    form_username_field: "{{ form_username_field | default('username') }}"
+    form_password_field: "{{ form_password_field | default('password') }}"
+    form_extra_fields: "{{ form_extra_fields | default({}) }}"
+
+    # Acceptable HTTP status codes (tune as needed)
+#    expected_status_codes: "{{ expected_status_codes | default([200, 301, 302, 401, 403]) }}"
+  block:
+
+    - name: "Sanity check | Ensure we have at least one site to test"
+      ansible.builtin.assert:
+        that:
+          - site_targets | length > 0
+        fail_msg: "No site_targets provided. Pass a list of {url, username, password} objects."
+        success_msg: "site_targets provided: {{ site_targets | length }} item(s)."
+
+    - name: "Login ({{ login_method }}) against each URL and collect status"
+      vars:
+        target_url: "{{ item.url }}"
+        user: "{{ item.username }}"
+        pass: "{{ item.password }}"
+      ansible.builtin.uri:
+        url: >-
+          {% if login_method in ['basic', 'get'] -%}
+          {{ target_url }}
+          {%- elif login_method == 'form' -%}
+          {{ target_url.rstrip('/') + form_login_path }}
+          {%- else -%}
+          {{ target_url }}
+          {%- endif %}
+        method: >-
+          {% if login_method == 'form' %}POST{% else %}GET{% endif %}
+
+        # Basic / GET with credentials
+        url_username: "{{ user if login_method in ['basic', 'get'] else omit }}"
+        url_password: "{{ pass if login_method in ['basic', 'get'] else omit }}"
+        force_basic_auth: "{{ true if login_method in ['basic', 'get'] else omit }}"
+
+        # Form login body (optional)
+        body_format: "{{ 'form-urlencoded' if login_method == 'form' else omit }}"
+        body: >-
+          {% if login_method == 'form' -%}
+          {{ { (form_username_field): user, (form_password_field): pass } | combine(form_extra_fields) }}
+          {%- else -%}
+          {{ omit }}
+          {%- endif %}
+
+        validate_certs: "{{ validate_certs }}"
+        timeout: "{{ connection_timeout }}"
+        return_content: false
+        follow_redirects: none
+        status_code: "{{ expected_status_codes }}"
+      loop: "{{ site_targets }}"
+      loop_control:
+        label: "{{ item.url }}"
+      register: login_results
+      failed_when: false     # Never stop the loop; continue gathering statuses
+      changed_when: false
+
+    - name: "Build a compact summary list"
+      ansible.builtin.set_fact:
+        login_status_summary: >-
+          {{ login_status_summary | default([]) + [ {
+              'url': item.item.url,
+              'username': item.item.username,
+              'status': (item.status | default(item.msg | default('unknown'))),
+              'ok': (item.status is defined and (item.status in expected_status_codes)) and not (item.failed | default(false)),
+              'redirected': (item.redirected | default(false)),
+              'msg': item.msg | default(''),
+            } ] }}
+      loop: "{{ login_results.results }}"
+      loop_control:
+        label: "{{ item.item.url }}"
+
+    - name: "Print per-site status"
+      ansible.builtin.debug:
+        msg: "URL={{ item.url }} | user={{ item.username }} | status={{ item.status }} | ok={{ item.ok }}{{ ' | note=' + item.msg if item.msg else '' }}"
+      loop: "{{ login_status_summary }}"
+      loop_control:
+        label: "{{ item.url }}"
+
+    - name: "Optional: write JSON report to controller (set write_report=true to enable)"
+      when: write_report | default(false)
+      vars:
+        report_path: "{{ report_path | default('login_status_report.json') }}"
+      ansible.builtin.copy:
+        dest: "{{ report_path }}"
+        content: "{{ login_status_summary | to_nice_json }}"
+        mode: '0600'
+      delegate_to: localhost
+      run_once: true
+      changed_when: true

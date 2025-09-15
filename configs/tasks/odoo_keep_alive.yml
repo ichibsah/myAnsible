@@ -1,159 +1,60 @@
-# https://docs.ansible.com/ansible/latest/collections/ansible/builtin/uri_module.html
-# https://www.redhat.com/en/blog/deploying-static-website-ansible
-#
-- name: Check that you can connect (GET) to a page and it returns a status 200
-  ansible.builtin.uri:
-    url: http://www.example.com
+---
+- name: Iterate targets (each with distinct creds)
+  vars:
+    site_targets:
+      - { url: 'https://boboconsult.odoo.com/odoo', username: 'website@opendotsolutions.com', password: 'Qwertzuiop123', login_path: '/post' }
+      - { url: 'https://httpbin.org', username: 'bob', password: 'secret2', login_path: '/post' }
+    # site_targets: "{{ site_targets | default([]) }}"
+    path_prefix: "/odoo"          # your instance prefix
+    login_path: "/web/login"      # Odoo's login endpoint
+    validate_certs: true
+    timeout_s: 15
+  loop: "{{ site_targets }}"
+  loop_control:
+    label: "{{ item.url }}"
+  block:
 
-- name: Check that a page returns successfully but fail if the word AWESOME is not in the page contents
-  ansible.builtin.uri:
-    url: http://www.example.com
-    return_content: true
-  register: this
-  failed_when: "this is failed or 'AWESOME' not in this.content"
+    - name: GET login page to obtain session + CSRF
+      ansible.builtin.uri:
+        url: "{{ item.url | regex_replace('/$', '') }}{{ path_prefix }}{{ login_path }}"
+        method: GET
+        return_content: true
+        validate_certs: "{{ validate_certs }}"
+        timeout: "{{ timeout_s }}"
+        follow_redirects: all
+        # Persist cookies across this block
+        use_cookies: true
+      register: login_page
+      changed_when: false
+      failed_when: false
 
-- name: Create a JIRA issue
-  ansible.builtin.uri:
-    url: https://your.jira.example.com/rest/api/2/issue/
-    user: your_username
-    password: your_pass
-    method: POST
-    body: "{{ lookup('ansible.builtin.file','issue.json') }}"
-    force_basic_auth: true
-    status_code: 201
-    body_format: json
+    - name: Extract csrf_token from the HTML
+      ansible.builtin.set_fact:
+        odoo_csrf: "{{ (login_page.content | regex_search('name=\"csrf_token\"[^>]*value=\"([^\"]+)\"', '\\1')) | default('', true) }}"
+      changed_when: false
 
-- name: Login to a form based webpage, then use the returned cookie to access the app in later tasks
-  ansible.builtin.uri:
-    url: https://your.form.based.auth.example.com/index.php
-    method: POST
-    body_format: form-urlencoded
-    body:
-      name: your_username
-      password: your_password
-      enter: Sign in
-    status_code: 302
-  register: login
+    - name: POST login form with csrf_token
+      ansible.builtin.uri:
+        url: "{{ item.url | regex_replace('/$', '') }}{{ path_prefix }}{{ login_path }}"
+        method: POST
+        body_format: form-urlencoded
+        body:
+          login: "{{ item.username }}"
+          password: "{{ item.password }}"
+          csrf_token: "{{ odoo_csrf }}"
+          redirect: "/web"
+          # uncomment if you must force a db (multi-db setups)
+          # db: "{{ item.db | default(omit) }}"
+        validate_certs: "{{ validate_certs }}"
+        timeout: "{{ timeout_s }}"
+        follow_redirects: none     # see 302 directly
+        use_cookies: true
+      register: login_post
+      changed_when: false
+      failed_when: false
 
-- name: Login to a form based webpage using a list of tuples
-  ansible.builtin.uri:
-    url: https://your.form.based.auth.example.com/index.php
-    method: POST
-    body_format: form-urlencoded
-    body:
-    - [ name, your_username ]
-    - [ password, your_password ]
-    - [ enter, Sign in ]
-    status_code: 302
-  register: login
-
-- name: Upload a file via multipart/form-multipart
-  ansible.builtin.uri:
-    url: https://httpbin.org/post
-    method: POST
-    body_format: form-multipart
-    body:
-      file1:
-        filename: /bin/true
-        mime_type: application/octet-stream
-        multipart_encoding: base64
-      file2:
-        content: text based file content
-        filename: fake.txt
-        mime_type: text/plain
-        multipart_encoding: 7or8bit
-      text_form_field: value
-
-- name: Connect to website using a previously stored cookie
-  ansible.builtin.uri:
-    url: https://your.form.based.auth.example.com/dashboard.php
-    method: GET
-    return_content: true
-    headers:
-      Cookie: "{{ login.cookies_string }}"
-
-- name: Queue build of a project in Jenkins
-  ansible.builtin.uri:
-    url: http://{{ jenkins.host }}/job/{{ jenkins.job }}/build?token={{ jenkins.token }}
-    user: "{{ jenkins.user }}"
-    password: "{{ jenkins.password }}"
-    method: GET
-    force_basic_auth: true
-    status_code: 201
-
-- name: POST from contents of local file
-  ansible.builtin.uri:
-    url: https://httpbin.org/post
-    method: POST
-    src: file.json
-
-- name: POST from contents of remote file
-  ansible.builtin.uri:
-    url: https://httpbin.org/post
-    method: POST
-    src: /path/to/my/file.json
-    remote_src: true
-
-- name: Create workspaces in Log analytics Azure
-  ansible.builtin.uri:
-    url: https://www.mms.microsoft.com/Embedded/Api/ConfigDataSources/LogManagementData/Save
-    method: POST
-    body_format: json
-    status_code: [200, 202]
-    return_content: true
-    headers:
-      Content-Type: application/json
-      x-ms-client-workspace-path: /subscriptions/{{ sub_id }}/resourcegroups/{{ res_group }}/providers/microsoft.operationalinsights/workspaces/{{ w_spaces }}
-      x-ms-client-platform: ibiza
-      x-ms-client-auth-token: "{{ token_az }}"
-    body:
-
-- name: Pause play until a URL is reachable from this host
-  ansible.builtin.uri:
-    url: "http://192.0.2.1/some/test"
-    follow_redirects: none
-    method: GET
-  register: _result
-  until: _result.status == 200
-  retries: 720 # 720 * 5 seconds = 1hour (60*60/5)
-  delay: 5 # Every 5 seconds
-
-- name: Provide SSL/TLS ciphers as a list
-  uri:
-    url: https://example.org
-    ciphers:
-      - '@SECLEVEL=2'
-      - ECDH+AESGCM
-      - ECDH+CHACHA20
-      - ECDH+AES
-      - DHE+AES
-      - '!aNULL'
-      - '!eNULL'
-      - '!aDSS'
-      - '!SHA1'
-      - '!AESCCM'
-
-- name: Provide SSL/TLS ciphers as an OpenSSL formatted cipher list
-  uri:
-    url: https://example.org
-    ciphers: '@SECLEVEL=2:ECDH+AESGCM:ECDH+CHACHA20:ECDH+AES:DHE+AES:!aNULL:!eNULL:!aDSS:!SHA1:!AESCCM'
-
-######
-webserver_static_sites:
-  - name: site1.example.com
-    root: /usr/share/nginx/site1.example.com
-
-  - name: site2.example.com
-    root: /usr/share/nginx/site2.example.com
-
-  - name: site3.example.com
-    root: /usr/share/nginx/site3.example.com    
-
-- name: Copy site contents
-  copy:
-    dest: "{{ item.root }}/"
-    src: "usr/share/nginx/{{ item.name }}/"
-    owner: root
-    group: root
-    mode: 0755
-  with_items: "{{ webserver_static_sites }}"
+    - name: Show status for this URL
+      ansible.builtin.debug:
+        msg: >-
+          URL={{ item.url }} | POST {{ path_prefix }}{{ login_path }} | status={{ login_post.status }}
+          {{ ('| note=' + login_post.msg) if login_post.msg is defined else '' }}

@@ -56,6 +56,8 @@ dckr_dpl_uptmkm: yes
 apt_hst_strt_srvc_lst:                          # Ensure Host Specific Services are running.
   - isc-dhcp-server
 #
+odoo_keep_alive: yes                                 # Install Odoo keep alive cronjob
+#
 #
 #
 instl_dhcp_srvc: yes
