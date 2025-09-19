@@ -79,6 +79,48 @@ localusers:
     local: True
     hosts: deb1202
     bashrc: /home/ibrahim/sandbox/myAnsible/configs/files/home/ibrahim/.bashrc
+  - name: emmanuel
+    shell: /bin/bash
+    group: emmanuel
+    groups: 
+      #- sudo
+      - docker
+    append: True
+    state: present
+    key: emmanuel.pub
+    gen_ssh_key: True
+    create_home: True
+    local: True
+    hosts: gh-dev-xl
+    bashrc: /home/ibrahim/sandbox/myAnsible/configs/files/home/ibrahim/.bashrc    
+  - name: joel
+    shell: /bin/bash
+    group: joel
+    groups: 
+      #- sudo
+      - docker
+    append: True
+    state: present
+    key: joel.pub
+    gen_ssh_key: True
+    create_home: True
+    local: True
+    hosts: gh-dev-xl
+    bashrc: /home/ibrahim/sandbox/myAnsible/configs/files/home/ibrahim/.bashrc  
+  - name: joshua
+    shell: /bin/bash
+    group: joshua
+    groups: 
+      #- sudo
+      - docker
+    append: True
+    state: present
+    key: joshua.pub
+    gen_ssh_key: True
+    create_home: True
+    local: True
+    hosts: gh-dev-xl
+    bashrc: /home/ibrahim/sandbox/myAnsible/configs/files/home/ibrahim/.bashrc  
 #
 start_prtd: no
 prtd:

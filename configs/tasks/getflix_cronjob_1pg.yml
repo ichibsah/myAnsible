@@ -1,45 +1,122 @@
 ---
-# tasks file for anydesk
+- name: Configure hourly URL check cron job with Teams alerts on failures
 
-- name: Job 01 | Import AnyDesk GPG Key
-  apt_key:
-    url: https://keys.anydesk.com/repos/DEB-GPG-KEY
-    state: present 
-    validate_certs: yes
-  when: instl_anydesk
-#  
-- name: Job 02 | Add AnyDesk Repo
-  apt_repository:
-    repo: "deb http://deb.anydesk.com/ all main"
-    state: present 
-    mode: 0644 
-    update_cache: yes 
-    validate_certs: yes 
-  when: instl_anydesk
-#  
-- name: Job 03 | Install AnyDesk Package
-  apt:
-    pkg: "{{item}}"
-    state: present
-  loop:
-    "{{apt_anydsk_pckg_lst}}"
-  when: instl_anydesk
-#
-- name: Job 03(REMOVE) | Install AnyDesk Package # REMOVE
-  apt:
-    pkg: "{{item}}"
-    state: absent
-  loop:
-    "{{apt_anydsk_pckg_lst}}"
-  when: not instl_anydesk
-#
-# https://www.anyviewer.com/how-to/anydesk-display-server-not-supported-2578.html
-# https://medium.com/@Dylan.Wang/how-to-fix-anydesk-of-display-server-not-supported-error-for-ubuntu-22-04-c98c44de89c0
-#
-# sudo anydesk --admin-settings
-# https://support.anydesk.com/knowledge/command-line-interface-for-linux
-#
-# rsync -vr --progress --remove-source-files /mnt/Pool01-VMs/mytmp/telegram/ /mnt/Pool03-Data/telegram/
-#
-# TO DO:
-# edit: sudo nano /etc/gdm3/deamon.conf for bookworm (custom.conf for ubuntu) see page above for what needs editing
+  vars:
+    # === Customize these ===
+    target_url: "https://example.com/health"      # URL to open every hour
+    log_dir: "/var/log/url-check"                 # Where daily logs are written
+    script_path: "/usr/local/bin/url_check.sh"    # Wrapper script path
+    cron_user: "root"                             # Which user's crontab to use
+    webhook_env_file: "/etc/url-check.env"        # Root-only file to hold secrets
+
+    # REQUIRED: Teams Incoming Webhook URL (e.g., https://outlook.office.com/webhook/.... or api.webhook.office.com/...)
+    # Provide via `-e teams_webhook_url=...` or through Ansible Vault (recommended)
+    teams_webhook_url: ""
+
+  pre_tasks:
+    - name: Validate Teams webhook URL is provided
+      ansible.builtin.assert:
+        that:
+          - teams_webhook_url is string
+          - teams_webhook_url | length > 0
+          - teams_webhook_url is match("^https://")
+        fail_msg: "You must provide a valid https Teams Incoming Webhook URL via 'teams_webhook_url'."
+
+  tasks:
+    - name: Ensure curl is installed
+      ansible.builtin.package:
+        name: curl
+        state: present
+
+    - name: Ensure log directory exists
+      ansible.builtin.file:
+        path: "{{ log_dir }}"
+        state: directory
+        owner: "{{ cron_user }}"
+        group: "{{ cron_user }}"
+        mode: '0755'
+
+    - name: Install Teams webhook env file (root-only)
+      ansible.builtin.copy:
+        dest: "{{ webhook_env_file }}"
+        owner: root
+        group: root
+        mode: '0600'
+        content: |
+          # Secrets for url_check.sh
+          WEBHOOK_URL="{{ teams_webhook_url }}"
+
+    - name: Install URL check script with Teams alert on non-200
+      ansible.builtin.copy:
+        dest: "{{ script_path }}"
+        owner: root
+        group: root
+        mode: '0750'
+        content: |
+          #!/usr/bin/env bash
+          set -euo pipefail
+
+          URL="{{ target_url }}"
+          LOG_DIR="{{ log_dir }}"
+          ENV_FILE="{{ webhook_env_file }}"
+
+          CURL="$(command -v curl || echo /usr/bin/curl)"
+          DATE="$(command -v date || echo /bin/date)"
+          HOSTNAME_CMD="$(command -v hostname || echo /bin/hostname)"
+
+          # Load webhook secret (root-only)
+          if [[ -f "$ENV_FILE" ]]; then
+            # shellcheck disable=SC1090
+            source "$ENV_FILE"
+          fi
+
+          day="$($DATE +%F)"  # e.g. 2025-09-13
+          logfile="${LOG_DIR}/${day}.log"
+
+          ts="$($DATE --iso-8601=seconds)"
+          host="$($HOSTNAME_CMD -f 2>/dev/null || $HOSTNAME_CMD)"
+
+          # Perform request and capture HTTP status + elapsed time
+          # If curl fails, fallback to "curl_error 0"
+          read -r http_code time_total < <(
+            $CURL -sS -o /dev/null -w "%{http_code} %{time_total}" --max-time 30 "$URL" 2>/dev/null \
+            || echo "curl_error 0"
+          )
+
+          # Log every attempt
+          echo "$ts $host $URL -> $http_code (elapsed=${time_total}s)" >> "$logfile"
+
+          # Alert to Teams if not 200
+          if [[ "$http_code" != "200" ]]; then
+            if [[ -n "${WEBHOOK_URL:-}" ]]; then
+              # Build a Markdown message; escape JSON specials
+              msg=":rotating_light: URL check failed
+              Host: $host
+              URL: $URL
+              Status: $http_code
+              Elapsed: ${time_total}s
+              Time: $ts"
+
+              # JSON escape helper (escape \, ", and newlines)
+              escape_json() {
+                local s="$1"
+                s="${s//\\/\\\\}"         # backslashes
+                s="${s//\"/\\\"}"         # double quotes
+                s="${s//$'\n'/\\n}"       # newlines
+                printf '%s' "$s"
+              }
+
+              safe_msg="$(escape_json "$msg")"
+              payload="{\"text\":\"$safe_msg\"}"
+
+              # Post to Teams Incoming Webhook
+              $CURL -sS -X POST -H 'Content-Type: application/json' -d "$payload" "$WEBHOOK_URL" >/dev/null || true
+            fi
+          fi
+
+    - name: Create hourly cron job
+      ansible.builtin.cron:
+        name: "Open URL hourly and log status (with Teams alerts)"
+        user: "{{ cron_user }}"
+        special_time: hourly
+        job: "{{ script_path }}"

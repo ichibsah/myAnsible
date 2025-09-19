@@ -46,7 +46,7 @@ localusers:
     groups: 
       - sudo
     append: True
-    state: present
+    state: absent
     key: joe.pub
     create_home: True
     local: True
