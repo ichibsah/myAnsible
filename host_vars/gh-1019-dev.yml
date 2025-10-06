@@ -86,7 +86,7 @@ localusers:
       #- sudo
       - docker
     append: True
-    state: present
+    state: absent
     key: emmanuel.pub
     gen_ssh_key: True
     create_home: True
