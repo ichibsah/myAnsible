@@ -36,7 +36,7 @@ hostnamectl set-hostname de-1010-xl.imsawadogo.com
 #multitail "/var/log/maillog" -e sasl_username "/var/log/maillog" -e dovecot "/var/log/maillog" -e postfix/smtpd "/var/log/maillog"
 
 multitail -e Login "/var/log/maillog" -e dovecot "/var/log/maillog" -e smtpd "/var/log/maillog"
-
+multitail -e dovecot "/var/log/maillog" -e smtpd "/var/log/maillog"
 
 
 multitail -e Login "/var/log/maillog" -e dovecot "/var/log/maillog" -e smtpd "/var/log/maillog" "/var/log/auth.log"
@@ -45,3 +45,21 @@ multitail -e pam_unix "/var/log/auth.log" -e invalid "/var/log/auth.log" -e ssh 
 
 
 sudo multitail -e ban "/var/log/fail2ban.log" -e unban "/var/log/fail2ban.log" -e ssh "/var/log/fail2ban.log" "/var/log/fail2ban.log"
+
+#conntrack
+#https://linuxvox.com/blog/conntrack-linux/
+
+conntrack -L
+conntrack -L -p tcp
+conntrack -L -p tcp -E
+conntrack -E
+
+# Enable IP forwarding
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+# Set up NAT for outbound traffic
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+
+
+# tracking security issues
+sudo conntrack -E | grep -e "INVALID"
