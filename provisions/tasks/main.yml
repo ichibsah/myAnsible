@@ -1,13 +1,13 @@
 ---
 # tasks file for configs
-- name: Job 01 | import task timezone
+- name: Job 1001-1001 | import task timezone
   ansible.builtin.import_tasks:
     file: timezone.yml
   tags:
     - timezone
     #- test
 #
-- name: Job 01.01 | import task locales
+- name: Job 1001-1002 | import task locales
   ansible.builtin.import_tasks:
     file: locales.yml
   when: ansible_distribution == 'Debian'
@@ -145,7 +145,7 @@
   when: addLocalUser
   tags:
     - localusers
-    - #test
+    #- test
 #
 #
 - name: Job 98 | import task github key
@@ -153,7 +153,8 @@
     file: github_key.yml
   when: instl_docker_pckg and instl_gthb_ky
   tags:
-    - #test  
+    - github_key
+    #- test  
 #
 #
 - name: Job 99 | Check if reboot required

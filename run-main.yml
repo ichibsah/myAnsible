@@ -1,36 +1,36 @@
 ---
-- name: MAIN | Play run-provisions.yml
+- name: 1001 | Play run-provisions.yml
   import_playbook: run-provisions.yml
 #
-- name: MAIN | Play run-dockers.yml
+- name: 2001 | Play run-dockers.yml
   import_playbook: run-dockers.yml
 #
 # - name: MAIN | Play run-bashrc.yml
 #   import_playbook: run-bashrc.yml
 #
-- name: MAIN | Play run-crontab.yml
+- name: 3001 | Play run-crontab.yml
   import_playbook: run-crontab.yml
 #
-- name: MAIN | Play run-apt.yml
+- name: 4001 | Play run-apt.yml
   import_playbook: run-apt.yml
 #
-- name: MAIN | Play run-configs.yml
+- name: 5001 | Play run-configs.yml
   import_playbook: run-configs.yml
 #
-- name: MAIN | Play run-otds.yml
+- name: 6001 | Play run-otds.yml
   import_playbook: run-otds.yml
 #
 #- name: MAIN | Play run-plesk.yml
 #  import_playbook: run-plesk.yml
 #
 # its important that changes to hostnames should be done last.
-- name: MAIN | Play run-hostname.yml
+- name: 9901 | Play run-hostname.yml
   import_playbook: run-hostname.yml
-
-
-
-
-
+##
+#
+##
+#
+#
 # - hosts: allservers
 #   remote_user: ibrahim
 #   ##become: true
@@ -53,4 +53,3 @@
 #     - ansible-vault.yml 
 #   roles:
 #    #- apt-packages # 4a999ff should not be part of this hosts
- 
