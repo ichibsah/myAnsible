@@ -10,11 +10,11 @@ ansible-inventory -y --list
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LOG_DIR="$SCRIPT_DIR/logs"
 mkdir -p "$LOG_DIR"
-LOGFILE="$LOG_DIR/run-dockers-$(date +%Y%m%d-%H%M%S).log"
-ln -sf "$LOGFILE" "$LOG_DIR/latest-run-dockers.log"
+LOGFILE="$LOG_DIR/all-run-$(date +%Y%m%d-%H%M%S).log"
+ln -sf "$LOGFILE" "$LOG_DIR/latest-all-run.log"
 echo "Logging ansible output to $LOGFILE"
 
 #ansible-playbook -v --limit !gh-servers run-main.yml --list-host # works
 #ansible-playbook -v --limit !gh-servers run-main.yml # works
-ansible-playbook -v --limit !gh-servers run-main.yml 2>&1 | tee -a "$LOGFILE" # works
+ansible-playbook -v --limit '!gh-servers' run-main.yml 2>&1 | tee -a "$LOGFILE" # works
 #ansible-playbook -v run-main.yml # works
