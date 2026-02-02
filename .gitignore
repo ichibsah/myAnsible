@@ -1,0 +1,9 @@
+# Ignore runtime logs
+logs/
+logs/*
+
+# Example: keep a placeholder if you want an empty directory tracked
+# !logs/.keep
+
+# Local Ansible facts and cache
+.ansible/
