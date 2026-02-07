@@ -6,4 +6,4 @@ clear
 #
 ansible-inventory -y --list
 #
-ansible-playbook -v --limit !gh-servers run-provisions.yml # works
+ansible-playbook -v --limit '!gh-servers' run-provisions.yml # works
