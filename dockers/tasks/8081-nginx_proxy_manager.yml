@@ -4,7 +4,7 @@
 # 3. If a new image was pulled and the container exists, stop and remove the container.
 # 4. If a new image was pulled, prune old/dangling images.
 # 5. Deploy the container using your original spec, with conditional recreate based on image update
-
+- include_vars: defaults/nginx_proxy_manager.yml
 # -----------------------------
 # [1] Pull latest image FIRST
 # -----------------------------
