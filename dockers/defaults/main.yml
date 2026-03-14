@@ -26,6 +26,16 @@ dckr_dpl_pihole: no
 dckr_dpl_iSpy: no
 dckr_dpl_semaphore: no
 dckr_dpl_npxymgmt: no
+#
+npm_container_name: "nginx_proxy_manager"
+npm_image_name: "jc21/nginx-proxy-manager"
+npm_image_tag: "latest"
+npm_image_full: "{{ npm_image_name }}:{{ npm_image_tag }}"
+npm_workdir: "/opt/docker/nginx_proxy_manager-8081/"
+npm_data_dir: "/opt/docker/nginx_proxy_manager-8081/data"
+npm_letsencrypt_dir: "/opt/docker/nginx_proxy_manager-8081/letsencrypt"
+npm_timezone: "Europe/Berlin"
+#
 dckr_dpl_trcmmnd: no
 dckr_dpl_gravity: no
 dckr_dpl_homepage: no

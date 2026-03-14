@@ -136,7 +136,7 @@
     file: wol.yml
   #when: odoo_keep_alive
   tags:
-    - test
+    #- test
     - wol
 #
 #

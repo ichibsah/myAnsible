@@ -67,6 +67,7 @@
 - name: Job 12 | import task 8081 nginx proxy manager
   ansible.builtin.import_tasks:
     file: 8081-nginx_proxy_manager.yml
+  when: instl_docker_pckg and dckr_dpl_npxymgmt
   tags:
     - nginx
     - test
