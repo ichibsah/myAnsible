@@ -1,55 +1,116 @@
-#- name: create new volume
-#  community.docker.docker_volume:
-#    name: portainer-data
-#
-- name: Job 00 | Deploy nginx_proxy_manager
-  community.docker.docker_container:
-    working_dir: "/opt/docker/nginx_proxy_manager-8081/"
-    name: nginx_proxy_manager
-    image: "jc21/nginx-proxy-manager:latest"
-    ports:
-      - 8081:81
-      - 80:80
-      - 443:443
-    volumes:
-      - /opt/docker/nginx_proxy_manager-8081/data:/data:rw
-      - /opt/docker/nginx_proxy_manager-8081/letsencrypt:/etc/letsencrypt
-      - /etc/localtime:/etc/localtime:ro
-    env:
-      TZ: Europe/Berlin
-    restart_policy: always
+# This Ansible task file deploys the nginx-proxy-manager container with the following logic:
+# 1. Pull the latest image from the registry (force pull to check for updates).
+# 2. Check if the container already exists.
+# 3. If a new image was pulled and the container exists, stop and remove the container.
+# 4. If a new image was pulled, prune old/dangling images.
+# 5. Deploy the container using your original spec, with conditional recreate based on image update
+- name: Variables for nginx-proxy-manager deployment
+  vars:
+    npm_container_name: "nginx_proxy_manager"
+    npm_image_name: "jc21/nginx-proxy-manager"
+    npm_image_tag: "latest"
+    npm_image_full: "jc21/nginx-proxy-manager:latest"
+    npm_workdir: "/opt/docker/nginx_proxy_manager-8081/"
+    npm_data_dir: "/opt/docker/nginx_proxy_manager-8081/data"
+    npm_letsencrypt_dir: "/opt/docker/nginx_proxy_manager-8081/letsencrypt"
+    npm_timezone: "Europe/Berlin"
+  debug:
+    msg: "Starting NPM deploy workflow (image={{ npm_image_full }}, container={{ npm_container_name }})"
   when: instl_docker_pckg and dckr_dpl_npxymgmt
-  #tags: test
+  # ^ Comment: This task just shows a starting message and defines variables we reuse below
 
+# -----------------------------
+# [1] Pull latest image FIRST
+# -----------------------------
+- name: Pull latest Nginx Proxy Manager image
+  community.docker.docker_image:
+    name: "{{ npm_image_name }}"
+    tag: "{{ npm_image_tag }}"
+    source: pull              # Comment: Forces a pull from the registry
+    force_source: true        # Comment: Ensures we check for updates even if present locally
+  register: npm_image_pull
+  when: instl_docker_pckg and dckr_dpl_npxymgmt
+  # Comment: This will set npm_image_pull.changed = true if a newer image was downloaded.
 
-# http://10.3.0.137:8081
-# #touch $(pwd)/docker/npm/config.json
-# docker run -d --name=nginx_proxy_manager \
-# -p 8081:81 \
-# -p 80:80 \
-# -p 443:443 \
-# -e PUID=1000 \
-# -e PGID=1000 \
-# -e TZ=Europe/Berlin \
-# -v $(pwd)/docker/npm/config.json:/app/config/production.json:rw \
-# -v $(pwd)/docker/npm/data:/data \
-# -v $(pwd)/docker/npm/letsencrypt:/etc/letsencrypt \
-# --restart always \
-# jc21/nginx-proxy-manager
+# -----------------------------
+# [2] Detect if container exists
+# -----------------------------
+- name: Check if the NPM container exists
+  community.docker.docker_container_info:
+    name: "{{ npm_container_name }}"
+  register: npm_container_info
+  when: instl_docker_pckg and dckr_dpl_npxymgmt
+  # Comment: We need this so we can stop/remove the container conditionally.
 
+# -------------------------------------------------------
+# [3] If the image was updated, stop and remove container
+# -------------------------------------------------------
+- name: Stop NPM container if running (only when a new image was pulled)
+  community.docker.docker_container:
+    name: "{{ npm_container_name }}"
+    state: stopped
+    stop_timeout: 30
+  when:
+    - instl_docker_pckg and dckr_dpl_npxymgmt
+    - npm_image_pull.changed
+    - npm_container_info.exists
+  # Comment: We explicitly stop the container because you asked to "stop the running container".
 
-# Email:    admin@example.com
-# Password: changeme
+- name: Remove NPM container (only when a new image was pulled)
+  community.docker.docker_container:
+    name: "{{ npm_container_name }}"
+    state: absent
+    force_kill: true
+  when:
+    - instl_docker_pckg and dckr_dpl_npxymgmt
+    - npm_image_pull.changed
+    - npm_container_info.exists
+  # Comment: Remove the container so the next run will recreate it against the fresh image.
 
-# version: '3.8'
-# services:
-#   app:
-#     image: 'jc21/nginx-proxy-manager:latest'
-#     restart: unless-stopped
-#     ports:
-#       - '80:80'
-#       - '81:81'
-#       - '443:443'
-#     volumes:
-#       - ./data:/data
-#       - ./letsencrypt:/etc/letsencrypt
+# -------------------------------------------------------
+# [4] Clean up old images (only when updated)
+# -------------------------------------------------------
+- name: Prune old/dangling Docker images after image update
+  community.docker.docker_prune:
+    images: true
+    containers: false
+    networks: false
+    volumes: false
+    builder_cache: false
+    filters:
+      dangling:
+        - "true"
+  when:
+    - instl_docker_pckg and dckr_dpl_npxymgmt
+    - npm_image_pull.changed
+  # Comment: When 'latest' moves, the prior image typically becomes 'dangling'. This removes it as requested.
+
+# -------------------------------------------------------
+# [5] (Re)deploy the container using your original spec
+#     - If image is new: this creates a fresh container.
+#     - If image is same: this ensures the container is present/running (no recreate).
+# -------------------------------------------------------
+- name: Job 00 | Deploy nginx_proxy_manager (idempotent)
+  community.docker.docker_container:
+    name: "{{ npm_container_name }}"
+    image: "{{ npm_image_full }}"
+    working_dir: "{{ npm_workdir }}"
+    # Ports mapping: host:container
+    ports:
+      - "8081:81"
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "{{ npm_data_dir }}:/data:rw"
+      - "{{ npm_letsencrypt_dir }}:/etc/letsencrypt"
+      - "/etc/localtime:/etc/localtime:ro"
+    env:
+      TZ: "{{ npm_timezone }}"
+    restart_policy: always
+    state: started
+    recreate: "{{ npm_image_pull.changed | default(false) }}"
+    # ^ Comment: If new image was pulled, recreate the container to use it.
+    pull: no
+    # ^ Comment: We already explicitly pulled above; avoid implicit pulls here.
+  when: instl_docker_pckg and dckr_dpl_npxymgmt
+  # Comment: This preserves your original task’s behavior and only recreates when a new image is available.

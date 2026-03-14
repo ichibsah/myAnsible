@@ -26,7 +26,7 @@ ansible-inventory -y --list
 #ansible-playbook -vv --tags servercleanup run-main.yml # works
 #ansible-playbook -vv --tags gpt run-main.yml # works
 #ansible-playbook --tags healthcheck --limit 4a999ff run-main.yml # works
-ansible-playbook -v --tags test --limit !gh-servers run-main.yml # works
+##ansible-playbook -v --tags test --limit !gh-servers run-main.yml # works
 #ansible-playbook -v --tags test -i test-inv.yml run-main.yml # works
 #ansible-playbook -v --tags test run-provisions.yml # works
 #ansible-playbook -v run-anydesk.yml # works
@@ -40,3 +40,15 @@ ansible-playbook -v --tags test --limit !gh-servers run-main.yml # works
 # export ANSIBLE_VAULT_PASSWORD_FILE=~/.vault_pass
 # echo "${ANSIBLE_VAULT_PASSWORD}" > "${ANSIBLE_VAULT_PASSWORD_FILE}"
 # ansible-playbook site.yml
+#
+# Setup logging: create logs dir and timestamped logfile
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LOG_DIR="$SCRIPT_DIR/logs"
+mkdir -p "$LOG_DIR"
+LOGFILE="$LOG_DIR/run-test-$(date +%Y%m%d-%H%M%S).log"
+ln -sf "$LOGFILE" "$LOG_DIR/latest-run-test.log"
+echo "Logging ansible output to $LOGFILE"
+
+# Run playbook and write both stdout and stderr to the timestamped log (also show on console)
+#ansible-playbook -v --limit '!gh-servers' run-dockers.yml 2>&1 | tee -a "$LOGFILE"
+ansible-playbook -v --tags test --limit !gh-servers run-main.yml 2>&1 | tee -a "$LOGFILE" # works

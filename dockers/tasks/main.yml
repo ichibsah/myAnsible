@@ -64,10 +64,12 @@
     - semaphore
     - #test  
 #
-- name: Job 12 | import task semaphore
+- name: Job 12 | import task 8081 nginx proxy manager
   ansible.builtin.import_tasks:
     file: 8081-nginx_proxy_manager.yml
-  #when: apt_host_pckg_lst | contains bind9
+  tags:
+    - nginx
+    - test
 #
 - name: Job 13 | import task truecommand
   ansible.builtin.import_tasks:
