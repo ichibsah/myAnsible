@@ -4,7 +4,9 @@
 # 3. If a new image was pulled and the container exists, stop and remove the container.
 # 4. If a new image was pulled, prune old/dangling images.
 # 5. Deploy the container using your original spec, with conditional recreate based on image update
+#
 - include_vars: defaults/nginx_proxy_manager.yml
+#
 # -----------------------------
 # [1] Pull latest image FIRST
 # -----------------------------
@@ -37,7 +39,6 @@
     state: stopped
     stop_timeout: 30
   when:
-    - instl_docker_pckg and dckr_dpl_npxymgmt
     - npm_image_pull.changed
     - npm_container_info.exists
   # Comment: We explicitly stop the container because you asked to "stop the running container".
@@ -48,7 +49,6 @@
     state: absent
     force_kill: true
   when:
-    - instl_docker_pckg and dckr_dpl_npxymgmt
     - npm_image_pull.changed
     - npm_container_info.exists
   # Comment: Remove the container so the next run will recreate it against the fresh image.
@@ -67,7 +67,6 @@
       dangling:
         - "true"
   when:
-    - instl_docker_pckg and dckr_dpl_npxymgmt
     - npm_image_pull.changed
   # Comment: When 'latest' moves, the prior image typically becomes 'dangling'. This removes it as requested.
 
@@ -100,3 +99,23 @@
     # ^ Comment: We already explicitly pulled above; avoid implicit pulls here.
   
   # Comment: This preserves your original task’s behavior and only recreates when a new image is available.
+
+
+  #promt:
+#   Got it, Ibrahim! Below is an idempotent, fully-commented Ansible task sequence that does exactly what you asked:
+
+# Pulls a fresh jc21/nginx-proxy-manager:latest image before deployment.
+# Compares the pulled image result to see if it’s new.
+# If the image was updated:
+
+# Stops the running container (if it exists),
+# Removes the existing container,
+# Prunes dangling images (to delete the old image),
+# Then deploys your container with the new image.
+
+
+# If the image is the same, it does not recreate anything—just ensures your container is running as per your original spec.
+
+# I also preserved your original options (ports, volumes, env, restart policy), and added a few safe improvements. Every block is documented inline.
+
+# Note: This uses the community.docker collection. Ensure it’s available on your controller (ansible-galaxy collection install community.docker).

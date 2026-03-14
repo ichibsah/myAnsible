@@ -60,9 +60,10 @@
 - name: Job 11 | import task semaphore
   ansible.builtin.import_tasks:
     file: 3002-semaphore.yml
+  when: instl_docker_pckg and dckr_dpl_semaphore
   tags:
     - semaphore
-    - #test  
+    - test  
 #
 - name: Job 12 | import task 8081 nginx proxy manager
   ansible.builtin.import_tasks:
@@ -70,7 +71,7 @@
   when: instl_docker_pckg and dckr_dpl_npxymgmt
   tags:
     - nginx
-    - test
+    #- test
 #
 - name: Job 13 | import task truecommand
   ansible.builtin.import_tasks:

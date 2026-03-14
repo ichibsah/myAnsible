@@ -1,0 +1,50 @@
+# Resolve UID/GID from current Ansible SSH user; fallback to 1000 if missing
+semaphore_user_uid: "{{ ansible_user_uid | default(1000) }}"
+semaphore_user_gid: "{{ ansible_user_gid | default(1000) }}"
+emaphore_user_uid: "{{ semaphore_user_uid }}"
+#
+#semaphore_user_gid: "{{ semaphore_user_gid }}"
+semaphore_db_password: "{{ vault_semaphore_db_password }}"
+semaphore_admin_password: "{{ vault_semaphore_admin_password }}"
+#semaphore_access_key_encryption: "{{ vault_semaphore_access_key_encryption }}"
+#no_log: true
+#
+#
+# Where the Semaphore stack lives
+base_dir: /opt/docker/semaphore-3002
+
+# Docker images
+mysql_image: "mysql:latest"
+semaphore_image: "semaphoreui/semaphore:latest"
+
+# Container names
+mysql_container_name: "ansiblemysql"
+semaphore_container_name: "ansiblesemaphore"
+
+# Ports
+semaphore_port_host: 3002
+semaphore_port_container: 3000
+
+# Optional: run semaphore as this UID:GID (uncomment if needed)
+# semaphore_run_as_user: "1000:1000"
+
+# Semaphore application config
+mysql_db_name: "semaphore"
+mysql_db_user: "semaphore"
+semaphore_admin_name: "admin"
+semaphore_admin_email: "admin@localhost"
+semaphore_admin_user: "admin"
+semaphore_access_key_encryption: ""  # put a strong key here (recommend vault)
+
+# Host key checking behavior for Ansible inside container
+ansible_host_key_checking: false
+
+# Volumes
+mysql_data_volume: "{{ base_dir }}/semaphore-mysql:/var/lib/mysql"
+inventory_volume: "{{ base_dir }}/inventory:/inventory:ro"
+authorized_keys_volume: "{{ base_dir }}/authorized-keys:/authorized-keys:ro"
+config_volume: "{{ base_dir }}/config:/etc/semaphore:rw"
+tmp_volume: "{{ base_dir }}/tmp:/tmp:rw"
+
+# Project name
+project_name: "semaphore"
