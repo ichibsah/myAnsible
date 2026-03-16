@@ -81,7 +81,10 @@
 - name: Job 14 | import task pihole
   ansible.builtin.import_tasks:
     file: 8080-pihole.yml
-  #when: apt_host_pckg_lst | contains bind9
+  when: instl_docker_pckg and dckr_dpl_pihole
+  tags:
+  - pihole
+  #- test 
 #
 - name: Job 15 | import task gravity
   ansible.builtin.import_tasks:
@@ -104,7 +107,7 @@
   when: instl_docker_pckg and dckr_dpl_plex_gh
   tags:
   - plex
-  - #test  
+  #- test  
 #
 - name: Job 18 | import task tubesync
   ansible.builtin.import_tasks:
@@ -114,7 +117,11 @@
 - name: Job 19 | import task YoutubeDl
   ansible.builtin.import_tasks:
     file: 8084-youtubedl.yml
-  #when: apt_host_pckg_lst | contains bind9
+  when: instl_docker_pckg and dckr_dpl_youtubedl
+  tags:
+    - youtubedl
+    #- test
+
 #
 - name: Job 20 | import task opensubtitles
   ansible.builtin.import_tasks:
@@ -129,7 +136,10 @@
 - name: Job 22 | import task overseerr
   ansible.builtin.import_tasks:
     file: 5055-overseerr.yml
-  #when: apt_host_pckg_lst | contains bind9
+  when: instl_docker_pckg and dckr_dpl_overseerr
+  tags:
+    - overseerr
+    #- test
 #
 - name: Job 23 | import task emby
   ansible.builtin.import_tasks:
@@ -244,7 +254,7 @@
   when: instl_docker_pckg and dckr_dpl_webcheck
   tags:
     - webcheck
-    - #test
+    #- test
 #
 - name: Job 36 | import task uptimekuma
   ansible.builtin.import_tasks:
@@ -252,7 +262,7 @@
   when: instl_docker_pckg and dckr_dpl_uptmkm
   tags:
     - uptimekuma
-    - #test
+    #- test
 #
 - name: Job 37 | import task activ
   ansible.builtin.import_tasks:

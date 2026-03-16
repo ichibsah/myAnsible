@@ -4,6 +4,29 @@
 # 3. If a new image was pulled and the container exists, stop and remove the container.
 # 4. If a new image was pulled, prune old/dangling images.
 # 5. Deploy the container using your original spec, with conditional recreate based on image update
+# This ensures that the container is only recreated when a new image is available, making the deployment idempotent and efficient.
+# Note: This task assumes you have the community.docker collection installed and configured on your Ansible controller.
+# Load variables specific to nginx_proxy_manager
+# This should include variables like:
+# - npm_image_name
+# - npm_image_tag
+# - npm_container_name
+# - npm_image_full (e.g., "{{ npm_image_name }}:{{ npm_image_tag }}")
+# - npm_workdir
+# - npm_data_dir
+# - npm_letsencrypt_dir
+# - npm_timezone
+# Adjust the variable names as needed to match your actual variable definitions.
+# Example variable definitions (these should be in your defaults/nginx_proxy_manager.yml or host_vars):
+# npm_image_name: "jc21/nginx-proxy-manager"
+# npm_image_tag: "latest"
+# npm_image_full: "{{ npm_image_name }}:{{ npm_image_tag }}"
+# npm_container_name: "nginx-proxy-manager"
+# npm_workdir: "/app"
+# npm_data_dir: "/opt/docker/nginx-proxy-manager/data"
+# npm_letsencrypt_dir: "/opt/docker/nginx-proxy-manager/letsencrypt"
+# npm_timezone: "Africa/Accra"
+# Load role defaults (if not already loaded)
 #
 - include_vars: defaults/nginx_proxy_manager.yml
 #

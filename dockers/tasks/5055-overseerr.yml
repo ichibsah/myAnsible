@@ -1,61 +1,75 @@
----
-- name: Job 00 | Deploy Overseerr
+# Optionally load container-specific vars if you keep them in a file
+# - name: Load Overseerr vars
+#   ansible.builtin.include_vars:
+#     file: vars/overseerr.yml
+
+# Example defaults (adjust or manage in group_vars/host_vars/role defaults)
+# vars:
+#   overseerr_image_name: "ghcr.io/linuxserver/overseerr"
+#   overseerr_image_tag: "latest"
+#   overseerr_image_full: "{{ overseerr_image_name }}:{{ overseerr_image_tag }}"
+#   overseerr_container_name: "overseerr_con"
+#   overseerr_timezone: "Europe/Berlin"
+#   overseerr_config_dir: "/opt/docker/overseerr-5055/overseerr"
+
+- name: Job 00 | Pull Overseerr image (force to check updates)
+  community.docker.docker_image:
+    name: "{{ overseerr_image_full | default('ghcr.io/linuxserver/overseerr:latest') }}"
+    source: pull
+    force_source: true
+  register: overseerr_image_pull
+
+- name: Check if Overseerr container exists
+  community.docker.docker_container_info:
+    name: "{{ overseerr_container_name | default('overseerr_con') }}"
+  register: overseerr_ct_info
+
+- name: Stop & remove Overseerr container if image was updated
+  community.docker.docker_container:
+    name: "{{ overseerr_container_name | default('overseerr_con') }}"
+    state: absent
+    force_kill: true
+    container_default_behavior: compatibility
+  when:
+    - overseerr_image_pull.changed
+    - overseerr_ct_info.exists | default(false)
+
+- name: Prune old/dangling images when image was updated
+  community.docker.docker_prune:
+    images: true
+    images_filters:
+      dangling: true
+  when:
+    - overseerr_image_pull.changed
+
+- name: Job 00 | Deploy Overseerr (conditional recreate only if image updated)
   community.docker.docker_compose:
-    #working_dir: "/opt/docker/overseerr-5055/"
-    #remove_images: all
-    #remove_volumes: True
-    #stopped: True
-    #state: absent
-    #
     project_name: Overseerr
+    recreate: "{{ 'always' if overseerr_image_pull.changed else 'never' }}"
+    # pull is not needed here because we already forced a pull, but keeping it 'policy' is harmless.
+    pull: policy
     definition:
       version: '3.9'
       services:
         overseerr:
           hostname: overseerr.skyline.lan
-          container_name: overseerr_con
-          image: ghcr.io/linuxserver/overseerr:latest
+          container_name: "{{ overseerr_container_name | default('overseerr_con') }}"
+          image: "{{ overseerr_image_full | default('ghcr.io/linuxserver/overseerr:latest') }}"
           ports:
-            - 5055:5055
+            - "5055:5055"
           restart: always
           environment:
-            - TZ=Europe/Berlin
+            - TZ={{ overseerr_timezone | default('Europe/Berlin') }}
+          # If you want to keep host's UID/GID env substitution via Docker Compose:
           user: "${UID}:${GID}"
-          #user: "0:0" # root
-          #user: "1354601103:1354600513" # ibrahim@skyline
+          # OR set explicit UID:GID from Ansible vars instead:
+          # user: "{{ overseerr_uid | default('0') }}:{{ overseerr_gid | default('0') }}"
           volumes:
-            - /opt/docker/overseerr-5055/overseerr:/config
-  when: instl_docker_pckg and dckr_dpl_overseerr
-  register: output
-  tags:
-    - assert
-    - #test
-  #
-  # for debug purpose only - disabled in the meantime
-# - name: Show results
-#   ansible.builtin.debug:
-#     var: output
-#   #tags: test
-  #
+            - "{{ overseerr_config_dir | default('/opt/docker/overseerr-5055/overseerr') }}:/config"
+  register: overseerr_compose_out
+
 - name: Verify that overseerr is running
   ansible.builtin.assert:
     that:
-      - "output.services.overseerr.overseerr_con.state.running"
-      - #"output.services.mysql.ansiblemysql.state.running"
-  when: instl_docker_pckg and dckr_dpl_overseerr
-  tags:
-    - assert
-    - #test
-
-
-
-# docker run -d --name=overseerr \
-# -e PUID=1000 \
-# -e PGID=100 \
-# -e TZ=Europe/Berlin \
-# -v $(pwd)/docker/overseerr:/config \
-# -p 5055:5055 \
-# --restart always \
-# ghcr.io/linuxserver/overseerr
-
-# #https://mariushosting.com/how-to-install-overseerr-on-your-synology-nas/
+      - "overseerr_compose_out.services.overseerr.{{ overseerr_container_name | default('overseerr_con') }}.state.running"
+  

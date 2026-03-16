@@ -1,0 +1,60 @@
+I have an ansible code i want you to amend. here is my curent code:
+
+- name: Job 00 | Deploy Pihole
+  community.docker.docker_container:
+    working_dir: "/opt/docker/"
+    name: pihole
+    ports:
+        - '53:53/tcp'
+        - '53:53/udp'
+        - '8080:80'
+    restart_policy: always
+    env:
+        TZ: Europe/Berlin
+        #VIRTUAL_HOST: pihole.skyline.lan
+        #VIRTUAL_HOST: '{{hostname_additional_hosts[0].hostname}}'
+        #PROXY_LOCATION: '{{hostname_additional_hosts[0].hostname}}'
+        ServerIP: '{{hostname_additional_hosts[0].ip_address}}'
+        dns: '1.1.1.1'
+        WEBPASSWORD: '{{ansible_become_pass}}'  # change!
+        DNSSEC: 'true'
+        WEBTHEME: default-dark
+    volumes:
+        - '/opt/docker/pihole-8080/etc:/etc/pihole'
+        - '/opt/docker/pihole-8080/dnsmasq:/etc/dnsmasq.d'
+    #hostname: pihole.{{dckr_dmain_nme_pstfx}} # pihole.home.sawadogo.xyz
+    #hostname: '{{hostname_additional_hosts[0].hostname}}'
+    hostname:  pihole.skyline.lan
+    image: 'pihole/pihole:latest'
+
+Here is what i want you to do:
+# This Ansible task file deploys the container with the following logic:
+# 1. Pull the latest image from the registry (force pull to check for updates).
+# 2. Check if the container already exists.
+# 3. If a new image was pulled and the container exists, stop and remove the container.
+# 4. If a new image was pulled, prune old/dangling images.
+# 5. Deploy the container using your original spec, with conditional recreate based on image update
+# This ensures that the container is only recreated when a new image is available, making the deployment idempotent and efficient.
+# Note: This task assumes you have the community.docker collection installed and configured on your Ansible controller.
+# Load variables specific to container
+# This should include variables like:
+# - npm_image_name
+# - npm_image_tag
+# - npm_container_name
+# - npm_image_full (e.g., "{{ npm_image_name }}:{{ npm_image_tag }}")
+# - npm_workdir
+# - npm_data_dir
+# - npm_letsencrypt_dir
+# - npm_timezone
+# Adjust the variable names as needed to match your actual variable definitions.
+# Example variable definitions (these should be in your defaults/container_name.yml):
+# npm_image_name: "jc21/nginx-proxy-manager"
+# npm_image_tag: "latest"
+# npm_image_full: "{{ npm_image_name }}:{{ npm_image_tag }}"
+# npm_container_name: "nginx-proxy-manager"
+# npm_workdir: "/app"
+# npm_data_dir: "/opt/docker/nginx-proxy-manager/data"
+# npm_letsencrypt_dir: "/opt/docker/nginx-proxy-manager/letsencrypt"
+# npm_timezone: "Africa/Accra"
+# Load role defaults (if not already loaded)
+#

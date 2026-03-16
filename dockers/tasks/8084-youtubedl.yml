@@ -1,57 +1,94 @@
-- name: Job 00 | Deploy Tubesync
+---
+#
+- include_vars: defaults/youtubedl.yml
+#
+# Variables can be overridden in vars/defaults.
+# These defaults mirror your existing settings.
+- name: "Set defaults for YoutubeDL/Tubesync deployment (override as needed)"
+  ansible.builtin.set_fact:
+    ytdl_image_name: "tzahi12345/youtubedl-material"
+    ytdl_image_tag: "latest"
+    ytdl_image_full: "{{ ytdl_image_name }}:{{ ytdl_image_tag }}"
+    ytdl_service_name: "youtubedl"
+    ytdl_container_name: "YoutubeDl_con"
+    ytdl_hostname: "ytdl.skyline.lan"
+    ytdl_project_name: "YoutubeDl"
+    ytdl_timezone: "Europe/Berlin"
+    ytdl_http_user: "ibrahim"
+    # NOTE: For PUID/PGID you are currently using ${UID}/${GID} in compose.
+    # You can keep that behavior, or set explicit integers here and switch compose ENV below.
+    ytdl_puid_env: "${UID}"
+    ytdl_pgid_env: "${GID}"
+    ytdl_base_dir: "/opt/docker/youtubedl-8084"
+
+# 1) Pull the latest image (force check with registry)
+- name: "Pull image (force check with registry)"
+  community.docker.docker_image:
+    name: "{{ ytdl_image_full }}"
+    source: pull
+    force_source: true
+  register: ytdl_pull
+
+# 2) Check if the container already exists
+- name: "Check if container exists"
+  community.docker.docker_container_info:
+    name: "{{ ytdl_container_name }}"
+  register: ytdl_container_info
+  failed_when: false  # in case it doesn't exist
+
+# 3) If a new image was pulled and the container exists, stop & remove it
+- name: "Stop and remove existing container when image updated"
+  community.docker.docker_container:
+    name: "{{ ytdl_container_name }}"
+    state: absent
+    force_kill: true
+  when:
+    - ytdl_pull.changed | bool
+    - (ytdl_container_info is defined) and (ytdl_container_info.exists | default(false))
+
+# 4) If a new image was pulled, prune dangling images
+- name: "Prune dangling images (only when image changed)"
+  community.docker.docker_prune:
+    images: true
+    images_filters:
+      dangling: true
+  when: ytdl_pull.changed | bool
+
+# 5) Deploy via docker_compose with conditional recreate
+- name: "Job 00 | Deploy TubeSync / YoutubeDL-Material"
   community.docker.docker_compose:
-    #working_dir: "/opt/docker/youtubedl-8084/"
-    #remove_images: all
-    #remove_volumes: True
-    #stopped: True
-    #state: absent
-    #
-    project_name: YoutubeDl
+    project_name: "{{ ytdl_project_name }}"
+    recreate: "{{ 'always' if ytdl_pull.changed else 'never' }}"
     definition:
       version: '3.9'
       services:
         youtubedl:
-          hostname: ytdl.skyline.lan
-          container_name: YoutubeDl_con
-          image: tzahi12345/youtubedl-material:latest
+          hostname: "{{ ytdl_hostname }}"
+          container_name: "{{ ytdl_container_name }}"
+          image: "{{ ytdl_image_full }}"
           ports:
-            - 8084:17442/tcp
+            - "8084:17442/tcp"
           restart: always
           environment:
-            - TZ=Europe/Berlin
-            - PUID=${UID}
-            - PGID=${GID}
-            - HTTP_USER=ibrahim
-            - HTTP_PASS={{ansible_become_pass}}
+            - TZ={{ ytdl_timezone }}
+            - PUID={{ ytdl_puid_env }}
+            - PGID={{ ytdl_pgid_env }}
+            - HTTP_USER={{ ytdl_http_user }}
+            - HTTP_PASS={{ ansible_become_pass }}
           volumes:
-            - /opt/docker/youtubedl-8084/appdata:/app/appdata
-            - /opt/docker/youtubedl-8084/audio:/app/audio
-            - /opt/docker/youtubedl-8084/subscriptions:/app/subscriptions
-            - /opt/docker/youtubedl-8084/users:/app/users
-            - /opt/docker/youtubedl-8084/video:/app/video
-  when: instl_docker_pckg and dckr_dpl_youtubedl
-  register: output
+            - "{{ ytdl_base_dir }}/appdata:/app/appdata"
+            - "{{ ytdl_base_dir }}/audio:/app/audio"
+            - "{{ ytdl_base_dir }}/subscriptions:/app/subscriptions"
+            - "{{ ytdl_base_dir }}/users:/app/users"
+            - "{{ ytdl_base_dir }}/video:/app/video"
+  register: ytdl_compose
   tags:
-    - #test
-#
-- name: Verify that tubesync is running
+    - ytdl
+
+# Verify service is running
+- name: "Verify that TubeSync is running"
   ansible.builtin.assert:
     that:
-      - "output.services.youtubedl.YoutubeDl_con.state.running"
-      - #"output.services.mysql.ansiblemysql.state.running"
-  when: instl_docker_pckg and dckr_dpl_youtubedl
-  tags:
-    - assert
-    - #test
-
-# # https://mariushosting.com/how-to-install-tubesync-on-your-synology-nas/
-
-# docker run -d --name=youtube_downloader \
-# -p 8084:17442 \
-# -v $(pwd)/docker/youtubedl/appdata:/app/appdata \
-# -v $(pwd)/docker/youtubedl/audio:/app/audio \
-# -v $(pwd)/docker/youtubedl/subscriptions:/app/subscriptions \
-# -v $(pwd)/docker/youtubedl/users:/app/users \
-# -v $(pwd)/docker/youtubedl/video:/app/video \
-# --restart always \
-# tzahi12345/youtubedl-material
+      - ytdl_compose.services[ytdl_service_name][ytdl_container_name].state.running | default(false)
+    fail_msg: "Container {{ ytdl_container_name }} is not running."
+    success_msg: "Container {{ ytdl_container_name }} is running."

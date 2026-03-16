@@ -1,0 +1,8 @@
+
+uk_image_name: "louislam/uptime-kuma"
+uk_image_tag: "latest"
+uk_image_full: "{{ uk_image_name }}:{{ uk_image_tag }}"
+uk_container_name: "uptimekuma_con"
+uk_workdir: "{{ dckr_bs_pth }}/uptimekuma-3444/"
+uk_data_dir: "{{ uk_workdir }}uptimekuma"
+uk_timezone: "Europe/Berlin"
