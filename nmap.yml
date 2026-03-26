@@ -1,0 +1,30 @@
+plugin: nmap
+
+# Multiple networks
+address:
+  - "192.168.1.0/24"
+  - "192.168.2.0/24"
+  - "10.0.0.0/24"
+
+# Ports to check
+ports:
+  - 22
+  - 80
+  - 443
+  - 5985
+  - 5986
+
+# Optional: ask nmap to perform OS detection
+os: true
+
+# Group hosts automatically
+groups:
+  linux: "'Linux' in osfamily"
+  windows: "'Windows' in osfamily"
+  ssh_hosts: "22 in ports"
+  web_servers: "80 in ports or 443 in ports"
+  winrm_hosts: "5985 in ports or 5986 in ports"
+
+# Add discovered hosts to inventory automatically
+compose:
+  ansible_host: ip

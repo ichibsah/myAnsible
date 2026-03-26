@@ -1,2 +1,10 @@
 ---
 # handlers file for provisions
+#
+# Handlers for improved_user_mgmt_role
+- name: Reload sudo
+  ansible.builtin.command: /usr/sbin/visudo -c
+
+- name: Reboot initiated
+  ansible.builtin.debug:
+    msg: "Reboot was triggered by handler."

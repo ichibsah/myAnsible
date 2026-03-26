@@ -1,17 +1,69 @@
+---
+# Load all role variables
+- name: Load variables
+  ansible.builtin.include_vars:
+    file: defaults/rustdesk.yml
+
+################################################################################
+# STEP 1 — Pull fresh image and check whether it differs from the current one
+################################################################################
+
+# Pull the latest image from registry without running containers yet
+- name: Pull latest rustdesk image
+  community.docker.docker_image:
+    name: rustdesk/rustdesk-server:latest
+    source: pull
+  register: new_image
+
+# Gather info on the currently installed image (if any)
+- name: Inspect currently installed rustdesk image
+  community.docker.docker_image_info:
+    name: rustdesk/rustdesk-server:latest
+  register: current_image
+  ignore_errors: true
+
+# Compare digests and decide if update is required
+- name: Determine if image has changed
+  ansible.builtin.set_fact:
+    image_changed: "{{ (current_image.images | length > 0) and (new_image.image.Id != current_image.images[0].Id) }}"
+
+################################################################################
+# STEP 2 — If image changed: stop & remove containers + remove old image
+################################################################################
+
+- name: Stop existing containers (only if image updated)
+  community.docker.docker_compose:
+    project_src: "{{ dckr_bs_pth }}/rustdesk-21118/"
+    state: stopped
+  when: image_changed
+  ignore_errors: true
+
+- name: Remove existing containers (only if image updated)
+  community.docker.docker_compose:
+    project_src: "{{ dckr_bs_pth }}/rustdesk-21118/"
+    state: absent
+  when: image_changed
+  ignore_errors: true
+
+- name: Remove old rustdesk image (only if image updated)
+  community.docker.docker_image:
+    name: rustdesk/rustdesk-server:latest
+    state: absent
+  when: image_changed
+  ignore_errors: true
+
+################################################################################
+# STEP 3 — Deploy your RustDesk containers using docker_compose definition
+################################################################################
+
 - name: Job 03 | Deploy rustdesk | deploy container
   vars:
-    working_dir: "{{dckr_bs_pth}}/rustdesk-21118/" 
-    log_dir: "{{ working_dir }}logs"
+    working_dir: "{{ dckr_bs_pth }}/rustdesk-21118/"
+    log_dir: "{{ working_dir }}/logs"
     prg_name: "rustdesk-21118"
-    con_name: "{{prg_name}}_con"
+    con_name: "{{ prg_name }}_con"
   community.docker.docker_compose:
-    #working_dir: "/opt/docker/invidious-7601/"
-    #remove_images: all
-    #remove_volumes: True
-    #stopped: True
-    #state: absent
-    #
-    project_name: "{{prg_name}}"
+    project_name: "{{ prg_name }}"
     definition:
       version: '3.9'
       services:
@@ -22,10 +74,8 @@
             - ALWAYS_USE_RELAY=Y
           command: hbbs
           volumes:
-            - "{{working_dir}}/data:/root"
-            #- ./data:/root
+            - "{{ working_dir }}/data:/root"
           network_mode: "host"
-
           depends_on:
             - hbbr
           restart: unless-stopped
@@ -35,30 +85,36 @@
           image: rustdesk/rustdesk-server:latest
           command: hbbr
           volumes:
-            - "{{working_dir}}/data:/root"
-            #- ./data:/root
+            - "{{ working_dir }}/data:/root"
           network_mode: "host"
           restart: unless-stopped
   register: output
-#
-- name: Verify that rustdesk is running
+
+################################################################################
+# STEP 4 — Verify services started successfully
+################################################################################
+
+- name: Verify that rustdesk containers are running
   ansible.builtin.assert:
     that:
-      - "output.services.hbbs.hbbs.state.running"
-      - "output.services.hbbr.hbbr.state.running"
-      #- #"output.services.mysql.ansiblemysql.state.running"
+      - output.services.hbbs.state.running
+      - output.services.hbbr.state.running
+    fail_msg: "RustDesk containers NOT running correctly!"
+    success_msg: "RustDesk containers are running successfully."
   tags:
     - assert
 
-
-# Be sure to open these ports in the firewall:
-
+################################################################################
+# Notes:
+#
+# Required ports:
 # hbbs:
-# 21114 (TCP): used for web console, only available in Pro version.
-# 21115 (TCP): used for the NAT type test.
-# 21116 (TCP/UDP): Please note that 21116 should be enabled both for TCP and UDP. 21116/UDP is used for the ID registration and heartbeat service. 21116/TCP is used for TCP hole punching and connection service.
-# 21118 (TCP): used to support web clients.
+#   21114 TCP – web console (Pro only)
+#   21115 TCP – NAT test
+#   21116 TCP/UDP – registration, heartbeat, hole punching
+#   21118 TCP – web clients
 # hbbr:
-# 21117 (TCP): used for the Relay services.
-# 21119 (TCP): used to support web clients.
-# If you do not need web client support, the corresponding ports 21118, 21119 can be disabled.
+#   21117 TCP – Relay service
+#   21119 TCP – web clients
+#
+################################################################################

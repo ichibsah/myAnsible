@@ -1,0 +1,11 @@
+working_dir: "{{dckr_bs_pth}}/rustdesk-21118/" 
+log_dir: "{{ working_dir }}logs"
+prg_name: "rustdesk-21118"
+con_name: "{{prg_name}}_con"
+#community.docker.docker_compose:
+  #working_dir: "/opt/docker/invidious-7601/"
+  #remove_images: all
+  #remove_volumes: True
+  #stopped: True
+  #state: absent
+#

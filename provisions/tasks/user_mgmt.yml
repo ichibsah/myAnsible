@@ -1,0 +1,106 @@
+
+---
+# Role: improved_user_mgmt_role
+# Main task file with improved structure, comments, and handlers
+
+# Task 01: Create groups for global users
+- name: Create groups for all users
+  ansible.builtin.group:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ users | map(attribute='groups') | list | flatten | unique }}"
+  tags: groups
+
+# Task 02: Add sudo rights (Debian only)
+- name: Add global sudo rights via lineinfile (Debian only)
+  ansible.builtin.lineinfile:
+    dest: /etc/sudoers
+    regexp: '^ibrahim'
+    line: 'ibrahim ALL=(ALL) NOPASSWD: ALL'
+    state: present
+    validate: 'visudo -cf %s'
+  when: ansible_os_family == 'Debian'
+  notify: Reload sudo
+  tags: sudo
+
+# Task 02.1: Add sudo rights using sudoers module
+- name: Add sudo rights using sudoers module
+  community.general.sudoers:
+    name: ibrahim-as-root
+    state: present
+    user: ibrahim
+    runas: root
+    commands: ALL
+  tags: sudo
+
+# Task 03: Create global users
+- name: Create global users
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    update_password: always
+    shell: "{{ item.shell }}"
+    groups: "{{ item.groups }}"
+    password: "{{ localhost_become_pass | password_hash('sha512') }}"
+    append: "{{ item.append }}"
+    create_home: true
+    state: present
+  loop: "{{ users }}"
+  tags: users
+
+# Task 04: Add authorized SSH keys for global users
+- name: Install authorized SSH keys
+  ansible.builtin.authorized_key:
+    user: "{{ item.name }}"
+    state: "{{ item.state }}"
+    key: "{{ lookup('file', 'files/authorized_key/' ~ item.key) }}"
+  loop: "{{ users }}"
+  tags: ssh
+
+# Task 05: Create local users
+- name: Create local users (if enabled)
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    update_password: on_create
+    shell: "{{ item.shell }}"
+    groups: "{{ item.groups }}"
+    password: "{{ localhost_become_pass | password_hash('sha512') }}"
+    append: "{{ item.append }}"
+    create_home: true
+    generate_ssh_key: "{{ item.gen_ssh_key }}"
+    state: present
+  when: addLocalUser
+  loop: "{{ localusers }}"
+  tags: local
+
+# Task 06: Add authorized SSH keys for local users
+- name: Install local authorized SSH keys
+  ansible.builtin.authorized_key:
+    user: "{{ item.name }}"
+    state: "{{ item.state }}"
+    key: "{{ lookup('file', 'files/authorized_key/' ~ item.key) }}"
+  when: addLocalUser
+  loop: "{{ localusers }}"
+  tags: local
+
+# Task 98: Import GitHub key task
+- name: Import GitHub SSH key task
+  ansible.builtin.import_tasks:
+    file: github_key.yml
+  when: instl_docker_pckg and instl_gthb_ky
+  tags: github_key
+
+# Task 99: Check if reboot required
+- name: Check if reboot is required
+  ansible.builtin.stat:
+    path: /var/run/reboot-required
+  register: reboot_required_file
+  tags: reboot
+
+# Task 99.1: Reboot system if required
+# - name: Reboot server if kernel update requires it
+#   ansible.builtin.reboot:
+#     reboot_timeout: 60
+#     test_command: "whoami"
+#   when: reboot_required_file.stat.exists
+#   notify: Reboot initiated
+#   tags: reboot
