@@ -1,0 +1,91 @@
+
+# Reset sources list only for Ubuntu < 20.04
+- name: Reset APT sources list
+  template:
+    src: etc_apt_sources.list.j2
+    dest: /etc/apt/sources.list
+  when: ansible_os_family == 'Debian' and ansible_facts['distribution'] == 'Ubuntu' and ansible_facts['distribution_version'] is version('20.04', '<')
+
+# Update package cache (APT/YUM/DNF supported)
+- name: Update package cache
+  package:
+    update_cache: yes
+  when: ansible_os_family in ['Debian', 'RedHat']
+
+# Install default packages dynamically
+- name: Install default packages
+  package:
+    name: "{{ apt_def_pckg_lst }}"
+    state: present
+  when: instl_def_pckg
+
+# Remove default packages if disabled
+- name: Remove default packages
+  package:
+    name: "{{ apt_def_pckg_lst }}"
+    state: absent
+  when: not instl_def_pckg and not kill_remove
+
+# Install host-specific packages
+- name: Install host specific packages
+  package:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ apt_host_pckg_lst | default([]) }}"
+  when: apt_host_pckg_lst | length > 0
+
+# Install utility packages (single pass)
+- name: Install utility packages
+  package:
+    name: "{{ apt_util_lst }}"
+    state: present
+  register: utility_status
+
+# Retry missing packages one-by-one
+- name: Retry failed utility packages
+  package:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ apt_util_lst }}"
+  when: utility_status is failed
+
+# Remove utilities
+- name: Remove Utilities
+  package:
+    name: "{{ apt_util_lst }}"
+    state: absent
+  when: not instl_utl_pckg and not kill_remove
+
+# PIP installs
+- name: Install pip packages
+  pip:
+    name: "{{ pip_host_pckg_lst }}"
+    state: present
+  when: instl_ansbl_pckg
+
+# Start services
+- name: Ensure services are running
+  systemd:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  loop: "{{ apt_strt_srvc_lst }}"
+  when: sysd_strt_srvc
+
+# Host-specific services
+- name: Ensure host-specific services are running
+  systemd:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  loop: "{{ apt_hst_strt_srvc_lst | default([]) }}"
+  when: apt_hst_strt_srvc_lst | length > 0
+
+# Stop services if disabled
+- name: Stop disabled services
+  systemd:
+    name: "{{ item }}"
+    state: stopped
+    enabled: no
+  loop: "{{ apt_strt_srvc_lst }}"
+  when: not sysd_strt_srvc and not kill_remove

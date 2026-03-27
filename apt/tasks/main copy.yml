@@ -1,0 +1,265 @@
+# file: apt/tasks/main.yml
+# TODA: add this to the auto upgrade
+# pip3 install agent360 --upgrade
+#
+#- include_vars: pckg.yml # see global_var folder for update
+# TODO: challenge - make this dynamic - disabled in the meantime
+#
+- name: Job 00 | import task resolv
+  ansible.builtin.import_tasks:
+    file: resolv.yml
+  #when: apt_host_pckg_lst | contains bind9
+
+
+- name: Job 01 | Reset the sources list (/etc/apt/sources.list)
+  template:
+    src: etc_apt_sources.list.j2
+    dest: /etc/apt/sources.list
+    owner: root
+    group: root
+    mode: 0644
+  when: apt_reset_source_list and ansible_os_family == 'Ubuntu' and ansible_facts['distribution_version'] is version('20.04', '<')
+#
+# TODO: takes 68.88s to run. needs review
+- name: Job 02 | Update the apt cache
+  apt:
+    update_cache: yes
+    upgrade: safe #
+    force_apt_get: yes #
+    cache_valid_time: "{{apt_cache_valid_time}}"
+  when: ansible_os_family == "Debian"
+#
+- name: Job 02.1 | Update the yum cache
+  dnf:
+    update_cache: yes
+  when: ansible_os_family != "Debian"
+  tags: 
+    - #test
+#
+# TODO: avoid using shell here - disabled in the meantime
+# - name: Job 03 | Check for cached .deb files
+#   shell: "ls /var/cache/apt/archives/*.deb 2&> /dev/null | wc -l"
+#   register: apt_cache_check
+#   changed_when: no
+#   when: apt_clean
+#
+# TODO: needs revision - disabled in the meantime
+# - name: Job 04 | Update the general configuration (/etc/apt/apt.conf.d/10general)
+#   template:
+#     src: etc_apt_apt.conf.d_10general.j2
+#     dest: /etc/apt/apt.conf.d/10general
+#     owner: root
+#     group: root
+#     mode: 0644
+#   when: apt_update_gen_conf
+#
+# - name: APT | Make sure the required packages are installed 20.04 and above
+#   set_fact:
+#     apt_packages_list: "{{ apt_default_packages }} + {{ apt_default_packages_post20 }}"
+#   when: ansible_os_family == 'Ubuntu' and ansible_facts['distribution_version'] is version('20.04', '>=')
+
+# - name: APT | Make sure the required packages are installed 19.10 and below
+#   set_fact:
+#     apt_packages_list: "{{ apt_default_packages }} + {{ apt_default_packages_pre20 }}"
+#   when: ansible_os_family == 'Ubuntu' and ansible_facts['distribution_version'] is version('20.04', '<')
+#
+- name: Job 00 | import task resolv
+  ansible.builtin.import_tasks:
+    file: resolv.yml
+
+#TODO: find out why others fail here (d86df44 de-jump deb1202 112e275)
+- name: Job 05 | INSTALL default packages
+  package:
+    name: "{{apt_def_pckg_lst}}"
+    state: present
+  #when: instl_def_pckg
+  when: instl_def_pckg
+  tags:
+    - #test
+#
+#
+# TODO: run below when above fails
+# - name: Job 05 | INSTALL default packages
+#   apt:
+#     update_cache: yes
+#     pkg: "{{ item }}"
+#     state: present
+#   loop:
+#     "{{apt_def_pckg_lst}}"
+#   when: instl_def_pckg
+#
+- name: Job 06 | REMOVE default packages # REMOVE #
+  ansible.builtin.package:
+    autoremove: yes
+    autoclean: yes
+    pkg: "{{ apt_def_pckg_lst }}"
+    state: absent
+  when: not instl_def_pckg and not kill_remove
+
+- name: Job 07 | Import Docker-ce GPG Key
+  apt_key:
+    url: https://download.docker.com/linux/debian/gpg # not required. The URL to retrieve key from.
+    state: present # not required. choices: absent;present. Ensures that the key is present (added) or absent (revoked).
+    validate_certs: no
+  when: ansible_os_family == "Debian"
+#
+- name: Job 00 | import task resolv
+  ansible.builtin.import_tasks:
+    file: resolv.yml
+#
+# Todo: Invalid data passed to ''loop'', it requires a list, got this instead: None.
+- name: Job 08 | Install Host Specific Packages
+  ansible.builtin.package:
+    name: "{{item}}"
+    state: present
+  loop:
+    "{{apt_host_pckg_lst}}"
+  when: apt_host_pckg_lst.0 is defined
+  #when: ansible_os_family == "Debian" and instl_def_pckg
+  tags: 
+    - #test
+#
+- name: Job 00 | import task resolv
+  ansible.builtin.import_tasks:
+    file: resolv.yml
+#
+#  09.1.1 and  09.1.2 is not wrking properly.
+- name: Job 09.1.1 | Install Utilities Packages (method once)
+  ansible.builtin.package:
+    name: "{{apt_util_lst}}" 
+    state: present
+  register: result
+  when: ansible_os_family == "Debian"
+  #failed_when: "'FAILED' in result"
+  #failed_when: "'no package' in result"
+  #when: result is succeeded and instl_utl_pckg
+  #tags: test
+#
+- name: Job 00 | import task resolv
+  ansible.builtin.import_tasks:
+    file: resolv.yml
+#
+- name: Job 09.1.2 | Install Utilities Packages (method loop)
+  ansible.builtin.package:
+    name: "{{item}}"
+    state: present
+  loop:
+    "{{apt_util_lst}}"
+  when: result is failed
+  #tags: test
+#
+- name: Job 10 | REMOVE Utilities Packages # REMOVE #
+  ansible.builtin.package:
+    name: "{{apt_util_lst}}"
+    state: absent
+  when: not instl_utl_pckg and not kill_remove
+#
+- name: Job 11 | Install host "{{ansible_hostname}}" specific package using pip
+  pip:
+    name:  
+      "{{pip_host_pckg_lst}}"
+    state: present
+  when: instl_ansbl_pckg
+#
+- name: Job 12 | REMOVE ansible package using pip # REMOVE #
+  pip:
+    name:  
+      "{{pip_ansbl_pckg_lst}}"
+    state: absent
+  when: not instl_ansbl_pckg and not kill_remove
+
+- name: Job 13 | REMOVE ansible package using apt # REMOVE #
+  ansible.builtin.package:
+    name:  
+      "{{apt_ansbl_pckg_lst}}"
+    state: absent
+  when: not instl_ansbl_pckg and not kill_remove
+#
+# REMOVE #
+# TODO: find alternateve, dont use shell
+- name: Job 14 | Remove all cached .deb files
+  shell: apt-get -y clean
+  changed_when: apt_cache_check.stdout != "0"
+  when: apt_clean and apt_cache_check.stdout != "0"
+#
+- name: Job 15 | Remove packages that are no longer needed for dependencies
+  ansible.builtin.package:
+    autoremove: "yes"
+  when: apt_autoremove
+
+- name: Job 16 | Remove .deb files for packages no longer on your system
+  ansible.builtin.package:
+    autoclean: "yes"
+  when: apt_autoclean
+#
+- name: Job 17 | Ensure Services are running.
+  systemd: 
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  with_items: 
+    "{{apt_strt_srvc_lst}}"
+  when: sysd_strt_srvc
+#
+# name changed. see job 18
+# - name: Job 17 | Ensure Services are running.
+#   systemd: 
+#     name: "{{ item }}"
+#     state: started
+#     enabled: yes
+#   with_items: 
+#     "{{apt_started_services_list}}"
+#   when: apt_started_services_list.0 is define
+#   tags: 
+#     - test
+#
+- name: Job 18 | Ensure host specific Services are running.
+  systemd: 
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  with_items: 
+    "{{apt_hst_strt_srvc_lst}}"
+  when: apt_hst_strt_srvc_lst.0 is defined
+#
+- name: Job 19 | STOP running Services. # REMOVE #
+  systemd: 
+    name: "{{ item }}"
+    state: stopped
+    enabled: no
+  with_items: 
+    "{{apt_strt_srvc_lst}}"
+  when: not sysd_strt_srvc and not kill_remove
+#
+# IMPORT TASKS goes here ...
+- name: Job 20 | import task docker
+  ansible.builtin.import_tasks:
+    file: docker.yml
+  tags: 
+    - #test
+#
+- name: Job 21 | import task ansible
+  ansible.builtin.import_tasks:
+    file: ansible.yml
+  #when: apt_host_pckg_lst | contains bind9
+#
+- name: Job 21 | import task filebot
+  ansible.builtin.import_tasks:
+    file: filebot.yml
+  #when: apt_host_pckg_lst | contains bind9
+#
+- name: Job 22 | import task vector
+  ansible.builtin.import_tasks:
+    file: vector.yml
+  #when: apt_host_pckg_lst | contains bind9
+  when: instl_def_pckg and instl_vctr
+  tags: 
+    - #test
+#
+# REBOOT #
+# Rebbot should be done last at all times
+- name: Job 99 | import task reboot
+  ansible.builtin.import_tasks:
+    file: reboot.yml
+  #when: apt_host_pckg_lst | contains bind9
+
