@@ -16,5 +16,5 @@ echo "Logging ansible output to $LOGFILE"
 
 #ansible-playbook -v --limit !gh-servers run-main.yml --list-host # works
 #ansible-playbook -v --limit !gh-servers run-main.yml # works
-ansible-playbook -v --limit '!gh-servers' run-main.yml 2>&1 | tee -a "$LOGFILE" # works
+ansible-playbook -v --limit '!gh-servers !localhost' run-main.yml 2>&1 | tee -a "$LOGFILE" # works
 #ansible-playbook -v run-main.yml # works
