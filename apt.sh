@@ -21,7 +21,8 @@ echo "Logging ansible output to $LOGFILE"
 #ansible-playbook -v --limit '!gh-servers' run-dockers.yml 2>&1 | tee -a "$LOGFILE"
 #ansible-playbook -v --tags apt -l apt --limit !gh-servers run-main.yml --check --diff 2>&1 | tee -a "$LOGFILE" # works
 #ansible-playbook -v --limit '!gh-servers !localhost' run-apt.yml --check --diff --step 2>&1 | tee -a "$LOGFILE" # works
-ansible-playbook -v --limit '!gh-servers !localhost' run-apt.yml --check --diff 2>&1 | tee -a "$LOGFILE" # works
+#ansible-playbook -v --limit '!gh-servers !localhost' run-apt.yml --check --diff 2>&1 | tee -a "$LOGFILE" # works
+ansible-playbook -v --limit '!gh-servers !localhost' run-apt.yml 2>&1 | tee -a "$LOGFILE" # works
 
 
 #1. Basic Dry‑Run (Check Mode)
