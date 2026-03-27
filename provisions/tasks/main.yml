@@ -11,7 +11,7 @@
 - name: Job 1001-1002 | import task locales
   ansible.builtin.import_tasks:
     file: locales.yml
-  when: ansible_distribution == 'Debian'
+  when: ansible_os_family == "Debian"
   tags:
     - locales
     - localhost
@@ -20,7 +20,7 @@
 - name: Job 1001-1003 | import task user_mgmt
   ansible.builtin.import_tasks:
     file: user_mgmt.yml
-  when: ansible_distribution == 'Debian'
+  when: ansible_os_family == "Debian"
   tags:
     - user_mgmt
     - localhost

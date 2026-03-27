@@ -1,5 +1,5 @@
 ---
-- name: locales | Job 01 | Debconf set default locale {{ansible_distribution}}
+- name: locales | Job 01 | Debconf set default locale "{{ansible_os_family}}"
   ansible.builtin.debconf:
     name: locales
     question: locales/default_environment_locale
@@ -7,21 +7,21 @@
     vtype: select
   #when: ansible_distribution == 'Ubuntu'
 
-- name: locales | Job 01 | Locales package present {{ansible_distribution}}
+- name: locales | Job 01 | Locales package present "{{ansible_os_family}}"
   ansible.builtin.apt:
     pkg:
       - locales
-  #when: ansible_distribution == 'Ubuntu'
+  #when: ansible_os_family == 'Ubuntu'
 
-- name: locales | Job 01 | set as default locale {{ansible_distribution}}
+- name: locales | Job 01 | set as default locale "{{ansible_os_family}}"
   ansible.builtin.command: localectl set-locale LANG=en_GB.UTF-8
   #when: ansible_distribution == 'Ubuntu'
 
-- name: locales | Job 01 | set as default x11-keymap {{ansible_distribution}}
+- name: locales | Job 01 | set as default x11-keymap "{{ansible_os_family}}"
   ansible.builtin.command: localectl --no-convert set-x11-keymap de
   #when: ansible_distribution == 'Ubuntu'
 
-- name: locales | Job 01 | create vconsole.conf for VC Keymap {{ansible_distribution}}
+- name: locales | Job 01 | create vconsole.conf for VC Keymap "{{ansible_os_family}}"
   ansible.builtin.copy:
     dest: /etc/vconsole.conf
     content: |

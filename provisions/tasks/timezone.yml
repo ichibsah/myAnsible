@@ -1,4 +1,4 @@
-- name: Job 1001-1001-1001 | Set timezone to {{ default_timezone }}
+- name: Job 1001-1001-1001 | Set timezone to "{{ default_timezone }}"
   community.general.timezone:
     name: "{{ default_timezone }}"
 #

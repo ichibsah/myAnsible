@@ -8,8 +8,7 @@
     group: ibrahim
     mode: 0744
   when: ansible_os_family == 'Debian'
-  tags:
-    - #test
+  #tags: test
 #
 - name: Job 02 | copy .ssh/config file to ibrahim
   copy:
@@ -19,8 +18,7 @@
     group: ibrahim
     mode: 0644
   when: ansible_os_family == 'Debian'
-  tags:
-    - #test
+  #tags: test
 #
 - name: Job 03 | copy .bashrc file to root
   copy:
@@ -30,8 +28,7 @@
     group: root
     mode: 0744
   when: ansible_os_family == 'Debian'
-  tags:
-    - #test
+  #tags: test
 #
 - name: Job 04 | copy .ssh/config file to root
   copy:
@@ -41,8 +38,7 @@
     group: root
     mode: 0644
   when: ansible_os_family == 'Debian'
-  tags:
-    - #test
+  #tags: test
 #
 ## copy same to localusers
 - name: Job 05 | copy .bashrc file to localusers
@@ -56,7 +52,7 @@
   loop: "{{ localusers }}"
   tags:
     - localusers
-    - #test
+    #- test
 #
 - name: Job 06 | copy .ssh/config file to localusers
   copy:
@@ -69,5 +65,5 @@
   loop: "{{ localusers }}"
   tags:
     - localusers
-    - #test
+    #- test
 #
