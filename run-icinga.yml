@@ -1,6 +1,7 @@
 ---
 - name: ICINGA | Install icinga1 manually
   hosts: localhost
+  gather_facts: true
   connection: local
   ignore_errors: false
   ignore_unreachable: false

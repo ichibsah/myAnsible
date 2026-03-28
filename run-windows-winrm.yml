@@ -1,6 +1,7 @@
 ---
 - name: PROVISIONS | First time Initialisation
   hosts: windows_users
+  #gather_facts: true
 
 #
   gather_facts: true

@@ -1,6 +1,7 @@
 ---
 - name: BASHRC | Initialisation
   hosts: allservers
+  gather_facts: true
   ignore_errors: true
   ignore_unreachable: true
   remote_user: ibrahim

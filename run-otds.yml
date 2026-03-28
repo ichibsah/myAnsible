@@ -1,6 +1,7 @@
 ---
 - name: OTDS | Initialisation
   hosts: ds_install
+  gather_facts: true
   ignore_errors: true
   ignore_unreachable: true
   # remote_user: root
