@@ -8,6 +8,10 @@ rm -rf ~/.ansible/tmp/
 rm -rf /tmp/.ansible-*
 #
 ansible-inventory -y --list
+
+sudo apt install ansible -y
+ansible-galaxy collection install -r 
+ansible-galaxy collection install community.healthchecksio --upgrade
 # ***
 # To see the ‘raw’ information as gathered, run this command at the command line:
 # ansible <hostname> -m ansible.builtin.setup
