@@ -56,8 +56,8 @@ echo "Logging ansible output to $LOGFILE"
 # Run playbook and write both stdout and stderr to the timestamped log (also show on console)
 #ansible-playbook -v --limit '!gh-servers' run-dockers.yml 2>&1 | tee -a "$LOGFILE"
 #ansible-playbook -v --tags localhost -l localhost --limit !gh-servers run-main.yml --check --diff 2>&1 | tee -a "$LOGFILE" # works
-#ansible-playbook -v --tags localhost --limit localhost run-main.yml --check --diff --step 2>&1 | tee -a "$LOGFILE" # works
-ansible-playbook -v --tags localhost --limit localhost run-main.yml 2>&1 | tee -a "$LOGFILE" # works
+ansible-playbook -v --tags localhost --limit localhost run-main.yml --check --diff --step 2>&1 | tee -a "$LOGFILE" # works
+#ansible-playbook -v --tags localhost --limit localhost run-main.yml 2>&1 | tee -a "$LOGFILE" # works
 
 
 #1. Basic Dry‑Run (Check Mode)

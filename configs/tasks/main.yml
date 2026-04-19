@@ -38,7 +38,9 @@
   ansible.builtin.import_tasks:
     file: symlink.yml
   #when: apt_host_pckg_lst | contains bind9
-  tag: locahost
+  tags:
+    - symlink
+    #- test
 #
 - name: Job 09 | import task bashrc
   ansible.builtin.import_tasks:
