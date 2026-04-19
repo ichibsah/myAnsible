@@ -15,6 +15,15 @@
   tags:
     - locales
     - localhost
+    #- test#
+#
+- name: Job 1001-1002 | import task locales
+  ansible.builtin.import_tasks:
+    file: sleepy.yml
+  when: ansible_os_family == "Debian"
+  tags:
+    - locales
+    - localhost
     #- test
 #
 - name: Job 1001-1003 | import task user_mgmt
