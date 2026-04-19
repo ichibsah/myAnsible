@@ -38,6 +38,7 @@
   ansible.builtin.import_tasks:
     file: symlink.yml
   #when: apt_host_pckg_lst | contains bind9
+  tag: locahost
 #
 - name: Job 09 | import task bashrc
   ansible.builtin.import_tasks:
@@ -57,6 +58,8 @@
   ansible.builtin.import_tasks:
     file: myiptable.yml
   #when: apt_host_pckg_lst | contains bind9
+  tags:
+    - localhost
 #
 - name: Job 12 | import task grafana
   ansible.builtin.import_tasks:
