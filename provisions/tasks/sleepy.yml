@@ -2,7 +2,7 @@
   ansible.builtin.systemd:
     name: "{{ item }}"
     masked: true
-    enabled: false
+    enabled: true
   loop:
     - sleep.target
     - suspend.target
