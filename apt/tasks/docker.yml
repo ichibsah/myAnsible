@@ -1,120 +1,90 @@
----
+###############################################################################
+# Docker installation and removal
+# Reference:
 # https://computingforgeeks.com/install-docker-ce-on-linux-systems/
-# apt_docker_pckg_lst:
-#   - rsync
-#   - docker-ce
-#   - docker-compose-plugin
-#   - apt-transport-https
-#   - ca-certificates
-#   - python3-docker
-#   - lsb-release gnupg2 apt-transport-https ca-certificates curl software-properties-common
-# 
-# apt reinstall docker docker-compose docker-compose-plugin
-#
-- name: Job 20.01 | Add Docker-ce Repo
+###############################################################################
+
+# -----------------------------------------------------------------------------
+# Add Docker CE APT repository (universal repo for all supported Debian releases)
+# -----------------------------------------------------------------------------
+- name: Job 20.01 | Add Docker CE APT repository
   apt_repository:
-    repo: deb [arch={{ [ansible_architecture] | map('extract', deb_architecture) | first }}] https://download.docker.com/{{ ansible_system | lower }}/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable
-    #repo: "deb [arch=amd64] https://download.docker.com/linux/debian bullseye stable" # TODO use facts variables
-    state: present # not required. choices: absent;present. A source string state.
-    mode: 0644 # not required. The octal mode for newly created files in sources.list.d
-    update_cache: yes # not required. Run the equivalent of C(apt-get update) when a change occurs.  Cache updates are run after making changes.
-    validate_certs: yes
-  # the when here is no longer requred.  
-  #when: instl_docker_pckg and (ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] < "12") #bullseye    
-  #when: instl_docker_pckg and (ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] < "12") #bullseye    
-  #tags: test
-#
-# this has been disabled after finding a universal repo: for all releases.
-# https://stackoverflow.com/questions/58169348/how-is-the-architecture-fact-called-in-ansible
-# - name: Job 20.02 | Add Docker-ce Repo
-#   apt_repository:
-#     repo: deb [arch={{ [ansible_architecture] | map('extract', deb_architecture) | first }}] https://download.docker.com/{{ ansible_system | lower }}/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable
-#     #repo: "deb [arch=amd64] https://download.docker.com/linux/debian bookworm stable" # TODO use facts variables
-#     state: present # not required. choices: absent;present. A source string state.
-#     mode: 0644 # not required. The octal mode for newly created files in sources.list.d
-#     update_cache: yes # not required. Run the equivalent of C(apt-get update) when a change occurs.  Cache updates are run after making changes.
-#     validate_certs: yes
-#   when: instl_docker_pckg and (ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] >= "12") #bookworm
-#   tags: test
-# 
-# --break-system-packages
-- name: Job 20.03 | Global Install - Python3 and pip
+    repo: >-
+      deb [arch={{ [ansible_architecture]
+                   | map('extract', deb_architecture)
+                   | first }}]
+      https://download.docker.com/{{ ansible_system | lower }}/{{ ansible_distribution | lower }}
+      {{ ansible_distribution_release }} stable
+    state: present
+    mode: "0644"
+    update_cache: true
+    validate_certs: true
+
+# -----------------------------------------------------------------------------
+# Ensure required Python tooling is installed system-wide
+# -----------------------------------------------------------------------------
+- name: Job 20.03 | Install system Python and pip packages
   apt:
-    pkg: "{{item}}"
+    pkg:
+      - python3
+      - python3-apt
+      - python3-pip
+      - python3-full
+      - pip
     state: latest
-  with_items:
-  - python3
-  - pip
-  - python3-apt
-  - python3-pip
-  - python3-full
-  #when: instl_docker_pckg
-  # tags: test #TODO
-#
-- name: Job 20.04 | Install Docker Package
+
+# -----------------------------------------------------------------------------
+# Install Docker packages via APT
+# -----------------------------------------------------------------------------
+- name: Job 20.04 | Install Docker packages
   apt:
-    pkg: "{{apt_docker_pckg_lst}}"
+    pkg: "{{ apt_docker_pckg_lst }}"
     state: present
   when: instl_docker_pckg
-  #tags: test
-#
-- name: Job 20.05 | Install Docker Module in Python
+
+# -----------------------------------------------------------------------------
+# Install Docker Python modules (required for Ansible docker_* modules)
+# -----------------------------------------------------------------------------
+- name: Job 20.05 | Install Docker Python modules
   pip:
-    name: "{{pip_dckr_pckg_lst}}"
+    name: "{{ pip_dckr_pckg_lst }}"
     state: present
-    #extra_args: --break-system-packages
-    # when no longer required
-  #when: instl_docker_pckg and (ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] <= "11") #bullseye
   when: instl_docker_pckg
-  # tags: test #TODO
-#
-# - name: Job 20.06 | Install Docker Module in Python
-#   pip:
-#     name: "{{pip_dckr_pckg_lst}}"
-#     state: present
-#     extra_args: --break-system-packages
-#   when: instl_docker_pckg and (ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] == "12") #bookworm
-#   # tags: test #TODO
-#
-- name: Job 20.07 | REMOVE Docker Package # REMOVE #
+
+# -----------------------------------------------------------------------------
+# Remove Docker packages (cleanup mode)
+# -----------------------------------------------------------------------------
+- name: Job 20.07 | Remove Docker APT packages
   apt:
-    pkg: "{{apt_docker_pckg_lst}}"
+    pkg: "{{ apt_docker_pckg_lst }}"
     state: absent
   when: not instl_docker_pckg and not kill_remove
-#
-- name: Job 20.08 | REMOVE Docker Package # REMOVE #
+
+- name: Job 20.08 | Remove Docker Python modules
   pip:
-    name: "{{pip_dckr_pckg_lst}}"
+    name: "{{ pip_dckr_pckg_lst }}"
     state: absent
   when: not instl_docker_pckg and not kill_remove
-#
-#
-# Ensure that groups and user append are done last
-- name: Job 21.98 | update user groups
+
+###############################################################################
+# User and group configuration
+# These tasks must run last
+###############################################################################
+
+# -----------------------------------------------------------------------------
+# Ensure docker group exists
+# -----------------------------------------------------------------------------
+- name: Job 21.98 | Ensure docker group exists
   group:
-    name: docker # required. Name of the group to manage.
-    gid:  # not required. Optional I(GID) to set for the group.
-    state: present # not required. choices: absent;present. Whether the group should be present or not on the remote host.
+    name: docker
+    state: present
 
-- name: Job 21.99 | append user to new groups
+# -----------------------------------------------------------------------------
+# Add user to docker group
+# -----------------------------------------------------------------------------
+- name: Job 21.99 | Add user to docker group
   user:
-    name: ibrahim # required. Name of the user to create, remove or modify.
-    groups: docker 
-    append: yes
-
-
-#
-# pip:
-#   name:  # not required. The name of a Python library to install or the url(bzr+,hg+,git+,svn+) of the remote package. This can be a list (since 2.2) and contain version specifiers (since 2.7).
-#   version:  # not required. The version number to install of the Python library specified in the I(name) parameter.
-#   requirements:  # not required. The path to a pip requirements file, which should be local to the remote system. File can be specified as a relative path if using the chdir option.
-#   virtualenv:  # not required. An optional path to a I(virtualenv) directory to install into. It cannot be specified together with the 'executable' parameter (added in 2.1). If the virtualenv does not exist, it will be created before installing packages. The optional virtualenv_site_packages, virtualenv_command, and virtualenv_python options affect the creation of the virtualenv.
-#   virtualenv_site_packages: no # not required. Whether the virtual environment will inherit packages from the global site-packages directory.  Note that if this setting is changed on an already existing virtual environment it will not have any effect, the environment must be deleted and newly created.
-#   virtualenv_command: virtualenv # not required. The command or a pathname to the command to create the virtual environment with. For example C(pyvenv), C(virtualenv), C(virtualenv2), C(~/bin/virtualenv), C(/usr/local/bin/virtualenv).
-#   virtualenv_python:  # not required. The Python executable used for creating the virtual environment. For example C(python3.5), C(python2.7). When not specified, the Python version used to run the ansible module is used. This parameter should not be used when C(virtualenv_command) is using C(pyvenv) or the C(-m venv) module.
-#   state: absent # not required. choices: absent;forcereinstall;latest;present. The state of module The 'forcereinstall' option is only available in Ansible 2.1 and above.
-#   extra_args:  # not required. Extra arguments passed to pip.
-#   editable: no # not required. Pass the editable flag.
-#   chdir:  # not required. cd into this directory before running the command
-#   executable:  # not required. The explicit executable or pathname for the pip executable, if different from the Ansible Python interpreter. For example C(pip3.3), if there are both Python 2.7 and 3.3 installations in the system and you want to run pip for the Python 3.3 installation. Mutually exclusive with I(virtualenv) (added in 2.1). Does not affect the Ansible Python interpreter. The setuptools package must be installed for both the Ansible Python interpreter and for the version of Python specified by this option.
-#   umask:  # not required. The system umask to apply before installing the pip package. This is useful, for example, when installing on systems that have a very restrictive umask by default (e.g., "0077") and you want to pip install packages which are to be used by all users. Note that this requires you to specify desired umask mode as an octal string, (e.g., "0022").
+    name: ibrahim
+    groups: docker
+    append: true
+``
