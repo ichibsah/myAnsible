@@ -24,6 +24,7 @@ crntb_activate_cronjobs: no
 #
 addLocalUser: yes                # add a local user to specific host
 #
+addresolv: yes                       # add nameservers to resolv.conf
 #
 ### APT | PACKAGES INSTALL ###
 instl_def_pckg: yes                       # Install complete packages. A 'no' will remove it from the host (apt_def_pckg_lst)
