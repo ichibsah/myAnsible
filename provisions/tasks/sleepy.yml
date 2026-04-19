@@ -2,7 +2,7 @@
   ansible.builtin.systemd:
     name: "{{ item }}"
     masked: true
-    enabled: true
+    enabled: false
   loop:
     - sleep.target
     - suspend.target
@@ -11,14 +11,14 @@
 
 
 #defensive measure to prevent accidental sleep, suspend, hibernate, and hybrid-sleep
-# - name: Stop and mask all sleep-related systemd targets
-#   ansible.builtin.systemd:
-#     name: "{{ item }}"
-#     state: stopped
-#     masked: true
-#     enabled: false
-#   loop:
-#     - sleep.target
-#     - suspend.target
-#     - hibernate.target
-#     - hybrid-sleep.target
+- name: Stop and mask all sleep-related systemd targets
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    state: stopped
+    masked: true
+    enabled: false
+  loop:
+    - sleep.target
+    - suspend.target
+    - hibernate.target
+    - hybrid-sleep.target
