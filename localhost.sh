@@ -9,7 +9,7 @@ rm -rf /tmp/.ansible-*
 #
 ansible-inventory -y --list
 
-sudo apt install ansible -y
+sudo apt install ansible ssh -y
 ansible-galaxy collection install -r 
 ansible-galaxy collection install community.healthchecksio --upgrade
 # ***
