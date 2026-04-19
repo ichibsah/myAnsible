@@ -5,6 +5,9 @@
 - name: Ensure resolv configuration is applied
   ansible.builtin.import_tasks:
     file: resolv.yml
+  tags:
+    - resolv
+    - localhost
 
 - name: Ensure package configuration is applied
   ansible.builtin.import_tasks:
