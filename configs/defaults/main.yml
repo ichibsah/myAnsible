@@ -31,6 +31,7 @@ backup_home: no                                     # backup home folder from se
 #
 odoo_keep_alive: no                                 # Install Odoo keep alive cronjob
 #
+teams: no                                           # Install teams-for-linux
 #
 #
 addLocalUser: no                # add a local user to specific host

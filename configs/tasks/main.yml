@@ -148,6 +148,14 @@
     #- test
     - wol
 #
+- name: Job 23 | import task teams
+  ansible.builtin.import_tasks:
+    file: teams.yml
+  when: teams
+  tags:
+    #- test
+    - teams
+#
 #
 # - name: Job 20 | import task accesswebpages
 #   ansible.builtin.import_tasks:
