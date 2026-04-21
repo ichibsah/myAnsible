@@ -1,28 +1,45 @@
-- name: Ensure /etc/apt/keyrings exists
+- name: Remove old teams-for-linux repo files
   ansible.builtin.file:
-    path: /etc/apt/keyrings
-    state: directory
-    mode: '0755'
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - /etc/apt/sources.list.d/teams-for-linux.list
+    - /etc/apt/sources.list.d/teams-for-linux-beta.list
+    - /etc/apt/sources.list.d/teams-for-linux-packages.list
+    - /etc/apt/sources.list.d/teams-for-linux.sources
 
-- name: Download teams-for-linux GPG key
+- name: Install teams-for-linux APT key
   ansible.builtin.get_url:
-    url: https://repo.teamsforlinux.de/teams-for-linux.asc
-    dest: /etc/apt/keyrings/teams-for-linux.asc
+    url: https://repo.teamsforlinux.de/key.gpg
+    dest: /usr/share/keyrings/teams-for-linux.gpg
     mode: '0644'
 
-- name: Add teams-for-linux repository (DEB822 format)
-  ansible.builtin.deb822_repository:
-    name: teams-for-linux-packages
-    types: [deb]
-    uris: ["https://repo.teamsforlinux.de/debian/"]
-    suites: [stable]
-    components: [main]
-    architectures: [amd64]
-    signed_by: /etc/apt/keyrings/teams-for-linux.asc
+- name: Set repository filename based on channel
+  ansible.builtin.set_fact:
+    teams_repo_filename: >-
+      {{ 'teams-for-linux-beta'
+         if teams_for_linux_channel == 'beta'
+         else 'teams-for-linux' }}
+
+- name: Add teams-for-linux APT repository
+  ansible.builtin.apt_repository:
+    repo: >
+      deb [arch={{ ansible_architecture }}
+      signed-by=/usr/share/keyrings/teams-for-linux.gpg]
+      https://repo.teamsforlinux.de/debian
+      {{ teams_for_linux_channel }} main
+    filename: "{{ teams_repo_filename }}"
     state: present
 
-- name: Install teams-for-linux
-  ansible.builtin.apt:
-    name: teams-for-linux
-    update_cache: yes
+- name: Add teams-for-linux repository
+  ansible.builtin.apt_repository:
+    repo: >
+      deb [signed-by=/etc/apt/keyrings/teams-for-linux.asc]
+      https://repo.teamsforlinux.de/debian
+      stable main
+    filename: teams-for-linux
     state: present
+
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes

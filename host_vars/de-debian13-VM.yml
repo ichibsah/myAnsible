@@ -62,6 +62,9 @@ odoo_keep_alive: yes                                 # Install Odoo keep alive c
 #
 teams: yes                                           # Install teams-for-linux
 #
+vscode: yes                                           # Install Visual Studio Code
+#
+#
 instl_dhcp_srvc: yes
 dsbl_dhcpvsx: yes                               # Disable dhcp v6 in DHCP
 dsbl_dhcpvsx_regx: INTERFACESv4='eno1'          # text that should change goes here eg. INTERFACESv4='ens18'

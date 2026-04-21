@@ -69,3 +69,21 @@ dependencies: []
 #     - name: Ubuntu
 #       versions: ["20.04", "22.04", "24.04"]
 # dependencies: []
+# ---
+# galaxy_info:
+#   role_name: vscode
+#   author: your_name
+#   description: Install Visual Studio Code on Debian/Ubuntu systems
+#   license: MIT
+#   min_ansible_version: "2.12"
+#   platforms:
+#     - name: Ubuntu
+#       versions:
+#         - jammy
+#         - focal
+#     - name: Debian
+#       versions:
+#         - bullseye
+#         - bookworm
+
+# dependencies: []

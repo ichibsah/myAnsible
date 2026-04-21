@@ -32,6 +32,7 @@ backup_home: no                                     # backup home folder from se
 odoo_keep_alive: no                                 # Install Odoo keep alive cronjob
 #
 teams: no                                           # Install teams-for-linux
+teams_for_linux_channel: stable   # or "beta"
 #
 #
 addLocalUser: no                # add a local user to specific host
@@ -103,3 +104,10 @@ url_monitor_require_curl: true
 # Optional: prevent overlapping runs (disabled by default)
 url_monitor_enable_lock: false
 url_monitor_lock_file: "/var/lock/url_check.lock"
+#
+#vscode vars:
+vscode: no                                           # Install Visual Studio Code
+vscode_package: code
+vscode_repo_url: https://packages.microsoft.com/repos/code
+vscode_keyring_path: /usr/share/keyrings/microsoft.gpg
+vscode_architectures: amd64,arm64,armhf

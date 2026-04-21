@@ -75,3 +75,22 @@ Ansible role that creates a cron job to HTTP GET a URL every hour, log the resul
         url_monitor_target_url: "https://your-service.example.com/health"
         url_monitor_enable_teams_alerts: true
         url_monitor_webhook_url: "https://<your-teams-webhook>"
+# vscode Ansible Role
+
+Installs Visual Studio Code on Debian and Ubuntu systems using the official Microsoft repository.
+
+## Variables
+
+| Variable | Default | Description |
+|--------|--------|-------------|
+| `vscode_package` | `code` | Set to `code-insiders` to install Insiders |
+| `vscode_repo_url` | Microsoft repo URL | VS Code APT repository |
+| `vscode_keyring_path` | `/usr/share/keyrings/microsoft.gpg` | GPG key path |
+
+## Example Playbook
+
+```yaml
+- hosts: workstations
+  become: true
+  roles:
+    - vscode

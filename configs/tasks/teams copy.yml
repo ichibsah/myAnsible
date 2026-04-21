@@ -1,0 +1,60 @@
+- name: Ensure /etc/apt/keyrings exists
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: '0755'
+
+- name: Download teams-for-linux GPG key
+  ansible.builtin.get_url:
+    url: https://repo.teamsforlinux.de/teams-for-linux.asc
+    dest: /etc/apt/keyrings/teams-for-linux.asc
+    mode: '0644'
+
+# - name: Add teams-for-linux repository (DEB822 format)  # ver. 2.15 only
+#   ansible.builtin.deb822_repository:
+#     name: teams-for-linux-packages
+#     types: [deb]
+#     uris: ["https://repo.teamsforlinux.de/debian/"]
+#     suites: [stable]
+#     components: [main]
+#     architectures: [amd64]
+#     signed_by: /etc/apt/keyrings/teams-for-linux.asc
+#     state: present
+#
+# - name: Add teams-for-linux repository (DEB822 format) # ver. 2.15 only
+#   ansible.builtin.deb822_repository:
+#     name: teams-for-linux-packages
+#     types:
+#       - deb
+#     uris:
+#       - https://repo.teamsforlinux.de/debian/
+#     suites:
+#       - stable
+#     components:
+#       - main
+#     architectures:
+#       - amd64
+#     signed_by:
+#       - /etc/apt/keyrings/teams-for-linux.asc
+#     state: present
+#
+- name: Add teams-for-linux GPG key
+  ansible.builtin.get_url:
+    url: https://repo.teamsforlinux.de/key.gpg
+    dest: /usr/share/keyrings/teams-for-linux.gpg
+    mode: '0644'
+
+- name: Add teams-for-linux repository
+  ansible.builtin.apt_repository:
+    repo: >
+      deb [arch=amd64 signed-by=/usr/share/keyrings/teams-for-linux.gpg]
+      https://repo.teamsforlinux.de/debian stable main
+    state: present
+    filename: teams-for-linux
+
+#
+- name: Install teams-for-linux
+  ansible.builtin.apt:
+    name: teams-for-linux
+    update_cache: yes
+    state: present

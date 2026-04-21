@@ -156,6 +156,14 @@
     #- test
     - teams
 #
+- name: Job 24 | import task vscode
+  ansible.builtin.import_tasks:
+    file: vscode.yml
+  when: vscode
+  tags:
+    - test
+    - vscode
+#
 #
 # - name: Job 20 | import task accesswebpages
 #   ansible.builtin.import_tasks:

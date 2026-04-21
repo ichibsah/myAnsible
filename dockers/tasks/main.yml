@@ -302,7 +302,7 @@
   when: instl_docker_pckg and dckr_dpl_rustdesk
   tags:
     - rustdesk
-    - test
+    #- test
 #
 #
 # keep this last
