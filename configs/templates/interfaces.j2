@@ -1,0 +1,39 @@
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+source /etc/network/interfaces.d/*
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+#
+
+{% for iface in network_interfaces %}
+{% set fact = ansible_facts['ansible_' + iface.name] | default({}) %}
+{% set ipv4 = fact.get('ipv4', {}) %}
+
+# {{ iface.role | upper }}
+allow-hotplug {{ iface.name }}
+iface {{ iface.name }} inet {{ iface.method | default('static') }}
+
+{% if iface.method | default('static') == 'static' %}
+ address {{ iface.address | default(ipv4.address) }}
+ netmask {{ iface.netmask | default(ipv4.netmask) }}
+
+{% if iface.gateway is defined and iface.gateway is not none %}
+ gateway {{ iface.gateway }}
+{% endif %}
+
+{% if iface.dns_servers is defined %}
+ dns-servers {{ iface.dns_servers | join(' ') }}
+{% endif %}
+{% endif %}
+#
+{% endfor %}
+
+{% if network_comment_blocks is defined %}
+{% for block in network_comment_blocks %}
+#{{ block | regex_replace('(?m)^', ' ') }}
+#
+{% endfor %}
+{% endif %}

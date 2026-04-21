@@ -1,0 +1,26 @@
+# Step A: Get default route
+- name: Gather default route info
+  command: ip route show default
+  register: default_route
+  changed_when: false
+
+- name: Set default interface fact
+  set_fact:
+    default_interface: "{{ default_route.stdout.split(' ')[4] }}"
+
+# Step B: Detect SSH interface
+- name: Determine SSH interface
+  set_fact:
+    ssh_interface: "{{ ansible_facts.default_ipv4.interface }}"
+
+# Step C: Safety guard
+- name: Abort if SSH interface is about to be reconfigured
+  fail:
+    msg: >
+      SAFETY ABORT:
+      SSH is connected via {{ ssh_interface }},
+      but this interface is managed by the network role.
+      Refusing to continue to avoid loss of connectivity.
+  when:
+    - ssh_interface is defined
+    - network_interfaces | map(attribute='name') | list is containing(ssh_interface)

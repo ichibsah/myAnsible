@@ -29,7 +29,10 @@
   tags: 
     - dns
 
-- name: Job 07 | import task interfaces
+- name: Job 07.01 | Run preflight safety checks
+  import_tasks: preflight.yml
+
+- name: Job 07.02 | import task interfaces
   ansible.builtin.import_tasks:
     file: interfaces.yml
   #when: apt_host_pckg_lst | contains bind9

@@ -47,3 +47,36 @@
     - Restart networking
     - Restart docker
   #tags: test
+  #
+  #
+# - name: Deploy network interfaces configuration
+#   template:
+#     src: interfaces.j2
+#     dest: /etc/network/interfaces
+#     owner: root
+#     group: root
+#     mode: '0644'
+#   notify: Restart networking
+#   when: network_interfaces is defined and network_interfaces | length > 0
+#   tags:
+#     - network
+#     #- test
+#
+- name: Deploy network interfaces configuration
+  template:
+    src: interfaces.j2
+    dest: /etc/network/interfaces
+    owner: root
+    group: root
+    mode: '0644'
+  register: interfaces_template
+  when: network_interfaces_check
+
+- name: Restart networking (safe)
+  service:
+    name: networking
+    state: restarted
+  when:
+    - interfaces_template.changed
+    - ssh_interface != default_interface
+    - network_interfaces_check

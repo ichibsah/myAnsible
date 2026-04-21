@@ -75,6 +75,54 @@ strt_myiptbls_at_boot: yes
 # interfaces:
 #   - iface: eth1
 #
+#
+#network interfaces
+# network_interfaces:
+#   - name: ens18
+#     role: lan
+#     address: 10.3.0.254
+#     netmask: 255.252.0.0
+#     gateway: 10.3.0.254
+#     dns_servers:
+#       - 10.3.0.254
+
+#   - name: ens19
+#     role: wan
+#     address: 192.168.0.80
+#     netmask: 255.255.255.0
+#     gateway: 192.168.0.1
+#     dns_servers:
+#       - 10.3.0.254
+#
+network_interfaces:
+  - name: ens18
+    role: lan
+    method: static
+    gateway: "{{ ansible_default_ipv4.gateway | default(omit) }}"
+    dns_servers:
+      - 10.3.0.254
+
+  - name: ens19
+    role: wan
+    method: static
+    dns_servers:
+      - 10.3.0.254
+#
+network_comment_blocks:
+  - |
+    allow-hotplug ens19
+    iface ens19 inet static
+     address 192.168.77.253
+     netmask 255.255.255.0
+     gateway 192.168.77.254
+     dns-servers 10.3.0.254
+
+  - |
+    allow-hotplug ens19
+    iface ens19 inet dhcp
+
+#
+#
 localusers:
   - name: mobile
     shell: /bin/bash
