@@ -94,6 +94,8 @@ strt_myiptbls_at_boot: yes
 #     dns_servers:
 #       - 10.3.0.254
 #
+network_interfaces_check: true
+#
 network_interfaces:
   - name: ens18
     role: lan
