@@ -65,7 +65,7 @@
 - name: Deploy network interfaces configuration
   template:
     src: interfaces.j2
-    dest: /etc/network/interfaces
+    dest: /etc/network/interfaces     # come into me, my precioussssss
     owner: root
     group: root
     mode: '0644'

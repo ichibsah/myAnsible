@@ -32,11 +32,17 @@
 - name: Job 07.01 | Run preflight safety checks
   import_tasks: interfaces_preflight.yml
   when: network_interfaces_check
+  tags:
+    - preflight
+    - test
 #  
 - name: Job 07.02 | import task interfaces
   ansible.builtin.import_tasks:
     file: interfaces.yml
   when: network_interfaces_check
+  tags:
+    - interfaces
+    - test
 #
 - name: Job 08 | import task symlink
   ansible.builtin.import_tasks:
