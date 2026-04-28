@@ -34,7 +34,7 @@
   when: network_interfaces_check
   tags:
     - preflight
-    - test
+    #- test
 #  
 - name: Job 07.02 | import task interfaces
   ansible.builtin.import_tasks:
@@ -42,7 +42,7 @@
   when: network_interfaces_check
   tags:
     - interfaces
-    - test
+    #- test
 #
 - name: Job 08 | import task symlink
   ansible.builtin.import_tasks:
