@@ -100,7 +100,10 @@
 - name: Job 15 | import task fail2ban
   ansible.builtin.import_tasks:
     file: fail2ban.yml
-  #when: apt_host_pckg_lst | contains bind9
+  when: fail2ban_whitelist
+  tags:
+    - fail2ban
+    - test
 #
 - name: Job 16 | import task parted
   ansible.builtin.import_tasks:

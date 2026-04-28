@@ -1,0 +1,88 @@
+# https://blog.swmansion.com/limiting-failed-ssh-login-attempts-with-fail2ban-7da15a2313b
+#
+- name: Job 00 | upload fail2ban configuration
+  template:
+    src: files/fail2ban/jail.local
+    dest: /etc/fail2ban/jail.local
+  notify: Restart fail2ban
+  when: upld_fail2bn_cfg
+  tags: 
+    #- test
+    - fail2ban
+
+# commands to use:
+# $ sudo fail2ban-client status
+# $ sudo fail2ban-client status sshd
+# $ sudo iptables -S
+#
+#
+- name: Detect public IP of Ansible control machine
+  ansible.builtin.uri:
+    url: "{{ public_ip_service_url }}"
+    return_content: true
+  delegate_to: localhost
+  run_once: true
+  register: detected_ip
+
+- name: Set controller_public_ip fact
+  ansible.builtin.set_fact:
+    controller_public_ip: "{{ detected_ip.content | trim }}"
+  run_once: true
+
+- name: Ensure Fail2Ban whitelist drop-in exists
+  ansible.builtin.lineinfile:
+    path: "{{ fail2ban_whitelist_file }}"
+    create: true
+    mode: "0644"
+    regexp: '^ignoreip ='
+    line: "ignoreip = 127.0.0.1/8 ::1 {{ controller_public_ip }}"
+  notify: Restart fail2ban
+
+- name: Ensure controller IP is present if ignoreip already exists
+  ansible.builtin.lineinfile:
+    path: "{{ fail2ban_whitelist_file }}"
+    backrefs: true
+    regexp: '^(ignoreip =.*)$'
+    line: '\1 {{ controller_public_ip }}'
+  when: controller_public_ip not in lookup('file', fail2ban_whitelist_file, errors="ignore")
+  notify: Restart fail2ban
+#
+#How to Verify After Running
+#$ fail2ban-client get sshd ignoreip
+#sudo fail2ban-client status 
+#fail2ban-client set <jail> unbanip YOUR.IP.ADDRESS
+#
+- name: Detect public IP address
+  ansible.builtin.uri:
+    url: "{{ public_ip_service_url }}"
+    return_content: true
+  register: public_ip_response
+
+- name: Set public IP fact
+  ansible.builtin.set_fact:
+    public_ip: "{{ public_ip_response.content | trim }}"
+
+- name: Show detected public IP
+  ansible.builtin.debug:
+    msg: "Detected public IP: {{ public_ip }}"
+
+- name: Find all files under /etc/fail2ban
+  ansible.builtin.find:
+    paths: /etc/fail2ban/filter.d
+    file_type: file
+  register: fail2ban_files
+
+- name: Remove public IP from Fail2Ban files
+  ansible.builtin.replace:
+    path: "{{ item.path }}"
+    regexp: "{{ public_ip }}"
+    replace: ""
+  loop: "{{ fail2ban_files.files }}"
+  register: replace_results
+  ignore_errors: true
+
+- name: Restart Fail2Ban if changes were made
+  ansible.builtin.service:
+    name: "{{ fail2ban_service_name }}"
+    state: restarted
+  when: replace_results is changed

@@ -14,3 +14,78 @@
 # $ sudo fail2ban-client status
 # $ sudo fail2ban-client status sshd
 # $ sudo iptables -S
+#
+#
+- name: Detect public IP of Ansible controller
+  ansible.builtin.uri:
+    url: "{{ public_ip_service_url }}"
+    return_content: true
+  delegate_to: localhost
+  #run_once: true
+  register: detected_ip
+
+- name: Show detected public IP
+  ansible.builtin.debug:
+    msg: "Detected public IP: {{ detected_ip }}"
+
+- name: Set controller IP fact
+  ansible.builtin.set_fact:
+    controller_public_ip: "{{ detected_ip.content | trim }}"
+  #run_once: true
+
+- name: Get Fail2Ban status
+  ansible.builtin.command: fail2ban-client status
+  register: fail2ban_status
+  changed_when: false
+  failed_when: false
+
+# ✅ FAILSAFE INITIALIZATION (this is the missing piece)
+- name: Initialize detected jail list to empty
+  ansible.builtin.set_fact:
+    fail2ban_jails_detected: []
+
+# ✅ Attempt detection (may or may not succeed)
+- name: Extract jail list from Fail2Ban output
+  ansible.builtin.set_fact:
+    fail2ban_jails_detected: "{{ detected_jails }}"
+  vars:
+    detected_jails: >-
+      {{
+        (
+          fail2ban_status.stdout
+          | regex_search('Jail list:\\s*(.+)', '\\1')
+          | default([])
+        )
+        | first
+        | default('')
+        | split(', ')
+        | map('trim')
+        | list
+      }}
+  when: fail2ban_status.stdout is defined
+
+# ✅ Guaranteed fallback
+- name: Use detected jail list or fallback
+  ansible.builtin.set_fact:
+    fail2ban_jails: >-
+      {{
+        fail2ban_jails_detected
+        if fail2ban_jails_detected | length > 0
+        else fail2ban_default_jails
+      }}
+
+- name: Unban controller IP from all jails
+  ansible.builtin.command: >
+    fail2ban-client set {{ item }} unbanip {{ controller_public_ip }}
+  loop: "{{ fail2ban_jails }}"
+  register: unban_results
+  failed_when: false
+  changed_when: false
+#
+#
+#
+#How to Verify After Running
+#$ fail2ban-client get sshd ignoreip
+#sudo fail2ban-client status 
+#fail2ban-client set <jail> unbanip YOUR.IP.ADDRESS
+#

@@ -113,3 +113,32 @@ vscode_keyring_path: /usr/share/keyrings/microsoft.gpg
 vscode_architectures: amd64,arm64,armhf
 #
 network_interfaces_check: false
+#
+# Fail2ban vars:
+fail2ban_whitelist: no                                # Enable Fail2Ban whitelist configuration
+# URL used to detect the public IP of the Ansible control machine
+public_ip_service_url: https://api.ipify.org
+# Fail2Ban whitelist configuration file
+fail2ban_whitelist_file: /etc/fail2ban/jail.d/whitelist.conf
+# Service name may differ on some distros
+fail2ban_service_name: fail2ban
+# Public IP lookup service
+#public_ip_url: "https://api.ipify.org
+# Public IP detection service
+#public_ip_service_url: https://api.ipify.org
+
+# Fallback jail list if detection fails
+fail2ban_default_jails:
+  - plesk-apache
+  - plesk-apache-badbot
+  - plesk-dovecot
+  - plesk-modsecurity
+  - plesk-one-week-ban
+  - plesk-panel
+  - plesk-permanent-ban
+  - plesk-postfix
+  - plesk-proftpd
+  - plesk-roundcube
+  - plesk-wordpress
+  - recidive
+  - ssh
