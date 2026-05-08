@@ -44,12 +44,12 @@ crntb_fldr_lst:                            # Crontab folder list that will be co
 fail2ban_whitelist: yes                                # Enable Fail2Ban whitelist configuration
 #
 crntb_actvt_crnjbs_mrym: no
-dckr_dpl_meryem: yes
-dckr_dpl_anasse: yes
+#dckr_dpl_meryem: yes
+#dckr_dpl_anasse: yes
 dckr_dpl_opendot: yes
 dckr_dpl_skyline: yes
 dckr_dpl_reddot_africa: yes
-dckr_dpl_blingbody: yes
-dckr_dpl_activ: yes
-dckr_dpl_jmj: yes
+#dckr_dpl_blingbody: yes
+#dckr_dpl_activ: yes
+#dckr_dpl_jmj: yes
 #dckr_dpl_anasse: yes
