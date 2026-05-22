@@ -12,44 +12,44 @@ apt_hst_strt_srvc_lst:                # Ensure Services are running.
   - psa
 #
 ### PRVS | CONFIG ###
-prvs_copy_home: yes                       # Copy default user's home files in place
-prvs_root_passwd: yes                     # update root passward
+prvs_copy_home: true                      # Copy default user's home files in place
+prvs_root_passwd: true                    # update root passward
 #
-dkr_copy_def_files: no                   # Copy default docker files to target server
-dkr_copy_etx_files: no                   # # Copy extended docker files to target host
+dkr_copy_def_files: false                 # Copy default docker files to target server
+dkr_copy_etx_files: false                 # # Copy extended docker files to target host
 
-crntb_activate_cronjobs: no
+crntb_activate_cronjobs: false
 #
 ansible_become_pass: '{{ localhost_become_pass }}'
 #
 #
 ### APT | PACKAGES INSTALL ###
-instl_def_pckg: yes                       # Install complete packages. A 'no' will remove it from the host (apt_def_pckg_lst)
-instl_utl_pckg: yes                        # Install complete packages. A 'no' will remove it from the host (apt_util_lst)
-sysd_strt_srvc: yes                       # Start services
-instl_ansbl_pckg: no                      # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
-instl_docker_pckg: yes                    # Install Docker package (apt_docker_pckg_lst)
-instl_gthb_ky: yes                        # add id_rsa to only ibrahim to allow local server access to git
+instl_def_pckg: true                       # Install complete packages. A 'no' will remove it from the host (apt_def_pckg_lst)
+instl_utl_pckg: true                        # Install complete packages. A 'no' will remove it from the host (apt_util_lst)
+sysd_strt_srvc: true                       # Start services
+instl_ansbl_pckg: false                      # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
+instl_docker_pckg: true                    # Install Docker package (apt_docker_pckg_lst)
+instl_gthb_ky: true                        # add id_rsa to only ibrahim to allow local server access to git
 apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
   - bind9
   - telnetd
   - telnet    # systemctl status inetd
 dckr_fldr_lst:                            # Docker folder list that will be copied when set in the host variable
-- { fldr: "4a999ff" }
+  - { fldr: "4a999ff" }
 
 crntb_fldr_lst:                            # Crontab folder list that will be copied when set in the host variable
-- { fldr: "4a999ff" }
+  - { fldr: "4a999ff" }
 #
-# my ignore ip list for fail2ban is here: /etc/fail2ban/jail.local 
-fail2ban_whitelist: yes                                # Enable Fail2Ban whitelist configuration
+# my ignore ip list for fail2ban is here: /etc/fail2ban/jail.local
+fail2ban_whitelist: true                               # Enable Fail2Ban whitelist configuration
 #
-crntb_actvt_crnjbs_mrym: no
-#dckr_dpl_meryem: yes
-#dckr_dpl_anasse: yes
-dckr_dpl_opendot: yes
-dckr_dpl_skyline: yes
-dckr_dpl_reddot_africa: yes
-#dckr_dpl_blingbody: yes
-#dckr_dpl_activ: yes
-#dckr_dpl_jmj: yes
-#dckr_dpl_anasse: yes
+crntb_actvt_crnjbs_mrym: false
+# dckr_dpl_meryem: yes
+# dckr_dpl_anasse: yes
+dckr_dpl_opendot: true
+dckr_dpl_skyline: true
+dckr_dpl_reddot_africa: true
+# dckr_dpl_blingbody: yes
+# dckr_dpl_activ: yes
+# dckr_dpl_jmj: yes
+# dckr_dpl_anasse: yes
