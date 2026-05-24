@@ -15,58 +15,60 @@ dckr_dmain_nme_pstfx: home.sawadogo.xyz
 ansible_become_pass: '{{ localhost_become_pass }}'
 #
 ### PRVS | CONFIG ###
-prvs_copy_home: no                       # Copy default user's home files in place
-prvs_root_passwd: no                     # update root passward
+prvs_copy_home: false                       # Copy default user's home files in place
+prvs_root_passwd: false                     # update root passward
 #
-dkr_copy_def_files: no                   # Copy default docker files to target server
+dkr_copy_def_files: false                   # Copy default docker files to target server
 #
-crntb_activate_cronjobs: no
+crntb_activate_cronjobs: false
 #
-addLocalUser: yes                # add a local user to specific host
+addLocalUser: true                # add a local user to specific host
 #
-addresolv: yes                       # add nameservers to resolv.conf
+addresolv: true                       # add nameservers to resolv.conf
 #
 ### APT | PACKAGES INSTALL ###
-instl_def_pckg: yes                       # Install complete packages. A 'no' will remove it from the host (apt_def_pckg_lst)
-instl_utl_pckg: yes                        # Install complete packages. A 'no' will remove it from the host (apt_util_lst)
-sysd_strt_srvc: yes                       # Start services
-instl_ansbl_pckg: yes                      # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
-instl_docker_pckg: yes                    # Install Docker package (apt_docker_pckg_lst)
+instl_def_pckg: true                       # Install complete packages. A 'no' will remove it from the host (apt_def_pckg_lst)
+instl_utl_pckg: true                        # Install complete packages. A 'no' will remove it from the host (apt_util_lst)
+sysd_strt_srvc: true                       # Start services
+instl_ansbl_pckg: true                      # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
+instl_docker_pckg: true                    # Install Docker package (apt_docker_pckg_lst)
 apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
-- cifs-utils
-- isc-dhcp-common
-- isc-dhcp-server
-- kubectx
+  - cifs-utils
+  - isc-dhcp-common
+  - isc-dhcp-server
+  - kubectx
 #
 #
 pip_host_pckg_lst:                        # Install Host Specific PIP Packages when ansible is also installed
 #
 #
 # docker containers
-dckr_dpl_pihole: yes
-dckr_dpl_iSpy: no
-dckr_dpl_semaphore: yes
-dckr_dpl_trcmmnd: no
-dckr_dpl_npxymgmt: yes
-dckr_dpl_gravity: yes
-dckr_dpl_homepage: yes
-dckr_dpl_wud: yes
-dckr_dpl_webcheck: yes
-dckr_dpl_uptmkm: yes
+dckr_dpl_pihole: true
+dckr_dpl_ispy: false
+dckr_dpl_semaphore: true
+dckr_dpl_trcmmnd: false
+dckr_dpl_npxymgmt: true
+dckr_dpl_gravity: true
+dckr_dpl_homepage: true
+dckr_dpl_wud: true
+dckr_dpl_webcheck: true
+dckr_dpl_uptmkm: true
 #
 apt_hst_strt_srvc_lst:                          # Ensure Host Specific Services are running.
   - isc-dhcp-server
 #
-odoo_keep_alive: yes                                 # Install Odoo keep alive cronjob
+odoo_keep_alive: true                                 # Install Odoo keep alive cronjob
 #
 #
 #
-instl_dhcp_srvc: yes
-dsbl_dhcpvsx: yes                               # Disable dhcp v6 in DHCP
+instl_dhcp_srvc: true
+dsbl_dhcpvsx: true                               # Disable dhcp v6 in DHCP
 dsbl_dhcpvsx_regx: INTERFACESv4='eno1'          # text that should change goes here eg. INTERFACESv4='ens18'
 #
-copy_iptables: yes                                   # Copy iptables to /root folder
-strt_myiptbls_at_boot: yes
+copy_iptables: true                                   # Copy iptables to /root folder
+strt_myiptbls_at_boot: true
+#
+gnomerdp: true                                # Install and configure GNOME Remote Desktop (RDP)
 #
 # interfaces:
 #   - iface: eth1
@@ -74,25 +76,23 @@ strt_myiptbls_at_boot: yes
 localusers:
   - name: mobile
     shell: /bin/bash
-    groups: 
+    groups:
       - mobile
     append: false
     state: present
     key: mobile.pub
-    create_home: True
-    local: True
+    create_home: true
+    local: true
     hosts: de-debian13
   - name: lady
     shell: /bin/bash
-    #group: lady
-    groups: 
+    # group: lady
+    groups:
       - sudo
       - docker
-    append: True
+    append: true
     state: present
     key: lady.pub
-    gen_ssh_key: True
-    create_home: True
-    local: True
-    hosts: de-debian13
-    bashrc: /home/ibrahim/sandbox/myAnsible/configs/files/home/ibrahim/.bashrc  
+    gen_ssh_key: true
+    create_home: true
+    local: true

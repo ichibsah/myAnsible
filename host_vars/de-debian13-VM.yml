@@ -10,8 +10,8 @@ hostname_additional_hosts:
     hostname_short: de-debian13-VM
   #
 dckr_dmain_nme_pstfx: home.sawadogo.xyz
-#virthost01.skyline.lan: 
-#ansible_connection: local # this will overwrite any other type of connections. its needed here.
+# virthost01.skyline.lan:
+# ansible_connection: local # this will overwrite any other type of connections. its needed here.
 ansible_become_pass: '{{ localhost_become_pass }}'
 #
 ### PRVS | CONFIG ###
@@ -33,10 +33,10 @@ sysd_strt_srvc: true                       # Start services
 instl_ansbl_pckg: true                      # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
 instl_docker_pckg: true                    # Install Docker package (apt_docker_pckg_lst)
 apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
-- cifs-utils
-- isc-dhcp-common
-- isc-dhcp-server
-- kubectx
+  - cifs-utils
+  - isc-dhcp-common
+  - isc-dhcp-server
+  - kubectx
 #
 #
 pip_host_pckg_lst:                        # Install Host Specific PIP Packages when ansible is also installed
@@ -76,7 +76,7 @@ strt_myiptbls_at_boot: true
 #   - iface: eth1
 #
 #
-#network interfaces
+# network interfaces
 # network_interfaces:
 #   - name: ens18
 #     role: lan
@@ -128,7 +128,7 @@ network_comment_blocks:
 localusers:
   - name: mobile
     shell: /bin/bash
-    groups: 
+    groups:
       - mobile
     append: false
     state: present
@@ -138,7 +138,7 @@ localusers:
     hosts: de-debian13-VM
   - name: lady
     shell: /bin/bash
-    #group: lady
+    # group: lady
     groups:
       - sudo
       - docker
@@ -149,4 +149,4 @@ localusers:
     create_home: true
     local: true
     hosts: de-debian13-VM
-    bashrc: /home/ibrahim/sandbox/myAnsible/configs/files/home/ibrahim/.bashrc  
+    bashrc: /home/ibrahim/sandbox/myAnsible/configs/files/home/ibrahim/.bashrc

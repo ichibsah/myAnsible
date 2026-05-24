@@ -1,0 +1,104 @@
+- name: Ensure GNOME remote desktop is installed
+  ansible.builtin.apt:
+    name: "{{ gnome_packages }}"
+    state: present
+    update_cache: true
+
+# --- Ensure certificate directory exists ---
+- name: Create RDP cert directory
+  ansible.builtin.file:
+    path: "{{ gnome_rdp_cert_path }}"
+    state: directory
+    owner: "{{ gnome_rdp_user }}"
+    mode: '0700'
+
+# --- Generate TLS cert if missing ---
+- name: Generate TLS key/cert for RDP
+  ansible.builtin.shell: |
+    openssl req -new -x509 -nodes \
+    -newkey ec \
+    -pkeyopt ec_paramgen_curve:P-384 \
+    -keyout {{ gnome_rdp_cert_path }}/rdp-tls.key \
+    -out {{ gnome_rdp_cert_path }}/rdp-tls.crt \
+    -days 3650 \
+    -subj "/CN={{ inventory_hostname }}"
+  args:
+    creates: "{{ gnome_rdp_cert_path }}/rdp-tls.key"
+  become: true
+  become_user: "{{ gnome_rdp_user }}"
+#
+# - name: Generate TLS key/cert for RDP
+#   ansible.builtin.shell: |
+#     openssl req -new -x509 -nodes -newkey ec:$(openssl ecparam -name secp384r1) \
+#     -keyout {{ gnome_rdp_cert_path }}/rdp-tls.key \
+#     -out {{ gnome_rdp_cert_path }}/rdp-tls.crt \
+#     -days 3650 \
+#     -subj "/CN={{ inventory_hostname }}"
+#   args:
+#     creates: "{{ gnome_rdp_cert_path }}/rdp-tls.key"
+#   become: true
+#   become_user: "{{ gnome_rdp_user }}"
+
+# --- Configure GNOME RDP (per-user) ---
+#
+# - name: Configure TLS key
+#   ansible.builtin.shell: |
+#     grdctl rdp set-tls-key {{ gnome_rdp_cert_path }}/rdp-tls.key
+#   become: true
+#   become_user: "{{ gnome_rdp_user }}"
+#
+- name: Configure TLS key
+  ansible.builtin.shell: |
+    DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u {{ gnome_rdp_user }})/bus \
+    grdctl rdp set-tls-key {{ gnome_rdp_cert_path }}/rdp-tls.key
+  become: true
+  become_user: "{{ gnome_rdp_user }}"
+#
+- name: Configure TLS cert
+  ansible.builtin.shell: |
+    grdctl rdp set-tls-cert {{ gnome_rdp_cert_path }}/rdp-tls.crt
+  become: true
+  become_user: "{{ gnome_rdp_user }}"
+
+- name: Set RDP credentials (vault)
+  ansible.builtin.shell: |
+    grdctl rdp set-credentials "{{ gnome_rdp_user }}" "{{ gnome_rdp_password }}"
+  become: true
+  become_user: "{{ gnome_rdp_user }}"
+
+- name: Enable full remote control (disable view-only)
+  ansible.builtin.shell: |
+    grdctl rdp disable-view-only
+  become: true
+  become_user: "{{ gnome_rdp_user }}"
+
+- name: Enable RDP
+  ansible.builtin.shell: |
+    grdctl rdp enable
+  become: true
+  become_user: "{{ gnome_rdp_user }}"
+
+# --- Enable systemd user service ---
+- name: Enable user service
+  ansible.builtin.shell: |
+    systemctl --user enable --now gnome-remote-desktop.service
+  become: true
+  become_user: "{{ gnome_rdp_user }}"
+  notify: Restart gnome remote desktop (user)
+
+# --- Optional system-wide mode ---
+- name: Enable system-wide RDP (optional)
+  ansible.builtin.shell: |
+    grdctl --system rdp enable && systemctl enable --now gnome-remote-desktop.service
+  when: gnome_rdp_system | bool
+  notify: restart gnome remote desktop (system)
+
+# --- Status check ---
+- name: Check RDP status
+  ansible.builtin.command: grdctl status
+  become: true
+  become_user: "{{ gnome_rdp_user }}"
+  register: rdp_status
+
+- debug:
+    var: rdp_status.stdout

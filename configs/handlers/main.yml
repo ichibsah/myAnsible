@@ -26,7 +26,7 @@
     name: fail2ban
     state: restarted
 #
-- name: restart sensu-services
+- name: Restart sensu-services
   service:
     name: "{{ item }}"
     state: restarted
@@ -34,6 +34,19 @@
     - sensu-api
     - sensu-client
     - sensu-server
+#
+# gnomerdp
+- name: Restart gnome remote desktop (user)
+  ansible.builtin.shell: |
+    systemctl --user restart gnome-remote-desktop.service
+  become: true
+  become_user: "{{ gnome_rdp_user }}"
+
+- name: Restart gnome remote desktop (system)
+  ansible.builtin.systemd:
+    name: gnome-remote-desktop
+    state: restarted
+    enabled: true
 #
 # https://serverfault.com/questions/796067/is-it-possible-to-notify-a-group-of-services-instead-of-individual-in-ansible
 # notify:

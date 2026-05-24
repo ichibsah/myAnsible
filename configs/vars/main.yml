@@ -9,3 +9,8 @@ webpages:
     username: "user2"
     password: "password2"
     logout_url: "https://another-site.com/logout"
+#
+# gnomerdp
+gnome_packages:
+  - gnome-remote-desktop
+#

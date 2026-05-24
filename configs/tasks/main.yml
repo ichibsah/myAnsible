@@ -177,6 +177,13 @@
     #- test
     - vscode
 #
+- name: Job 25 | import task gnomerdp
+  ansible.builtin.import_tasks:
+    file: gnomerdp.yml
+  when: gnomerdp
+  tags:
+    - test
+    - gnomerdp
 #
 # - name: Job 20 | import task accesswebpages
 #   ansible.builtin.import_tasks:

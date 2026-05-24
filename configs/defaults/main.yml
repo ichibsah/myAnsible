@@ -142,3 +142,9 @@ fail2ban_default_jails:
   - plesk-wordpress
   - recidive
   - ssh
+#
+# gnomerdp
+gnomerdp: false                                # Install and configure GNOME Remote Desktop (RDP)
+gnome_rdp_port: 3389
+gnome_rdp_cert_path: "/home/{{ gnome_rdp_user }}/.ssh"
+gnome_rdp_system: false
