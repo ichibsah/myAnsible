@@ -174,12 +174,13 @@
     file: vscode.yml
   when: vscode
   tags:
-    #- test
+#   - test
     - vscode
 #
 - name: Job 25 | import task gnomerdp
   ansible.builtin.import_tasks:
-    file: gnomerdp.yml
+    # file: gnomerdp.yml
+    file: gnomerdpv1.2.yml
   when: gnomerdp
   tags:
     - test

@@ -1,0 +1,91 @@
+- name: Install GNOME remote desktop
+  ansible.builtin.apt:
+    name: gnome-remote-desktop
+    state: present
+    update_cache: true
+
+# --------------------------------------------------
+# ✅ CREATE CERT DIRECTORY (system path)
+# --------------------------------------------------
+- name: Create cert directory
+  ansible.builtin.file:
+    path: "{{ gnome_rdp_cert_dir }}"
+    state: directory
+    owner: gnome-remote-desktop
+    group: gnome-remote-desktop
+    mode: "0700"
+    recurse: true
+
+# --------------------------------------------------
+# ✅ GENERATE EC CERTIFICATE (secp384r1)
+# --------------------------------------------------
+- name: Generate TLS key/cert
+  ansible.builtin.shell: |
+    openssl req -new -x509 -nodes \
+    -newkey ec:<(openssl ecparam -name secp384r1) \
+    -keyout {{ gnome_rdp_cert_dir }}/tls.key \
+    -out {{ gnome_rdp_cert_dir }}/tls.crt \
+    -days 3650 \
+    -subj "/C={{ gnome_rdp_cert_country }}/ST={{ gnome_rdp_cert_state }}/L={{ gnome_rdp_cert_city }}/O={{ gnome_rdp_cert_org }}/OU={{ gnome_rdp_cert_unit }}/CN={{ gnome_rdp_cert_cn }}/emailAddress={{ gnome_rdp_cert_email }}"
+  args:
+    executable: /bin/bash
+    creates: "{{ gnome_rdp_cert_dir }}/tls.key"
+
+# --------------------------------------------------
+# ✅ ENSURE CORRECT PERMISSIONS
+# --------------------------------------------------
+- name: Fix ownership
+  ansible.builtin.file:
+    path: "/var/lib/gnome-remote-desktop/.local"
+    owner: gnome-remote-desktop
+    group: gnome-remote-desktop
+    recurse: true
+
+# --------------------------------------------------
+# ✅ CONFIGURE SYSTEM-WIDE RDP
+# --------------------------------------------------
+- name: Set TLS key
+  ansible.builtin.command:
+    cmd: >
+      grdctl --system rdp set-tls-key
+      {{ gnome_rdp_cert_dir }}/tls.key
+
+- name: Set TLS cert
+  ansible.builtin.command:
+    cmd: >
+      grdctl --system rdp set-tls-cert
+      {{ gnome_rdp_cert_dir }}/tls.crt
+
+- name: Set RDP credentials (vault)
+  ansible.builtin.command:
+    cmd: >
+      grdctl --system rdp set-credentials
+      {{ gnome_rdp_user }} {{ gnome_rdp_password }}
+
+- name: Enable RDP
+  ansible.builtin.command:
+    cmd: grdctl --system rdp enable
+
+# --------------------------------------------------
+# ✅ CHECK STATUS
+# --------------------------------------------------
+- name: Check RDP status
+  ansible.builtin.command: grdctl --system status
+  register: rdp_status
+
+- name: Show status
+  ansible.builtin.debug:
+    var: rdp_status.stdout
+
+# --------------------------------------------------
+# ✅ RESTART SERVICE
+# --------------------------------------------------
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Restart GNOME Remote Desktop
+  ansible.builtin.systemd:
+    name: gnome-remote-desktop
+    state: restarted
+  notify: restart gnome remote desktop

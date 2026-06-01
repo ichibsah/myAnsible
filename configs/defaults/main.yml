@@ -148,3 +148,16 @@ gnomerdp: false                                # Install and configure GNOME Rem
 gnome_rdp_port: 3389
 gnome_rdp_cert_path: "/home/{{ gnome_rdp_user }}/.ssh"
 gnome_rdp_system: false
+#
+# v1.2
+# gnome_rdp_port: 3389
+gnome_rdp_user: "rdpuser"
+gnome_rdp_cert_dir: "/var/lib/gnome-remote-desktop/.local/share/gnome-remote-desktop"
+
+gnome_rdp_cert_country: "DE"
+gnome_rdp_cert_state: "Hessen"
+gnome_rdp_cert_city: "Darmstadt"
+gnome_rdp_cert_org: "DK Enterprise"
+gnome_rdp_cert_unit: "IT"
+gnome_rdp_cert_cn: "{{ inventory_hostname }}"
+gnome_rdp_cert_email: "admin@localhost"
