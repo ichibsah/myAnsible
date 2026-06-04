@@ -52,3 +52,5 @@ dckr_dpl_reddot_africa: true
 dckr_dpl_blingbody: false
 dckr_dpl_activ: false
 dckr_dpl_jmj: false
+#
+ansible_python_interpreter: /usr/bin/python3

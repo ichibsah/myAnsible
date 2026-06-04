@@ -31,6 +31,8 @@ backup_home: no                                     # backup home folder from se
 #
 odoo_keep_alive: no                                 # Install Odoo keep alive cronjob
 #
+docker3: false                                    # Install Docker
+#
 teams: no                                           # Install teams-for-linux
 teams_for_linux_channel: stable   # or "beta"
 #

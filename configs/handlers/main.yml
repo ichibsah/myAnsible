@@ -54,6 +54,12 @@
     state: restarted
     daemon_reload: true
 #
+- name: Restart Docker
+  service:
+    name: docker
+    state: restarted
+
+#
 #
 # https://serverfault.com/questions/796067/is-it-possible-to-notify-a-group-of-services-instead-of-individual-in-ansible
 # notify:

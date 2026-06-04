@@ -183,8 +183,18 @@
     file: gnomerdpv1.2.yml
   when: gnomerdp
   tags:
-    - test
+#   - test
     - gnomerdp
+#
+- name: Job 26 | import task docker
+  ansible.builtin.import_tasks:
+    # file: gnomerdp.yml
+    file: docker.yml
+  when: docker3
+  tags:
+    - test
+    - docker
+#
 #
 # - name: Job 20 | import task accesswebpages
 #   ansible.builtin.import_tasks:

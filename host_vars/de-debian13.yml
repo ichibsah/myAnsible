@@ -37,10 +37,14 @@ apt_host_pckg_lst:                        # Install Host Specific Packages (keep
   - isc-dhcp-common
   - isc-dhcp-server
   - kubectx
+  - python3-docker
+  - docker-cli
 #
 #
 pip_host_pckg_lst:                        # Install Host Specific PIP Packages when ansible is also installed
+  - docker
 #
+docker3: true                                    # Install Docker
 #
 # docker containers
 dckr_dpl_pihole: true
@@ -53,6 +57,7 @@ dckr_dpl_homepage: true
 dckr_dpl_wud: true
 dckr_dpl_webcheck: true
 dckr_dpl_uptmkm: true
+dckr_dpl_n8n: true              # add n8n to this list and set it to true to have it deployed on the target host
 #
 apt_hst_strt_srvc_lst:                          # Ensure Host Specific Services are running.
   - isc-dhcp-server

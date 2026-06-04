@@ -304,6 +304,15 @@
     - rustdesk
     #- test
 #
+- name: Job 42 | import task n8n
+  ansible.builtin.import_tasks:
+    file: 5678-n8n.yml
+  when: instl_docker_pckg and dckr_dpl_n8n
+  tags:
+    - n8n
+    - test
+#
+#
 #
 # keep this last
 - name: Job 99 | import task prune

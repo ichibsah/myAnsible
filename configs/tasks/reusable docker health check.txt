@@ -1,0 +1,46 @@
+You can paste this before any container deployment:
+
+- name: Docker pre-flight check block
+  block:
+
+    - name: Check docker socket exists
+      stat:
+        path: /var/run/docker.sock
+      register: docker_sock
+
+    - name: Fail if socket missing
+      fail:
+        msg: "Docker socket not found!"
+      when: not docker_sock.stat.exists
+
+    - name: Check docker service
+      service_facts:
+
+    - name: Fail if Docker service not running
+      fail:
+        msg: "Docker service is not running!"
+      when: ansible_facts.services['docker.service'].state != 'running'
+
+    - name: Test Docker CLI
+      command: docker ps
+      register: docker_ps
+      changed_when: false
+
+    - name: Validate Docker API via Python SDK
+      command: python3 -c "import docker; client=docker.from_env(); print(client.ping())"
+      register: docker_ping
+      changed_when: false
+
+    - name: Fail if Docker SDK fails
+      fail:
+        msg: "Docker SDK is broken (http+docker issue likely)"
+      when: "'True' not in docker_ping.stdout"
+
+  rescue:
+    - name: Show debug info
+      debug:
+        var: docker_ps
+
+    - name: Hard fail
+      fail:
+        msg: "Docker environment is not healthy. Fix before continuing."

@@ -1,0 +1,56 @@
+---
+# - name: Load split variable files
+#   ansible.builtin.include_vars:
+#     dir: "{{ role_path }}/vars/"
+#     extensions:
+#       - yml
+#     file: "n8n.yml"
+#
+- name: Ensure Docker volume exists
+  community.docker.docker_volume:
+    name: "{{ n8n_volume_name }}"
+    state: present
+
+# 1. Pull latest image (force check)
+- name: Pull latest n8n image
+  community.docker.docker_image:
+    name: "{{ n8n_image_full }}"
+    source: pull
+    force_source: true
+  register: n8n_image_pull
+
+# 2. Check if container exists
+- name: Check if n8n container exists
+  community.docker.docker_container_info:
+    name: "{{ n8n_container_name }}"
+  register: n8n_container_info
+  failed_when: false
+
+# 3. Stop & remove container if new image was pulled
+- name: Stop and remove existing container if image updated
+  community.docker.docker_container:
+    name: "{{ n8n_container_name }}"
+    state: absent
+  when:
+    - n8n_image_pull.changed
+    - n8n_container_info.exists
+
+# 4. Prune dangling images if new image pulled
+- name: Prune old Docker images
+  community.docker.docker_prune:
+    images: true
+  when: n8n_image_pull.changed
+
+# 5. Deploy container
+- name: Deploy n8n container
+  community.docker.docker_container:
+    name: "{{ n8n_container_name }}"
+    image: "{{ n8n_image_full }}"
+    state: started
+    restart_policy: "{{ n8n_restart_policy }}"
+    ports: "{{ n8n_ports }}"
+    volumes:
+      - "{{ n8n_volume_name }}:{{ n8n_volume_mount }}"
+    tty: "{{ n8n_tty }}"
+    stdin_open: "{{ n8n_stdin_open }}"
+    recreate: "{{ n8n_image_pull.changed }}"

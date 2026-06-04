@@ -14,3 +14,14 @@ webpages:
 gnome_packages:
   - gnome-remote-desktop
 #
+# docker
+docker_users:
+  - "{{ ansible_user }}"
+
+docker_daemon_config:
+  log-driver: "json-file"
+  log-opts:
+    max-size: "10m"
+    max-file: "3"
+  storage-driver: "overlay2"
+#

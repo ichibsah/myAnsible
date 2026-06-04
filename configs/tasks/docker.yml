@@ -1,0 +1,143 @@
+# install
+---
+- name: Install required packages
+  apt:
+    name:
+      - ca-certificates
+      - curl
+      - gnupg
+    state: present
+    update_cache: true
+
+- name: Add Docker GPG key
+  apt_key:
+    url: https://download.docker.com/linux/debian/gpg
+    state: present
+
+- name: Add Docker repo
+  apt_repository:
+    repo: "deb https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable"
+    state: present
+
+- name: Install Docker engine
+  apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - python3-pip
+    state: latest
+    update_cache: true
+
+- name: Install Docker SDK for Python (clean)
+  pip:
+    name: docker
+    state: latest
+
+- name: Remove conflicting docker-py
+  pip:
+    name: docker-py
+    state: absent
+  ignore_errors: true
+
+- name: Ensure Docker service is running
+  service:
+    name: docker
+    state: started
+    enabled: true
+
+# config
+- name: Add users to docker group
+  user:
+    name: "{{ item }}"
+    groups: docker
+    append: true
+  loop: "{{ docker_users }}"
+
+- name: Configure daemon.json
+  copy:
+    dest: /etc/docker/daemon.json
+    content: "{{ docker_daemon_config | to_nice_json }}"
+    mode: '0644'
+  notify: Restart Docker
+
+- name: Ensure docker socket permissions
+  file:
+    path: /var/run/docker.sock
+    mode: '0660'
+    group: docker
+
+# validate
+- name: Wait for Docker socket
+  wait_for:
+    path: /var/run/docker.sock
+    timeout: 20
+
+- name: Test Docker CLI
+  command: docker info
+  register: docker_info
+  changed_when: false
+
+- name: Fail if Docker is not responding
+  fail:
+    msg: "Docker is not working properly!"
+  when: docker_info.rc != 0
+
+- name: Verify Docker Python SDK
+  command: python3 -c "import docker; print(docker.__version__)"
+  register: docker_sdk
+  changed_when: false
+
+- name: Show Docker SDK version
+  debug:
+    msg: "Docker SDK version: {{ docker_sdk.stdout }}"
+#
+#
+#
+#
+#You can paste this before any container deployment:
+
+- name: Docker pre-flight check block
+  block:
+
+    - name: Check docker socket exists
+      stat:
+        path: /var/run/docker.sock
+      register: docker_sock
+
+    - name: Fail if socket missing
+      fail:
+        msg: "Docker socket not found!"
+      when: not docker_sock.stat.exists
+
+    - name: Check docker service
+      service_facts:
+
+    - name: Fail if Docker service not running
+      fail:
+        msg: "Docker service is not running!"
+      when: ansible_facts.services['docker.service'].state != 'running'
+
+    - name: Test Docker CLI
+      command: docker ps
+      register: docker_ps
+      changed_when: false
+
+    - name: Validate Docker API via Python SDK
+      command: python3 -c "import docker; client=docker.from_env(); print(client.ping())"
+      register: docker_ping
+      changed_when: false
+
+    - name: Fail if Docker SDK fails
+      fail:
+        msg: "Docker SDK is broken (http+docker issue likely)"
+      when: "'True' not in docker_ping.stdout"
+
+  rescue:
+    - name: Show debug info
+      debug:
+        var: docker_ps
+
+    - name: Hard fail
+      fail:
+        msg: "Docker environment is not healthy. Fix before continuing."
