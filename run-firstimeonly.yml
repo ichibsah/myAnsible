@@ -12,18 +12,23 @@
 
   pre_tasks:
     - name: PRE TASK | Check if ansible is installed
-      command: ansible --version
+      ansible.builtin.command:
+        cmd: ansible --version
       register: ansible_check
       ignore_errors: true
-      pkg:
-        name: 
+      changed_when: false
+
+    - name: PRE TASK | Install required packages
+      ansible.builtin.package:
+        name:
           - python3
           - sudo
         state: present
-      #when: ansible_check.rc != 0
+      when: ansible_check.rc != 0
+
     - name: PRE TASK | Install adm packages before starting roles
-      apt:
-        name:  
+      ansible.builtin.apt:
+        name:
           - python3
           - sudo
         state: present
