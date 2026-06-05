@@ -179,7 +179,16 @@
 #
 - name: Job 25 | import task gnomerdp
   ansible.builtin.import_tasks:
-    # file: gnomerdp.yml
+    file: gnomerdp.yml
+    #file: gnomerdpv1.2.yml
+  when: gnomerdp
+  tags:
+#   - test
+    - gnomerdp
+#
+- name: Job 25.1 | import task gnomerdp
+  ansible.builtin.import_tasks:
+    #file: gnomerdp.yml
     file: gnomerdpv1.2.yml
   when: gnomerdp
   tags:
