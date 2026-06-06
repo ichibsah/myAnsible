@@ -75,6 +75,8 @@ strt_myiptbls_at_boot: false
 #
 gnomerdp: true                                # Install and configure GNOME Remote Desktop (RDP)
 #
+xrdp: true                                           # Install and configure xrdp
+#
 # interfaces:
 #   - iface: eth1
 #

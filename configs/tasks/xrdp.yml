@@ -1,0 +1,103 @@
+- name: Install required packages
+  apt:
+    name:
+      - xrdp
+      - xfce4
+      - xfce4-goodies
+    state: present
+    update_cache: yes
+
+- name: Ensure xrdp service enabled
+  systemd:
+    name: xrdp
+    enabled: yes
+    state: started
+
+- name: Add xrdp user to ssl-cert group (for TLS key access)
+  user:
+    name: xrdp
+    groups: ssl-cert
+    append: yes
+
+- name: Configure XFCE session for all users
+  copy:
+    dest: /etc/skel/.xsession
+    content: |
+      startxfce4
+    mode: '0644'
+
+- name: Ensure existing users get XFCE session
+  shell: |
+    if [ ! -f ~/.xsession ]; then
+      echo "startxfce4" > ~/.xsession
+    fi
+  args:
+    executable: /bin/bash
+
+- name: Replace startwm.sh
+  template:
+    src: startwm.sh.j2
+    dest: /etc/xrdp/startwm.sh
+    mode: '0755'
+  notify: Restart xrdp
+
+# Optional firewall (UFW)
+- name: Allow RDP port (3389)
+  ufw:
+    rule: allow
+    port: '3389'
+    proto: tcp
+  when: ansible_facts['os_family'] == "Debian"
+
+## optional task
+
+# - name: Copy TLS certificate
+#   copy:
+#     src: files/cert.pem
+#     dest: /etc/xrdp/cert.pem
+#     mode: '0644'
+
+# - name: Copy TLS private key
+#   copy:
+#     src: files/key.pem
+#     dest: /etc/xrdp/key.pem
+#     mode: '0600'
+
+# - name: Configure xrdp TLS
+#   lineinfile:
+#     path: /etc/xrdp/xrdp.ini
+#     regexp: '^certificate='
+#     line: 'certificate=/etc/xrdp/cert.pem'
+
+# - name: Configure xrdp key
+#   lineinfile:
+#     path: /etc/xrdp/xrdp.ini
+#     regexp: '^key_file='
+#     line: 'key_file=/etc/xrdp/key.pem'
+
+#   notify: Restart xrdp
+
+#
+#
+# - name: Change RDP port
+#   lineinfile:
+#     path: /etc/xrdp/xrdp.ini
+#     regexp: '^port='
+#     line: 'port=3390'
+#   notify: Restart xrdp
+
+# #
+# - name: Allow only trusted IP
+#   ufw:
+#     rule: allow
+#     from_ip: "YOUR.IP.ADDR"
+#     port: 3389
+#     proto: tcp
+# #
+# - name: Disable root login via RDP
+#   lineinfile:
+#     path: /etc/pam.d/xrdp-sesman
+#     line: "auth required pam_succeed_if.so user != root"
+
+# #
+

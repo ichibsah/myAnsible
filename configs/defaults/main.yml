@@ -145,6 +145,8 @@ fail2ban_default_jails:
   - recidive
   - ssh
 #
+xrdp: false                                           # Install and configure xrdp
+#
 # gnomerdp
 gnomerdp: false                                # Install and configure GNOME Remote Desktop (RDP)
 gnome_rdp_port: 3389

@@ -195,6 +195,15 @@
 #   - test
     - gnomerdp
 #
+- name: Job 25.3 | import task xrdp
+  ansible.builtin.import_tasks:
+    #file: xrdp.yml
+    file: xrdp1.2.yml
+  when: xrdp
+  tags:
+#   - test
+    - xrdp
+#
 - name: Job 26 | import task docker
   ansible.builtin.import_tasks:
     # file: gnomerdp.yml

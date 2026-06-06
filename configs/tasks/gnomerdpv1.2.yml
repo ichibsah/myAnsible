@@ -130,3 +130,9 @@
 # sudo systemctl start xrdp
 
 # If this is a server (no monitor) → I strongly recommend switching to xrdp
+
+# TCP
+# sudo iptables -A INPUT -p tcp --dport 3389 -j ACCEPT
+
+# # UDP
+# sudo iptables -A INPUT -p udp --dport 3389 -j ACCEPT

@@ -58,7 +58,12 @@
   service:
     name: docker
     state: restarted
-
+#
+- name: Restart xrdp
+  systemd:
+    name: xrdp
+    state: restarted
+#
 #
 #
 # https://serverfault.com/questions/796067/is-it-possible-to-notify-a-group-of-services-instead-of-individual-in-ansible

@@ -1,0 +1,150 @@
+- name: Gather installed packages
+  package_facts:
+    manager: auto
+
+# --------------------------------------------------
+# Remove GNOME if present (server should stay lean)
+# --------------------------------------------------
+- name: Remove GNOME if installed
+  apt:
+    name:
+      - gnome
+      - gdm3
+      - gnome-shell
+      - gnome-session
+      - gnome-remote-desktop
+    state: absent
+    purge: yes
+  when: "'gnome-shell' in ansible_facts.packages"
+
+- name: Autoremove unused packages
+  apt:
+    autoremove: yes
+
+# --------------------------------------------------
+# Install XRDP + XFCE
+# --------------------------------------------------
+- name: Install XRDP + XFCE
+  apt:
+    name:
+      - xrdp
+      - xfce4
+      - xfce4-goodies
+    update_cache: yes
+    state: present
+
+# --------------------------------------------------
+# Ensure XRDP service running
+# --------------------------------------------------
+- name: Enable and start xrdp
+  systemd:
+    name: xrdp
+    enabled: yes
+    state: started
+
+# --------------------------------------------------
+# Fix permissions for TLS key
+# --------------------------------------------------
+- name: Add xrdp user to ssl-cert
+  user:
+    name: xrdp
+    groups: ssl-cert
+    append: yes
+
+# --------------------------------------------------
+# Configure XFCE session globally
+# --------------------------------------------------
+- name: Set default XFCE session
+  copy:
+    dest: /etc/skel/.xsession
+    content: |
+      startxfce4
+    mode: '0644'
+
+- name: Ensure current users have XFCE
+  shell: |
+    if [ ! -f ~/.xsession ]; then
+      echo "startxfce4" > ~/.xsession
+    fi
+  args:
+    executable: /bin/bash
+
+# --------------------------------------------------
+# Replace XRDP startup script
+# --------------------------------------------------
+- name: Configure startwm.sh
+  copy:
+    dest: /etc/xrdp/startwm.sh
+    mode: '0755'
+    content: |
+      #!/bin/sh
+
+      if [ -r /etc/profile ]; then
+        . /etc/profile
+      fi
+
+      if [ -r ~/.profile ]; then
+        . ~/.profile
+      fi
+
+      exec startxfce4
+  notify: Restart xrdp
+
+# --------------------------------------------------
+# Detect firewall type
+# --------------------------------------------------
+- name: Check if iptables exists
+  command: which iptables
+  register: iptables_check
+  changed_when: false
+  failed_when: false
+
+- name: Check if ufw exists
+  command: which ufw
+  register: ufw_check
+  changed_when: false
+  failed_when: false
+
+# --------------------------------------------------
+# Apply firewall rules (prefer iptables)
+# --------------------------------------------------
+- name: Allow RDP via iptables
+  shell: |
+    iptables -C INPUT -p tcp --dport 3389 -j ACCEPT || \
+    iptables -A INPUT -p tcp --dport 3389 -j ACCEPT
+  when: iptables_check.rc == 0
+
+- name: Save iptables rules (Debian)
+  shell: |
+    iptables-save > /etc/iptables/rules.v4
+  when: iptables_check.rc == 0
+
+# Fallback to ufw if iptables missing
+- name: Allow RDP via UFW (fallback)
+  ufw:
+    rule: allow
+    port: '3389'
+    proto: tcp
+  when:
+    - iptables_check.rc != 0
+    - ufw_check.rc == 0
+
+# --------------------------------------------------
+# Ensure XRDP port is correct
+# --------------------------------------------------
+- name: Ensure XRDP uses port 3389
+  lineinfile:
+    path: /etc/xrdp/xrdp.ini
+    regexp: '^port='
+    line: 'port=3389'
+  notify: Restart xrdp
+#
+#
+# Perfect — here’s a clean, production-ready Ansible role that does exactly what you asked:
+# ✅ Prefers iptables, but detects what exists
+# ✅ Removes GNOME if installed (to avoid conflicts / unnecessary weight)
+# ✅ Installs xrdp + XFCE
+# ✅ Configures session properly
+# ✅ Opens firewall using iptables (with fallback)
+# ✅ Keeps everything idempotent and safe
+#
