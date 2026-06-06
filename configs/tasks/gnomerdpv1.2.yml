@@ -89,3 +89,44 @@
     name: gnome-remote-desktop
     state: restarted
   notify: restart gnome remote desktop
+
+# ## troubleshooting commands:
+# systemctl --user status gnome-remote-desktop.service
+# systemctl --user start gnome-remote-desktop.service
+# systemctl --user enable gnome-remote-desktop.service
+# echo $XDG_RUNTIME_DIR
+# gsettings list-schemas | grep remote-desktop
+# sudo apt install libglib2.0-bin
+# sudo apt install gnome-remote-desktop
+# sudo glib-compile-schemas /usr/share/glib-2.0/schemas
+# grdctl status
+# dconf reset -f /org/gnome/desktop/remote-desktop/
+# sudo apt install dconf-cli
+# echo $XDG_SESSION_TYPE
+# systemctl --user restart gnome-remote-desktop
+# lsb_release -a
+# #
+# sudo apt install gnome-keyring
+# eval $(gnome-keyring-daemon --start)
+# grdctl rdp enable
+# echo $XDG_SESSION_TYPE
+# echo $DBUS_SESSION_BUS_ADDRESS
+# systemctl --user status gnome-remote-desktop
+#
+# sudo systemctl start gdm
+# sudo systemctl enable gdm
+# sudo apt update
+# sudo apt install gnome gdm3 gnome-remote-desktop
+# sudo systemctl enable gdm3
+# Right now your system is:
+
+# ✔ Debian installed
+# ❌ No GUI
+# ❌ No display manager
+# ❌ Only TTY mode
+
+# sudo apt install xrdp xfce4
+# sudo systemctl enable xrdp
+# sudo systemctl start xrdp
+
+# If this is a server (no monitor) → I strongly recommend switching to xrdp
