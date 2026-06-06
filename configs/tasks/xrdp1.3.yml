@@ -3,7 +3,7 @@
     manager: auto
 
 # --------------------------------------------------
-# Remove GNOME if present (server should stay lean)
+# Remove GNOME if present
 # --------------------------------------------------
 - name: Remove GNOME if installed
   apt:
@@ -22,19 +22,20 @@
     autoremove: yes
 
 # --------------------------------------------------
-# Install XRDP + XFCE
+# Install XRDP + XFCE + Fail2ban
 # --------------------------------------------------
-- name: Install XRDP + XFCE
+- name: Install required packages
   apt:
     name:
       - xrdp
       - xfce4
       - xfce4-goodies
+      - fail2ban
     update_cache: yes
     state: present
 
 # --------------------------------------------------
-# Ensure XRDP service running
+# Enable services
 # --------------------------------------------------
 - name: Enable and start xrdp
   systemd:
@@ -42,17 +43,39 @@
     enabled: yes
     state: started
 
+- name: Enable and start fail2ban
+  systemd:
+    name: fail2ban
+    enabled: yes
+    state: started
+
 # --------------------------------------------------
-# Fix permissions for TLS key
+# Lock root account (strong protection)
 # --------------------------------------------------
-- name: Add xrdp user to ssl-cert
+- name: Lock root account
+  command: passwd -l root
+  changed_when: false
+
+# --------------------------------------------------
+# Disable root login via XRDP (PAM)
+# --------------------------------------------------
+- name: Disable root login via XRDP
+  lineinfile:
+    path: /etc/pam.d/xrdp-sesman
+    line: "auth required pam_succeed_if.so user != root"
+    create: yes
+
+# --------------------------------------------------
+# XRDP TLS permission fix
+# --------------------------------------------------
+- name: Add xrdp user to ssl-cert group
   user:
     name: xrdp
     groups: ssl-cert
     append: yes
 
 # --------------------------------------------------
-# Configure XFCE session globally
+# Configure XFCE session
 # --------------------------------------------------
 - name: Set default XFCE session
   copy:
@@ -61,7 +84,7 @@
       startxfce4
     mode: '0644'
 
-- name: Ensure current users have XFCE
+- name: Ensure XFCE session for users
   shell: |
     if [ ! -f ~/.xsession ]; then
       echo "startxfce4" > ~/.xsession
@@ -70,7 +93,7 @@
     executable: /bin/bash
 
 # --------------------------------------------------
-# Replace XRDP startup script
+# XRDP startup script
 # --------------------------------------------------
 - name: Configure startwm.sh
   copy:
@@ -91,7 +114,7 @@
   notify: Restart xrdp
 
 # --------------------------------------------------
-# Detect firewall type
+# Detect firewall tools
 # --------------------------------------------------
 - name: Check if iptables exists
   command: which iptables
@@ -114,13 +137,13 @@
     iptables -A INPUT -p tcp --dport 3389 -j ACCEPT
   when: iptables_check.rc == 0
 
-- name: Save iptables rules (Debian)
+- name: Save iptables rules
   shell: |
+    mkdir -p /etc/iptables
     iptables-save > /etc/iptables/rules.v4
   when: iptables_check.rc == 0
 
-# Fallback to ufw if iptables missing
-- name: Allow RDP via UFW (fallback)
+- name: Allow RDP via UFW fallback
   ufw:
     rule: allow
     port: '3389'
@@ -130,52 +153,62 @@
     - ufw_check.rc == 0
 
 # --------------------------------------------------
-# Ensure XRDP port is correct
+# FAIL2BAN CONFIGURATION
 # --------------------------------------------------
-- name: Ensure XRDP uses port 3389
-  lineinfile:
-    path: /etc/xrdp/xrdp.ini
-    regexp: '^port='
-    line: 'port=3389'
-  notify: Restart xrdp
-#
-#
-# Perfect — here’s a clean, production-ready Ansible role that does exactly what you asked:
-# ✅ Prefers iptables, but detects what exists
-# ✅ Removes GNOME if installed (to avoid conflicts / unnecessary weight)
-# ✅ Installs xrdp + XFCE
-# ✅ Configures session properly
-# ✅ Opens firewall using iptables (with fallback)
-# ✅ Keeps everything idempotent and safe
-#
-# Added security
-- name: Disable root login via XRDP
-  lineinfile:
-    path: /etc/pam.d/xrdp-sesman
-    line: "auth required pam_succeed_if.so user != root"
-    create: yes
-#
-- name: Block root login via XRDP
-  lineinfile:
-    path: /etc/pam.d/xrdp-sesman
-    insertafter: '^auth'
-    line: "auth required pam_succeed_if.so user != root"
-#
-#
-# sudo systemctl restart xrdp
-# sudo passwd -l root
-#
-- name: Allow only specific users
+- name: Create fail2ban jail.local
   copy:
-    dest: /etc/security/access.conf
+    dest: /etc/fail2ban/jail.local
+    mode: '0644'
     content: |
-      + : ibrahim : ALL
-      - : ALL : ALL
+      [DEFAULT]
+      bantime = 1h
+      findtime = 10m
+      maxretry = 5
+      backend = systemd
+
+      [xrdp]
+      enabled = true
+      port = 3389
+      filter = xrdp
+      logpath = /var/log/xrdp.log
+      maxretry = 5
+  notify: Restart fail2ban
+
+# --------------------------------------------------
+# Create XRDP fail2ban filter
+# --------------------------------------------------
+- name: Create xrdp filter
+  copy:
+    dest: /etc/fail2ban/filter.d/xrdp.conf
+    mode: '0644'
+    content: |
+      [Definition]
+      failregex = .*authentication failure.*user=.* from <HOST>.*
+      ignoreregex =
+  notify: Restart fail2ban
+#
+#
+# # checks
+# fail2ban-client status
+# fail2ban-client status xrdp
+# fail2ban-client status xrdp
+# passwd -S root  # expect root L ...
+
+
 # #
-# For a production server:
-# ✔ Disable root login ✅
-# ✔ Use a normal user ✅
-# ✔ Use strong password ✅
-# ✔ Add Fail2ban ✅
-# ✔ Restrict IP access (if possible) ✅
+# If you want next-level security, I can add:
+# ✅ Auto-ban after 3 tries
+# ✅ Permanent bans for repeat offenders
+# ✅ GeoIP blocking (block entire countries)
+# ✅ VPN-only RDP access
+# ✅ Port randomization
+
+# Your server now:
+# ✅ Runs XRDP + XFCE
+# ✅ Works headless
+# ✅ Blocks brute-force attacks
+# ✅ Prevents root login
+# ✅ Uses iptables preferentially
+# ✅ Is production-hardened
 # #
+# netdata continues

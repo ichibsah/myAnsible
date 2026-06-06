@@ -1,0 +1,85 @@
+# --------------------------------------------------
+# Install Netdata (monitoring dashboard)
+# --------------------------------------------------
+- name: Install Netdata dependencies
+  apt:
+    name:
+      - curl
+      - ca-certificates
+    state: present
+
+- name: Install Netdata
+  shell: |
+    bash <(curl -Ss https://my-netdata.io/kickstart.sh) --dont-wait
+  args:
+    executable: /bin/bash
+  register: netdata_install
+  changed_when: "'already installed' not in netdata_install.stdout"
+
+# --------------------------------------------------
+# Ensure Netdata is running
+# --------------------------------------------------
+- name: Enable and start Netdata
+  systemd:
+    name: netdata
+    enabled: yes
+    state: started
+
+# --------------------------------------------------
+# Open Netdata port (19999)
+# --------------------------------------------------
+- name: Allow Netdata via iptables
+  shell: |
+    iptables -C INPUT -p tcp --dport 19999 -j ACCEPT || \
+    iptables -A INPUT -p tcp --dport 19999 -j ACCEPT
+  when: iptables_check.rc == 0
+
+- name: Save iptables rules (Netdata)
+  shell: |
+    iptables-save > /etc/iptables/rules.v4
+  when: iptables_check.rc == 0
+
+# --------------------------------------------------
+# Fail2ban Monitoring Command Helper
+# --------------------------------------------------
+- name: Create fail2ban status script
+  copy:
+    dest: /usr/local/bin/fail2ban-status
+    mode: '0755'
+    content: |
+      #!/bin/bash
+      echo "=== Fail2ban Status ==="
+      fail2ban-client status xrdp
+      echo ""
+      echo "=== Banned IPs ==="
+      fail2ban-client status xrdp | grep "Banned IP list"
+
+# --------------------------------------------------
+# XRDP Log helper
+# --------------------------------------------------
+- name: Create XRDP log viewer
+  copy:
+    dest: /usr/local/bin/xrdp-logs
+    mode: '0755'
+    content: |
+      #!/bin/bash
+      echo "=== XRDP LOG ==="
+      tail -n 50 /var/log/xrdp.log
+      echo ""
+      echo "=== XRDP SESSIONS ==="
+      who
+# #
+# # http://YOUR_SERVER_IP:19999
+# - name: Restrict Netdata access
+#   shell: |
+#     iptables -A INPUT -p tcp --dport 19999 -s YOUR.IP.ADDR -j ACCEPT
+#     iptables -A INPUT -p tcp --dport 19999 -j DROP
+
+# #Check XRDP log live
+# xrdp-logs
+
+# # Check fail2ban bans
+# fail2ban-status
+
+# #Watch logs live
+# journalctl -u xrdp -f

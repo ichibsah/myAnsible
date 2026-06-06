@@ -198,7 +198,16 @@
 - name: Job 25.3 | import task xrdp
   ansible.builtin.import_tasks:
     #file: xrdp.yml
-    file: xrdp1.2.yml
+    file: xrdp1.3.yml
+  when: xrdp
+  tags:
+#   - test
+    - xrdp
+#
+- name: Job 25.3 | import task xrdp-netdata
+  ansible.builtin.import_tasks:
+    #file: xrdp.yml
+    file: xrdp-netdata.yml
   when: xrdp
   tags:
 #   - test

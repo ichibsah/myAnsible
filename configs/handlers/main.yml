@@ -63,6 +63,11 @@
   systemd:
     name: xrdp
     state: restarted
+
+- name: Restart fail2ban
+  systemd:
+    name: fail2ban
+    state: restarted
 #
 #
 #
