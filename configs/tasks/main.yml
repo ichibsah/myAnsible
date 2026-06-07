@@ -204,7 +204,7 @@
 #   - test
     - xrdp
 #
-- name: Job 25.3 | import task xrdp-netdata
+- name: Job 25.4 | import task xrdp-netdata
   ansible.builtin.import_tasks:
     #file: xrdp.yml
     file: xrdp-netdata.yml

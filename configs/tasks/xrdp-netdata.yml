@@ -83,3 +83,60 @@
 
 # #Watch logs live
 # journalctl -u xrdp -f
+#
+- name: Add Microsoft GPG key
+  get_url:
+    url: https://packages.microsoft.com/keys/microsoft.asc
+    dest: /etc/apt/keyrings/microsoft.asc
+    mode: '0644'
+
+- name: Add VS Code repo
+  copy:
+    dest: /etc/apt/sources.list.d/vscode.list
+    content: |
+      deb [arch=amd64 signed-by=/etc/apt/keyrings/microsoft.asc] https://packages.microsoft.com/repos/code stable main
+
+- name: Install VS Code
+  apt:
+    name: code
+    update_cache: yes
+    state: present
+
+#
+- name: Download Teams package
+  get_url:
+    url: https://go.microsoft.com/fwlink/p/?LinkID=2112886
+    dest: /tmp/teams.deb
+
+- name: Install Teams
+  apt:
+    deb: /tmp/teams.deb
+
+#
+- name: Install Chrome dependencies
+  apt:
+    name:
+      - wget
+      - gnupg
+    state: present
+
+- name: Add Google Chrome key
+  shell: |
+    mkdir -p /etc/apt/keyrings
+    wget -qO- https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /etc/apt/keyrings/google.gpg
+  args:
+    creates: /etc/apt/keyrings/google.gpg
+
+- name: Add Chrome repo
+  copy:
+    dest: /etc/apt/sources.list.d/google-chrome.list
+    content: |
+      deb [arch=amd64 signed-by=/etc/apt/keyrings/google.gpg] http://dl.google.com/linux/chrome/deb/ stable main
+
+- name: Install Google Chrome
+  apt:
+    name: google-chrome-stable
+    update_cache: yes
+    state: present
+
+#
