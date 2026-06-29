@@ -139,22 +139,11 @@ mkdir -p /usr/local/psa/admin/conf/templates/custom/postfix
 cp /usr/local/psa/admin/conf/templates/default/postfix/main.cf \
    /usr/local/psa/admin/conf/templates/custom/postfix/main.cf
    
-#Create the script:
-nano /usr/local/bin/fix-postfix.sh
+#see fix-postfix.sh for more details
 
-#paste
-   
-#!/bin/bash
+#test run
+postconf | grep smtpd_recipient_restrictions
 
-postconf -e "smtpd_delay_reject = yes"
-postconf -e "smtpd_recipient_restrictions = reject_non_fqdn_recipient, reject_unknown_recipient_domain, reject_unlisted_recipient, reject_unknown_sender_domain, reject_non_fqdn_sender, reject_rbl_client zen.spamhaus.org, reject_rbl_client bl.spamcop.net, permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination"
-postconf -e "smtpd_client_restrictions = permit_mynetworks, permit_sasl_authenticated, reject_rbl_client zen.spamhaus.org"
-postconf -e "smtpd_client_message_rate_limit = 100"
-postconf -e "smtpd_client_connection_rate_limit = 30"
-postconf -e "smtpd_client_connection_count_limit = 10"
-postconf -e "unknown_local_recipient_reject_code = 550"
-
-systemctl restart postfix
 
 #Delete ALL deferred mail:
 postsuper -d ALL deferred
@@ -168,12 +157,12 @@ postmap -q random123@opendotsolutions.com hash:/var/spool/postfix/plesk/vmailbox
 
 
 #/**/ Method A: Use telnet (best test)
-telnet your-server-ip 25
+telnet 85.215.157.19 25
 EHLO test.com
 MAIL FROM:<test@gmail.com>
 RCPT TO:<doesnotexist@opendotsolutions.com>
 /**/
-
+expected results: 550 5.1.1 Recipient address rejected
 
 
 #Add a Plesk event handler
