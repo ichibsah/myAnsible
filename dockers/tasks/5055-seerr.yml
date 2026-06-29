@@ -1,0 +1,72 @@
+# Example defaults (adjust as needed)
+# vars:
+#   seerr_image_name: "ghcr.io/seerr-team/seerr"
+#   seerr_image_tag: "latest"
+#   seerr_image_full: "{{ seerr_image_name }}:{{ seerr_image_tag }}"
+#   seerr_container_name: "seerr"
+#   seerr_timezone: "Asia/Tashkent"
+#   seerr_config_dir: "/opt/docker/seerr/config"
+
+- name: Job 00 | Pull Seerr image (force to check updates)
+  community.docker.docker_image:
+    name: "{{ seerr_image_full | default('ghcr.io/seerr-team/seerr:latest') }}"
+    source: pull
+    force_source: true
+  register: seerr_image_pull
+
+- name: Check if Seerr container exists
+  community.docker.docker_container_info:
+    name: "{{ seerr_container_name | default('seerr') }}"
+  register: seerr_ct_info
+
+- name: Stop & remove Seerr container if image was updated
+  community.docker.docker_container:
+    name: "{{ seerr_container_name | default('seerr') }}"
+    state: absent
+    force_kill: true
+    container_default_behavior: compatibility
+  when:
+    - seerr_image_pull.changed
+    - seerr_ct_info.exists | default(false)
+
+- name: Prune old/dangling images when image was updated
+  community.docker.docker_prune:
+    images: true
+    images_filters:
+      dangling: true
+  when:
+    - seerr_image_pull.changed
+
+- name: Job 00 | Deploy Seerr (conditional recreate only if image updated)
+  community.docker.docker_compose:
+    project_name: Seerr
+    recreate: "{{ 'always' if seerr_image_pull.changed else 'never' }}"
+    pull: policy
+    definition:
+      version: '3.9'
+      services:
+        seerr:
+          image: "{{ seerr_image_full | default('ghcr.io/seerr-team/seerr:latest') }}"
+          container_name: "{{ seerr_container_name | default('seerr') }}"
+          init: true
+          ports:
+            - "5055:5055"
+          restart: unless-stopped
+          environment:
+            - LOG_LEVEL=debug
+            - TZ={{ seerr_timezone | default('Asia/Tashkent') }}
+            - PORT=5055
+          healthcheck:
+            test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:5055/api/v1/settings/public || exit 1"]
+            start_period: 20s
+            timeout: 3s
+            interval: 15s
+            retries: 3
+          volumes:
+            - "{{ seerr_config_dir | default('/opt/docker/seerr/config') }}:/app/config"
+  register: seerr_compose_out
+
+- name: Verify that Seerr is running
+  ansible.builtin.assert:
+    that:
+      - "seerr_compose_out.services.seerr.{{ seerr_container_name | default('seerr') }}.state.running"
