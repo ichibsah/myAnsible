@@ -165,3 +165,5 @@ gnome_rdp_cert_org: "DK Enterprise"
 gnome_rdp_cert_unit: "IT"
 gnome_rdp_cert_cn: "{{ inventory_hostname }}"
 gnome_rdp_cert_email: "admin@localhost"
+#
+postfix = false               # Install and configure Postfix

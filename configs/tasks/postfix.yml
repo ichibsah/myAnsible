@@ -1,0 +1,60 @@
+---
+# Postfix hardening and fixes derived from troubleshooting session
+
+- name: Configure Postfix core settings
+  command: >-
+    postconf -e {{ item }}
+  loop:
+    - "smtpd_delay_reject = yes"
+    - "unknown_local_recipient_reject_code = 550"
+    - "smtpd_reject_unlisted_recipient = yes"
+    - "mynetworks = 127.0.0.0/8 [::1]/128"
+    - "smtpd_relay_restrictions = permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination"
+    - "smtpd_recipient_restrictions = permit_mynetworks, permit_sasl_authenticated, reject_non_fqdn_recipient, reject_unknown_recipient_domain, reject_unlisted_recipient, reject_unknown_sender_domain, reject_non_fqdn_sender, reject_rbl_client zen.spamhaus.org, reject_rbl_client bl.spamcop.net, reject_rbl_client b.barracudacentral.org, reject_rhsbl_reverse_client dbl.spamhaus.org, reject_rhsbl_sender dbl.spamhaus.org, reject_unauth_destination"
+    - "smtpd_client_restrictions = permit_mynetworks, reject_unknown_client_hostname"
+    - "smtpd_helo_required = yes"
+    - "smtpd_helo_restrictions = reject_invalid_helo_hostname"
+    - "smtpd_sender_restrictions = reject_non_fqdn_sender, reject_unknown_sender_domain"
+    - "smtpd_client_message_rate_limit = 100"
+    - "smtpd_client_connection_rate_limit = 30"
+    - "smtpd_client_connection_count_limit = 10"
+    - "header_checks = regexp:/etc/postfix/header_checks"
+  notify: restart postfix
+
+- name: Sync Postfix chroot hosts file
+  copy:
+    src: /etc/hosts
+    dest: /var/spool/postfix/etc/hosts
+    remote_src: true
+  notify: reload postfix
+
+- name: Deploy header_checks
+  copy:
+    dest: /etc/postfix/header_checks
+    content: |
+      /Subject:.*FedEx.*delay/ REJECT phishing attempt
+  notify: reload postfix
+
+- name: Create Fail2Ban postfix-auth filter
+  copy:
+    dest: /etc/fail2ban/filter.d/postfix-auth.local
+    content: |
+      [Definition]
+      failregex = .*postfix/smtpd\[\d+\]: warning: .*?\[<HOST>\]: SASL .* authentication failed
+      ignoreregex =
+  notify: reload fail2ban
+
+- name: Configure Fail2Ban postfix-auth jail
+  copy:
+    dest: /etc/fail2ban/jail.d/postfix.conf
+    content: |
+      [postfix-auth]
+      enabled = true
+      port = smtp,ssmtp,submission
+      filter = postfix-auth
+      logpath = /var/log/maillog
+      maxretry = 2
+      findtime = 600
+      bantime = 604800
+      backend = auto
+  notify: reload fail2ban

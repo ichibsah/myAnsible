@@ -1,0 +1,15 @@
+smtpd_recipient_restrictions =
+    reject_non_fqdn_recipient,
+    reject_unknown_recipient_domain,
+    reject_unlisted_recipient,
+    reject_unknown_sender_domain,
+    reject_non_fqdn_sender,
+    reject_rbl_client zen.spamhaus.org,
+    reject_rbl_client bl.spamcop.net,
+    reject_rbl_client b.barracudacentral.org,
+    reject_rbl_client dnsbl.sorbs.net,
+    reject_rhsbl_reverse_client dbl.spamhaus.org,
+    reject_rhsbl_sender dbl.spamhaus.org,
+    permit_mynetworks,
+    permit_sasl_authenticated,
+    reject_unauth_destination

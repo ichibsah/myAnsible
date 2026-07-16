@@ -42,6 +42,7 @@ multitail -e sasl_username= "/var/log/maillog" -e smtpd "/var/log/maillog"
 
 
 multitail -e Login "/var/log/maillog" -e dovecot "/var/log/maillog" -e smtpd "/var/log/maillog" "/var/log/auth.log"
+multitail -e auth "/var/log/maillog" -e dovecot "/var/log/maillog" -e postfix "/var/log/maillog"
 
 multitail -e pam_unix "/var/log/auth.log" -e invalid "/var/log/auth.log" -e ssh "/var/log/auth.log"
 

@@ -69,6 +69,22 @@
     name: fail2ban
     state: restarted
 #
+- name: reload postfix
+  service:
+    name: postfix
+    state: reloaded
+
+- name: restart postfix
+  service:
+    name: postfix
+    state: restarted
+
+- name: reload fail2ban
+  service:
+    name: fail2ban
+    state: reloaded
+
+
 #
 #
 # https://serverfault.com/questions/796067/is-it-possible-to-notify-a-group-of-services-instead-of-individual-in-ansible
