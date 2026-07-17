@@ -83,6 +83,10 @@
   service:
     name: fail2ban
     state: reloaded
+#
+- name: run postfix fix script
+  command: /usr/local/bin/fix-postfix.sh
+
 
 
 #

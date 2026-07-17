@@ -5,61 +5,60 @@
     file: anydesk.yml
 #
 - name: Job 05 | Copy root folder to target host that matches "ansible_hostname"
-  copy:
-    src: "files/{{ansible_hostname}}/root"
+  ansible.builtin.copy:
+    src: "files/{{ ansible_hostname }}/root"
     dest: "/"
     owner: root
     group: root
-    mode: 0700
+    mode: '0700'
   when: ansible_hostname != 'virthost01'
 #
 - name: Job 05.1 | Copy global/etc to etc on each linux server
-  copy:
+  ansible.builtin.copy:
     src: "files/global/etc/"
     dest: "/etc/"
     owner: root
     group: root
-    mode: 0700
+    mode: '0700'
   when: ansible_os_family == 'Debian'
 #
 - name: Job 06 | import task bind
   ansible.builtin.import_tasks:
     file: bind.yml
-  #when: apt_host_pckg_lst | contains bind9
-  tags: 
+#  when: apt_host_pckg_lst | contains bind9
+  tags:
     - dns
 
 - name: Job 07.01 | Run preflight safety checks
-  import_tasks: interfaces_preflight.yml
+  ansible.builtin.import_tasks:
+    file: interfaces_preflight.yml
   when: network_interfaces_check
   tags:
     - preflight
-    #- test
-#  
+#    - test
+#
 - name: Job 07.02 | import task interfaces
   ansible.builtin.import_tasks:
     file: interfaces.yml
   when: network_interfaces_check
   tags:
     - interfaces
-    #- test
+#    - test
 #
 - name: Job 08 | import task symlink
   ansible.builtin.import_tasks:
     file: symlink.yml
-  #when: apt_host_pckg_lst | contains bind9
   tags:
     - symlink
-    #- test
+#   - test
 #
 - name: Job 09 | import task bashrc
   ansible.builtin.import_tasks:
     file: bashrc.yml
-  #when: apt_host_pckg_lst | contains bind9
   tags:
     - localhost
     - bashrc
-    #- test
+#   - test
 #
 - name: Job 10 | import task dhcp
   ansible.builtin.import_tasks:
@@ -132,9 +131,9 @@
 - name: Job 19 | import task healthcheck_io_v2
   ansible.builtin.import_tasks:
     file: healthcheck_io_v2.yml
-  #when: start_rsync and paused
+#  when: start_rsync and paused
   tags:
-    #- test
+#    - test
     - healthcheck
 #
 - name: Job 20 | import task getflix_cronjob
@@ -142,7 +141,7 @@
     file: getflix_cronjob.yml
   when: getflix_cronjob
   tags:
-    #- test
+#    - test
     - getflix_cronjob
 #
 # - name: Job 21 | import task odoo_keep_alive
@@ -156,9 +155,9 @@
 - name: Job 22 | import task wol
   ansible.builtin.import_tasks:
     file: wol.yml
-  #when: odoo_keep_alive
+#  when: odoo_keep_alive
   tags:
-    #- test
+#   - test
     - wol
 #
 - name: Job 23 | import task teams
@@ -166,7 +165,7 @@
     file: teams.yml
   when: teams
   tags:
-    #- test
+#    - test
     - teams
 #
 - name: Job 24 | import task vscode
@@ -180,7 +179,6 @@
 - name: Job 25 | import task gnomerdp
   ansible.builtin.import_tasks:
     file: gnomerdp.yml
-    #file: gnomerdpv1.2.yml
   when: gnomerdp
   tags:
 #   - test
@@ -188,7 +186,6 @@
 #
 - name: Job 25.1 | import task gnomerdp
   ansible.builtin.import_tasks:
-    #file: gnomerdp.yml
     file: gnomerdpv1.2.yml
   when: gnomerdp
   tags:
@@ -197,7 +194,6 @@
 #
 - name: Job 25.3 | import task xrdp
   ansible.builtin.import_tasks:
-    #file: xrdp.yml
     file: xrdp1.3.yml
   when: xrdp
   tags:
@@ -206,7 +202,7 @@
 #
 - name: Job 25.4 | import task xrdp-netdata
   ansible.builtin.import_tasks:
-    #file: xrdp.yml
+#    file: xrdp.yml
     file: xrdp-netdata.yml
   when: xrdp
   tags:
@@ -219,8 +215,18 @@
     file: docker.yml
   when: docker3
   tags:
-    - test
+#    - test
     - docker
+#
+#
+- name: Job 27 | import task postfix
+  ansible.builtin.import_tasks:
+    # file: gnomerdp.yml
+    file: postfix.yml
+  when: postfix
+  tags:
+    #- test
+    - postfix
 #
 #
 # - name: Job 20 | import task accesswebpages

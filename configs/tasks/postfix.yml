@@ -58,3 +58,32 @@
       bantime = 604800
       backend = auto
   notify: reload fail2ban
+#
+- name: Install postfix hardening script
+  copy:
+    src: postfix/fix-postfix.sh
+    dest: /usr/local/bin/fix-postfix.sh
+    owner: root
+    group: root
+    mode: '0755'
+  notify: run postfix fix script
+
+- name: Install header_checks
+  copy:
+    src: postfix/header_checks
+    dest: /etc/postfix/header_checks
+    owner: root
+    group: root
+    mode: '0644'
+  notify: run postfix fix script
+
+- name: Create Plesk event handler
+  command: >-
+    plesk bin event_handler --create
+    -event mail_management_status_update
+    -priority 100
+    -user root
+    -command /usr/local/bin/fix-postfix.sh
+  register: plesk_handler
+  failed_when: false
+  changed_when: "'already exists' not in (plesk_handler.stderr | default(''))"
