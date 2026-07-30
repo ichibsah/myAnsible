@@ -246,3 +246,22 @@ submission inet n       -       y       -       -       smtpd
 
 smtpd_sasl_security_options = noanonymous
 
+#
+grep "154.161.175.6" /var/log/maillog | tail -100
+whois 154.161.175.6
+grep "154.161.175.6" /var/log/maillog | tail -50
+
+grep "154.161.175.6" /var/log/maillog | tail -100
+whois 154.161.175.6 | head -30
+
+grep "info@alphablogistics.com" /var/log/maillog | tail -50
+grep "154.161.175.6" /var/log/maillog | grep "auth failed\|Aborted login\|Disconnected"
+
+
+# /**/ create swap file
+fallocate -l 4G /swapfile
+chmod 600 /swapfile
+mkswap /swapfile
+swapon /swapfile
+echo '/swapfile none swap sw 0 0' >> /etc/fstab
+

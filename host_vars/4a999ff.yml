@@ -84,3 +84,5 @@ localusers:
     local: True
     hosts: gh-dev-xl
     bashrc: /home/ibrahim/sandbox/myAnsible/configs/files/home/ibrahim/.bashrc  
+#
+postfix: true               # Install and configure Postfix

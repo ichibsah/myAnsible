@@ -3,7 +3,7 @@
   hosts: allservers
   gather_facts: true
   ignore_errors: true
-  ignore_unreachable: true
+  ignore_unreachable: false
   # remote_user: root
   remote_user: ibrahim
   become: true
@@ -14,7 +14,7 @@
 # - name: HOSTNAME | Initialisation - LOCALHOST
 #   hosts: local
 #   ignore_errors: true
-#   ignore_unreachable: true
+#   ignore_unreachable: false
 #   connection: local
 #   # remote_user: root
 #   remote_user: ibrahim

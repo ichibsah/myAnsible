@@ -3,7 +3,7 @@
   hosts: allservers
   gather_facts: true
   ignore_errors: true
-  ignore_unreachable: true
+  ignore_unreachable: false
   remote_user: ibrahim
   #become: false
   become: true
@@ -13,7 +13,7 @@
 # - name: BASHRC | Initialisation - LOCALHOST
 #   hosts: local
 #   ignore_errors: true
-#   ignore_unreachable: true
+#   ignore_unreachable: false
 #   connection: local
 #   remote_user: ibrahim
 #   become: false

@@ -225,7 +225,7 @@
     file: postfix.yml
   when: postfix
   tags:
-    #- test
+    - test
     - postfix
 #
 #

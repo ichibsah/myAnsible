@@ -3,7 +3,7 @@
   hosts: localhost
   gather_facts: true
   connection: local
-  ignore_errors: false
+  ignore_errors: true
   ignore_unreachable: false
   # remote_user: root
   # remote_user: ibrahim

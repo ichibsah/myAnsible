@@ -10,8 +10,8 @@
   #gathering: smart #ERROR! 'gathering' is not a valid attribute for a Play
 #
   gather_facts: True
-  ##ignore_errors: True
-  ##ignore_unreachable: true
+  ##ignore_errors: true
+  ##ignore_unreachable: false
 #
   #become_method: runas 
   #become_user: adminqit
@@ -43,7 +43,7 @@
 # - name: PROVISIONS | First time Initialisation - LOCALHOST
 #   hosts: local
 #   ignore_errors: true
-#   ignore_unreachable: true
+#   ignore_unreachable: false
 #   connection: local
 #   # remote_user: root
 #   remote_user: ibrahim
