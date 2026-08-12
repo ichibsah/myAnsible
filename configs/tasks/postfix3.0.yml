@@ -3,8 +3,11 @@
 # Postfix hardening and fixes derived from troubleshooting session
 
 - name: Configure Postfix core settings
-  command: >-
-    postconf -e {{ item }}
+  command:
+    argv:
+      - postconf
+      - -e
+      - "{{ item }}"
   loop:
     - "smtpd_delay_reject = yes"
     - "unknown_local_recipient_reject_code = 550"

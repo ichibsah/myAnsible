@@ -12,7 +12,8 @@ echo "Logging ansible output to $LOGFILE"
 
 TAGS=$(IFS=,; echo "$*")
 
-ansible-playbook --tags "$TAGS" -v --limit '!gh-servers,!localhost' run-main.yml 2>&1 | tee -a "$LOGFILE"
+#ansible-playbook --tags "$TAGS" -v --limit '!gh-servers,!localhost' run-main.yml 2>&1 | tee -a "$LOGFILE"
+ansible-playbook --tags "$TAGS" -v --limit '!gh-servers,!localhost' run-main.yml
 
 #ansible-playbook --tag $1 $1 -v --limit '!gh-servers !localhost' run-main.yml 2>&1 | tee -a "$LOGFILE" # works
 
