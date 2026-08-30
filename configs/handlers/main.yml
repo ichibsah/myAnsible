@@ -87,6 +87,20 @@
 - name: run postfix fix script
   command: /usr/local/bin/fix-postfix.sh
 
+#/***/
+- name: Restart KRdp user service
+  become: true
+  become_user: "{{ krdp_user }}"
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ krdp_uid }}"
+    DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/{{ krdp_uid }}/bus"
+  ansible.builtin.systemd:
+    name: "{{ krdp_service_name }}"
+    state: restarted
+    enabled: "{{ krdp_enable_service }}"
+    scope: user
+    daemon_reload: true
+#/***/
 
 
 #

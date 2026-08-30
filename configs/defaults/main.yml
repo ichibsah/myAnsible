@@ -167,3 +167,37 @@ gnome_rdp_cert_cn: "{{ inventory_hostname }}"
 gnome_rdp_cert_email: "admin@localhost"
 #
 postfix: false               # Install and configure Postfix
+#
+krdp: false   
+#
+#/**/
+# Desktop user whose active Plasma session will be shared.
+krdp_user: "{{ ansible_user }}"
+# KRdp listens on TCP port 3389 by default.
+krdp_port: 3389
+# Set this to false if you manage the firewall separately.
+krdp_manage_firewall: true
+# Restrict access to your LAN instead of allowing all sources.
+# Example: "192.168.1.0/24"
+# Set to "" to allow TCP/3389 from any source accepted by the firewall.
+krdp_firewall_source: ""
+# Automatically enable and start the user service.
+krdp_enable_service: true
+# Generate a new certificate if one does not exist.
+krdp_generate_certificate: true
+# Certificate validity period.
+krdp_certificate_days: 365
+# Package names.
+krdp_packages:
+  - krdp
+  - systemsettings
+  - openssl
+# KRdp user-service name.
+krdp_service_name: app-org.kde.krdpserver.service
+# KRdp configuration file.
+krdp_config_file: "{{ krdp_user_home }}/.config/krdpserverrc"
+# Certificate and private-key locations.
+krdp_data_directory: "{{ krdp_user_home }}/.local/share/krdpserver"
+krdp_certificate_file: "{{ krdp_data_directory }}/krdp.crt"
+krdp_key_file: "{{ krdp_data_directory }}/krdp.key"
+#/**/

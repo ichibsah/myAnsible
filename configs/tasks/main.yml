@@ -228,6 +228,14 @@
     - test
     - postfix
 #
+- name: Job 28 | import task krdpa
+  ansible.builtin.import_tasks:
+    file: krdp.yml
+  when: krdp
+  tags:
+#   - test
+    - krdp
+#
 #
 # - name: Job 20 | import task accesswebpages
 #   ansible.builtin.import_tasks:

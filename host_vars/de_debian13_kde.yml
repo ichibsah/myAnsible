@@ -73,7 +73,10 @@ dsbl_dhcpvsx_regx: INTERFACESv4='eno1'          # text that should change goes h
 copy_iptables: true                                   # Copy iptables to /root folder
 strt_myiptbls_at_boot: true
 #
-gnomerdp: true                                # Install and configure GNOME Remote Desktop (RDP)
+gnomerdp: false                                # Install and configure GNOME Remote Desktop (RDP)
+#
+krdp: true                                      # Install and configure KDE Remote Desktop (KRDP)
+#
 #
 # interfaces:
 #   - iface: eth1

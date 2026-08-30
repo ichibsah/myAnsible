@@ -1,0 +1,169 @@
+---
+- name: Verify that the target is Debian
+  ansible.builtin.assert:
+    that:
+      - ansible_facts.os_family == "Debian"
+    fail_msg: "This role supports Debian-based systems only."
+
+- name: Verify that the target is Debian 13 or newer
+  ansible.builtin.assert:
+    that:
+      - ansible_facts.distribution_major_version | int >= 13
+    fail_msg: >
+      KRdp packaging is expected on Debian 13 or newer.
+      Debian 12 may require an upgrade or a separately maintained package.
+
+- name: Look up KRdp desktop user
+  ansible.builtin.getent:
+    database: passwd
+    key: "{{ krdp_user }}"
+
+- name: Set KRdp user facts
+  ansible.builtin.set_fact:
+    krdp_uid: "{{ getent_passwd[krdp_user][1] }}"
+    krdp_user_home: "{{ getent_passwd[krdp_user][4] }}"
+
+- name: Install KRdp packages
+  ansible.builtin.apt:
+    name: "{{ krdp_packages }}"
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Check the desktop session type
+  become: true
+  become_user: "{{ krdp_user }}"
+  ansible.builtin.shell: |
+    if [ -r "/proc/{{ krdp_uid }}/environ" ]; then
+      tr '\0' '\n' < "/proc/{{ krdp_uid }}/environ" |
+        awk -F= '$1 == "XDG_SESSION_TYPE" { print $2; exit }'
+    fi
+  args:
+    executable: /bin/bash
+  register: krdp_session_type
+  changed_when: false
+  failed_when: false
+
+- name: Warn when the active session is not Wayland
+  ansible.builtin.debug:
+    msg: >
+      KRdp is designed for a KDE Plasma Wayland session.
+      Detected session type: {{ krdp_session_type.stdout | default('unknown') | trim }}
+  when: (krdp_session_type.stdout | default('') | trim) != "wayland"
+
+- name: Create KRdp data directory
+  become: true
+  become_user: "{{ krdp_user }}"
+  ansible.builtin.file:
+    path: "{{ krdp_data_directory }}"
+    state: directory
+    owner: "{{ krdp_user }}"
+    group: "{{ krdp_user }}"
+    mode: "0700"
+
+- name: Generate KRdp private key and certificate
+  become: true
+  become_user: "{{ krdp_user }}"
+  ansible.builtin.command:
+    cmd: >
+      openssl req -nodes -new -x509
+      -keyout {{ krdp_key_file }}
+      -out {{ krdp_certificate_file }}
+      -days {{ krdp_certificate_days }}
+      -subj /CN={{ ansible_hostname }}
+  args:
+    creates: "{{ krdp_certificate_file }}"
+  when: krdp_generate_certificate
+
+- name: Set private-key permissions
+  ansible.builtin.file:
+    path: "{{ krdp_key_file }}"
+    owner: "{{ krdp_user }}"
+    group: "{{ krdp_user }}"
+    mode: "0600"
+  when: krdp_generate_certificate
+
+- name: Set certificate permissions
+  ansible.builtin.file:
+    path: "{{ krdp_certificate_file }}"
+    owner: "{{ krdp_user }}"
+    group: "{{ krdp_user }}"
+    mode: "0644"
+  when: krdp_generate_certificate
+
+- name: Configure KRdp
+  become: true
+  become_user: "{{ krdp_user }}"
+  ansible.builtin.template:
+    src: krdpserverrc.j2
+    dest: "{{ krdp_config_file }}"
+    owner: "{{ krdp_user }}"
+    group: "{{ krdp_user }}"
+    mode: "0600"
+  notify: Restart KRdp user service
+
+- name: Check whether the user systemd instance is available
+  become: true
+  become_user: "{{ krdp_user }}"
+  ansible.builtin.command:
+    cmd: systemctl --user is-system-running
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ krdp_uid }}"
+    DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/{{ krdp_uid }}/bus"
+  register: krdp_user_systemd
+  changed_when: false
+  failed_when: false
+
+- name: Enable and start KRdp user service
+  become: true
+  become_user: "{{ krdp_user }}"
+  ansible.builtin.systemd:
+    name: "{{ krdp_service_name }}"
+    enabled: "{{ krdp_enable_service }}"
+    state: started
+    scope: user
+    daemon_reload: true
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ krdp_uid }}"
+    DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/{{ krdp_uid }}/bus"
+  when:
+    - krdp_enable_service
+    - krdp_user_systemd.rc == 0
+  notify: Restart KRdp user service
+
+- name: Install UFW
+  ansible.builtin.apt:
+    name: ufw
+    state: present
+  when:
+    - krdp_manage_firewall
+    - krdp_firewall_source | length > 0
+
+- name: Allow KRdp from the specified network
+  community.general.ufw:
+    rule: allow
+    port: "{{ krdp_port | string }}"
+    proto: tcp
+    from_ip: "{{ krdp_firewall_source }}"
+  when:
+    - krdp_manage_firewall
+    - krdp_firewall_source | length > 0
+
+- name: Allow KRdp from any permitted firewall source
+  community.general.ufw:
+    rule: allow
+    port: "{{ krdp_port | string }}"
+    proto: tcp
+  when:
+    - krdp_manage_firewall
+    - krdp_firewall_source | length == 0
+
+- name: Display post-installation instructions
+  ansible.builtin.debug:
+    msg:
+      - "KRdp has been installed for user {{ krdp_user }}."
+      - "Log into KDE Plasma using Wayland."
+      - "Open System Settings > Networking > Remote Desktop."
+      - "Set the RDP username and password there."
+      - "Connect to {{ ansible_host | default(inventory_hostname) }}:{{ krdp_port }}."
+      - "Check the service with: systemctl --user status {{ krdp_service_name }}"
