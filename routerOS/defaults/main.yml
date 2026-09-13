@@ -25,3 +25,7 @@ wifiboss_create_test_user: false
 wifiboss_test_username: "router-test"
 wifiboss_test_password: ""
 wifiboss_remove_test_user: false
+
+#
+#
+config: false

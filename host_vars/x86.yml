@@ -35,3 +35,6 @@ wifiboss_test_password: "CHANGE_THIS_TEST_PASSWORD"
 
 # Set true only when you intentionally want the role to delete the test account.
 wifiboss_remove_test_user: false
+
+#
+config: true
