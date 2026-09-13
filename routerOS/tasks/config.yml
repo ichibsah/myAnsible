@@ -1,0 +1,431 @@
+---
+- name: BACKUP - save binary backup and text export
+  community.routeros.command:
+    commands:
+      - /system backup save name=before-wifiboss-configuration
+      - /export file=before-wifiboss-configuration
+      - /file print where name~"before-wifiboss"
+  register: backup_result
+  changed_when: true
+
+- name: BACKUP - verify backup files exist
+  community.routeros.command:
+    commands:
+      - /file print where name~"before-wifiboss"
+  register: backup_check
+  changed_when: false
+  failed_when: >
+    'before-wifiboss' not in (backup_check.stdout | join(' '))
+
+- name: INTERFACES - inspect interfaces
+  community.routeros.command:
+    commands:
+      - /interface print detail
+      - /interface bridge print detail
+      - /interface list print
+  register: interface_check
+  changed_when: false
+
+- name: INTERFACES - create interface lists and members
+  community.routeros.command:
+    commands:
+      - >
+        :if ([:len [/interface list find name="WAN"]] = 0) do={
+          /interface list add name=WAN comment="Internet interface"
+        }
+      - >
+        :if ([:len [/interface list find name="LAN"]] = 0) do={
+          /interface list add name=LAN comment="Local network interfaces"
+        }
+      - >
+        :if ([:len [/interface list member find list="WAN" interface="{{ wifiboss_wan_interface }}"]] = 0) do={
+          /interface list member add list=WAN interface="{{ wifiboss_wan_interface }}"
+        }
+      - >
+        :if ([:len [/interface list member find list="LAN" interface="{{ wifiboss_lan_interface }}"]] = 0) do={
+          /interface list member add list=LAN interface="{{ wifiboss_lan_interface }}"
+        }
+      - /interface list member print
+  register: interface_config
+  changed_when: true
+  failed_when: >
+    'WAN' not in (interface_config.stdout | join(' ')) or
+    'LAN' not in (interface_config.stdout | join(' '))
+
+- name: IP ADDRESSES - configure WAN and LAN addresses
+  community.routeros.command:
+    commands:
+      - >
+        :if ([:len [/ip address find address="{{ wifiboss_wan_address }}" interface="{{ wifiboss_wan_interface }}"]] = 0) do={
+          /ip address add address="{{ wifiboss_wan_address }}" interface="{{ wifiboss_wan_interface }}" comment="WAN address"
+        }
+      - >
+        :if ([:len [/ip address find address="{{ wifiboss_lan_address }}" interface="{{ wifiboss_lan_interface }}"]] = 0) do={
+          /ip address add address="{{ wifiboss_lan_address }}" interface="{{ wifiboss_lan_interface }}" comment="LAN gateway"
+        }
+      - /ip address print detail
+  register: address_config
+  changed_when: true
+  failed_when: >
+    wifiboss_wan_address not in (address_config.stdout | join(' ')) or
+    wifiboss_lan_address not in (address_config.stdout | join(' '))
+
+- name: ROUTING - configure default route
+  community.routeros.command:
+    commands:
+      - >
+        :if ([:len [/ip route find dst-address="0.0.0.0/0" gateway="{{ wifiboss_gateway }}"]] = 0) do={
+          /ip route add dst-address=0.0.0.0/0 gateway="{{ wifiboss_gateway }}" distance=1 comment="WAN default route"
+        }
+      - /ip route print detail
+      - /ping {{ wifiboss_gateway }} interface={{ wifiboss_wan_interface }} count=4
+  register: route_check
+  changed_when: true
+  failed_when: >
+    '0.0.0.0/0' not in (route_check.stdout | join(' '))
+
+- name: DNS - configure resolver and local portal name
+  community.routeros.command:
+    commands:
+      - >
+        /ip dns set allow-remote-requests=yes
+        servers={{ wifiboss_dns_servers | join(',') }}
+        cache-size=4096KiB
+      - >
+        :if ([:len [/ip dns static find name="{{ wifiboss_hotspot_dns_name }}"]] = 0) do={
+          /ip dns static add name="{{ wifiboss_hotspot_dns_name }}" address=192.168.18.1 ttl=1h comment="HotSpot portal"
+        }
+      - /ip dns print
+      - /ip dns static print detail
+      - :put [:resolve google.com]
+      - :put [:resolve {{ wifiboss_hotspot_dns_name }}]
+  register: dns_check
+  changed_when: true
+  failed_when: >
+    wifiboss_hotspot_dns_name not in (dns_check.stdout | join(' '))
+
+- name: DHCP - create address pool
+  community.routeros.command:
+    commands:
+      - >
+        :if ([:len [/ip pool find name="{{ wifiboss_dhcp_pool }}"]] = 0) do={
+          /ip pool add name="{{ wifiboss_dhcp_pool }}" ranges="{{ wifiboss_dhcp_range }}"
+        }
+      - /ip pool print
+  register: pool_check
+  changed_when: true
+  failed_when: >
+    wifiboss_dhcp_pool not in (pool_check.stdout | join(' '))
+
+- name: DHCP - create DHCP server
+  community.routeros.command:
+    commands:
+      - >
+        :if ([:len [/ip dhcp-server find name="{{ wifiboss_dhcp_server }}"]] = 0) do={
+          /ip dhcp-server add
+          name="{{ wifiboss_dhcp_server }}"
+          interface="{{ wifiboss_lan_interface }}"
+          address-pool="{{ wifiboss_dhcp_pool }}"
+          lease-time=1h
+          disabled=no
+          comment="LAN DHCP server"
+        }
+      - >
+        :if ([:len [/ip dhcp-server network find address="192.168.18.0/24"]] = 0) do={
+          /ip dhcp-server network add
+          address=192.168.18.0/24
+          gateway=192.168.18.1
+          dns-server=192.168.18.1
+          domain="{{ wifiboss_hotspot_dns_name }}"
+          comment="LAN DHCP network"
+        }
+      - /ip dhcp-server print detail
+      - /ip dhcp-server network print detail
+  register: dhcp_check
+  changed_when: true
+  failed_when: >
+    wifiboss_dhcp_server not in (dhcp_check.stdout | join(' ')) or
+    '192.168.18.0/24' not in (dhcp_check.stdout | join(' '))
+
+- name: NAT - configure LAN masquerade
+  community.routeros.command:
+    commands:
+      - >
+        :if ([:len [/ip firewall nat find
+        chain=srcnat
+        src-address=192.168.18.0/24
+        out-interface-list=WAN
+        action=masquerade]] = 0) do={
+          /ip firewall nat add
+          chain=srcnat
+          src-address=192.168.18.0/24
+          out-interface-list=WAN
+          action=masquerade
+          comment="NAT LAN users to Internet"
+        }
+      - /ip firewall nat print detail
+  register: nat_check
+  changed_when: true
+  failed_when: >
+    'NAT LAN users to Internet' not in (nat_check.stdout | join(' '))
+
+- name: FIREWALL - configure filter rules
+  community.routeros.command:
+    commands:
+      - >
+        :if ([:len [/ip firewall filter find comment="Accept established and related input"]] = 0) do={
+          /ip firewall filter add chain=input action=accept connection-state=established,related comment="Accept established and related input"
+        }
+      - >
+        :if ([:len [/ip firewall filter find comment="Drop invalid input"]] = 0) do={
+          /ip firewall filter add chain=input action=drop connection-state=invalid comment="Drop invalid input"
+        }
+      - >
+        :if ([:len [/ip firewall filter find comment="Allow LAN DNS UDP"]] = 0) do={
+          /ip firewall filter add chain=input action=accept in-interface-list=LAN protocol=udp dst-port=53 comment="Allow LAN DNS UDP"
+        }
+      - >
+        :if ([:len [/ip firewall filter find comment="Allow LAN DNS TCP"]] = 0) do={
+          /ip firewall filter add chain=input action=accept in-interface-list=LAN protocol=tcp dst-port=53 comment="Allow LAN DNS TCP"
+        }
+      - >
+        :if ([:len [/ip firewall filter find comment="Allow LAN DHCP"]] = 0) do={
+          /ip firewall filter add chain=input action=accept in-interface-list=LAN protocol=udp dst-port=67-68 comment="Allow LAN DHCP"
+        }
+      - >
+        :if ([:len [/ip firewall filter find comment="Allow router management from LAN"]] = 0) do={
+          /ip firewall filter add chain=input action=accept in-interface-list=LAN comment="Allow router management from LAN"
+        }
+      - >
+        :if ([:len [/ip firewall filter find comment="Block unsolicited WAN input"]] = 0) do={
+          /ip firewall filter add chain=input action=drop in-interface-list=WAN comment="Block unsolicited WAN input"
+        }
+      - >
+        :if ([:len [/ip firewall filter find comment="Accept established and related forwarding"]] = 0) do={
+          /ip firewall filter add chain=forward action=accept connection-state=established,related comment="Accept established and related forwarding"
+        }
+      - >
+        :if ([:len [/ip firewall filter find comment="Drop invalid forwarding"]] = 0) do={
+          /ip firewall filter add chain=forward action=drop connection-state=invalid comment="Drop invalid forwarding"
+        }
+      - >
+        :if ([:len [/ip firewall filter find comment="Allow LAN to Internet"]] = 0) do={
+          /ip firewall filter add chain=forward action=accept in-interface-list=LAN out-interface-list=WAN comment="Allow LAN to Internet"
+        }
+      - >
+        :if ([:len [/ip firewall filter find comment="Block unsolicited WAN forwarding"]] = 0) do={
+          /ip firewall filter add chain=forward action=drop in-interface-list=WAN connection-state=new connection-nat-state=!dstnat comment="Block unsolicited WAN forwarding"
+        }
+      - >
+        :if ([:len [/ip firewall filter find comment="Drop all other forwarded traffic"]] = 0) do={
+          /ip firewall filter add chain=forward action=drop comment="Drop all other forwarded traffic"
+        }
+      - /ip firewall filter print detail
+  register: firewall_check
+  changed_when: true
+  failed_when: >
+    'Allow LAN to Internet' not in (firewall_check.stdout | join(' ')) or
+    'Block unsolicited WAN input' not in (firewall_check.stdout | join(' '))
+
+- name: CERTIFICATES - create local CA
+  community.routeros.command:
+    commands:
+      - >
+        :if ([:len [/certificate find name="wifiboss-ca"]] = 0) do={
+          /certificate add name=wifiboss-ca common-name=wifiboss-ca key-usage=key-cert-sign,crl-sign
+        }
+      - >
+        :if ([/certificate get [find name="wifiboss-ca"] fingerprint] = "") do={
+          /certificate sign wifiboss-ca name=wifiboss-ca
+        }
+      - /certificate set [find name="wifiboss-ca"] trusted=yes
+      - /certificate print detail
+  register: ca_check
+  changed_when: true
+  failed_when: "'wifiboss-ca' not in (ca_check.stdout | join(' '))"
+
+- name: CERTIFICATES - create HotSpot certificate
+  community.routeros.command:
+    commands:
+      - >
+        :if ([:len [/certificate find name="wifiboss-cert"]] = 0) do={
+          /certificate add
+          name=wifiboss-cert
+          common-name={{ wifiboss_hotspot_dns_name }}
+          subject-alt-name=DNS:{{ wifiboss_hotspot_dns_name }}
+          key-usage=tls-server
+        }
+      - >
+        :if ([/certificate get [find name="wifiboss-cert"] fingerprint] = "") do={
+          /certificate sign wifiboss-cert ca=wifiboss-ca name=wifiboss-cert
+        }
+      - /certificate print detail
+  register: cert_check
+  changed_when: true
+  failed_when: "'wifiboss-cert' not in (cert_check.stdout | join(' '))"
+
+- name: TIKMAN - optionally import WireGuard setup
+  community.routeros.command:
+    commands:
+      - >
+        /tool fetch url="{{ tikman_setup_url }}"
+        dst-path=tikman-wg-setup.rsc
+      - >
+        :if ([/file get tikman-wg-setup.rsc size] > 0) do={
+          /import file-name=tikman-wg-setup.rsc;
+          /file remove tikman-wg-setup.rsc;
+          :log info "Tikman WireGuard setup completed"
+        } else={
+          :log error "Tikman WireGuard setup failed"
+        }
+      - /interface wireguard print detail
+      - /interface wireguard peers print detail
+      - /log print where message~"Tikman|WireGuard|wireguard"
+  when: tikman_setup_url | length > 0
+  register: tikman_check
+  changed_when: true
+  failed_when: >
+    'WireGuard' not in (tikman_check.stdout | join(' ')) and
+    'wireguard' not in (tikman_check.stdout | join(' '))
+
+- name: HOTSPOT - create HotSpot profile
+  community.routeros.command:
+    commands:
+      - >
+        :if ([:len [/ip hotspot profile find name="{{ wifiboss_hotspot_profile }}"]] = 0) do={
+          /ip hotspot profile add
+          name="{{ wifiboss_hotspot_profile }}"
+          hotspot-address=192.168.18.1
+          dns-name="{{ wifiboss_hotspot_dns_name }}"
+          use-radius=yes
+          radius-accounting=yes
+          radius-interim-update=1m
+          login-by=http-chap,cookie
+          comment="WiFiBoss billing HotSpot"
+        }
+      - /ip hotspot profile print detail
+  register: hotspot_profile_check
+  changed_when: true
+  failed_when: >
+    wifiboss_hotspot_profile not in (hotspot_profile_check.stdout | join(' '))
+
+- name: HOTSPOT - create HotSpot server
+  community.routeros.command:
+    commands:
+      - >
+        :if ([:len [/ip hotspot find name="{{ wifiboss_hotspot_server }}"]] = 0) do={
+          /ip hotspot add
+          name="{{ wifiboss_hotspot_server }}"
+          interface="{{ wifiboss_lan_interface }}"
+          address-pool="{{ wifiboss_dhcp_pool }}"
+          profile="{{ wifiboss_hotspot_profile }}"
+          addresses-per-mac=1
+          disabled=no
+          comment="WiFiBoss customer HotSpot"
+        }
+      - /ip hotspot print detail
+  register: hotspot_server_check
+  changed_when: true
+  failed_when: >
+    wifiboss_hotspot_server not in (hotspot_server_check.stdout | join(' '))
+
+- name: RADIUS - configure external Tikman RADIUS
+  community.routeros.command:
+    commands:
+      - >
+        :if ([:len [/radius find address="{{ tikman_radius_server }}" service=hotspot]] = 0) do={
+          /radius add
+          address="{{ tikman_radius_server }}"
+          service=hotspot
+          secret="{{ tikman_radius_secret }}"
+          authentication-port=1812
+          accounting-port=1813
+          timeout=2s
+          comment="Tikman RADIUS"
+        }
+      - >
+        /ip hotspot profile set
+        [find name="{{ wifiboss_hotspot_profile }}"]
+        use-radius=yes
+        radius-accounting=yes
+        radius-interim-update=1m
+      - /radius print detail
+      - /log print where message~"radius|hotspot"
+  when:
+    - tikman_configure_external_radius | bool
+    - tikman_radius_server | length > 0
+    - tikman_radius_secret | length > 0
+  no_log: true
+  register: radius_check
+  changed_when: true
+  failed_when: tikman_radius_server not in (radius_check.stdout | join(' '))
+
+- name: CERTIFICATES - assign certificate to HotSpot profile
+  community.routeros.command:
+    commands:
+      - >
+        /ip hotspot profile set
+        [find name="{{ wifiboss_hotspot_profile }}"]
+        hotspot-address=192.168.18.1
+        dns-name="{{ wifiboss_hotspot_dns_name }}"
+        ssl-certificate=wifiboss-cert
+        login-by=https,http-chap,cookie
+      - /ip hotspot profile print detail
+  register: hotspot_certificate_check
+  changed_when: true
+  failed_when: "'wifiboss-cert' not in (hotspot_certificate_check.stdout | join(' '))"
+
+- name: CERTIFICATES - export CA and server certificate
+  community.routeros.command:
+    commands:
+      - /certificate export-certificate wifiboss-ca type=pem file-name=wifiboss-ca
+      - /certificate export-certificate wifiboss-cert type=der file-name=wifiboss-cert
+      - /file print where name~"wifiboss"
+  register: certificate_export_check
+  changed_when: true
+  failed_when: >
+    'wifiboss-ca' not in (certificate_export_check.stdout | join(' ')) or
+    'wifiboss-cert' not in (certificate_export_check.stdout | join(' '))
+
+- name: SERVICES - disable unused services and restrict management
+  community.routeros.command:
+    commands:
+      - /ip service disable ftp
+      - /ip service disable telnet
+      - /ip service disable www
+      - /ip service disable api
+      - /ip service disable api-ssl
+      - /ip service set winbox address=192.168.18.0/24
+      - /ip service set ssh address=192.168.18.0/24
+      - /ip service print
+  register: service_check
+  changed_when: true
+  failed_when: >
+    'winbox' not in (service_check.stdout | join(' ')) or
+    'ssh' not in (service_check.stdout | join(' '))
+
+- name: CONNECTIVITY - verify gateway, Internet, DNS, NAT, and HotSpot
+  community.routeros.command:
+    commands:
+      - /ping {{ wifiboss_gateway }} interface={{ wifiboss_wan_interface }} count=4
+      - /ping 1.1.1.1 src-address=192.168.18.1 count=4
+      - :put [:resolve wifiboss.link]
+      - /ip firewall nat print stats
+      - /ip hotspot active print
+      - /ip dhcp-server lease print
+  register: final_check
+  changed_when: false
+  failed_when: >
+    'sent=4 received=4' not in (final_check.stdout | join(' ')) and
+    'received=4' not in (final_check.stdout | join(' '))
+
+- name: FINAL - save working configuration
+  community.routeros.command:
+    commands:
+      - /system backup save name=wifiboss-working-config
+      - /export file=wifiboss-working-config
+      - /file print where name~"wifiboss-working-config"
+  register: final_backup
+  changed_when: true
+  failed_when: >
+    'wifiboss-working-config' not in (final_backup.stdout | join(' '))

@@ -1,0 +1,44 @@
+hostname_additional_hosts:
+  - ip_address: 212.227.151.179
+    hostname: de-jump.imsawadogo.com
+    hostname_short: de-jump
+  # - ip_address: 5.6.7.8
+  #   hostname: b.example.com
+  #   hostname_short: b
+  #
+#
+ansible_become_pass: "{{ deb12_01_become_pass }}"
+#
+#  ## PRVS | CONFIG  ###
+prvs_copy_home: true # Copy default user's home files in place
+prvs_root_passwd: true # update root passward
+#
+dkr_copy_def_files: no # Copy default docker files to target server
+dkr_copy_etx_files: no #  # Copy extended docker files to target host
+#
+dckr_fldr_lst: # Docker folder list that will be copied when set in the host variable
+  - { fldr: "de-jump" }
+#
+crntb_activate_cronjobs: no
+#
+#
+#  ## APT | PACKAGES INSTALL  ###
+instl_def_pckg: true # Install complete packages. A 'no' will remove it from the host (apt_def_pckg_lst)
+instl_utl_pckg: no # Install complete packages. A 'no' will remove it from the host (apt_util_lst)
+sysd_strt_srvc: true # Start services
+instl_ansbl_pckg: no # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
+instl_docker_pckg: no # Install Docker package (apt_docker_pckg_lst)
+apt_host_pckg_lst: # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
+  - fail2ban
+  - crontab
+#
+apt_hst_strt_srvc_lst: # Ensure Services are running.
+  - fail2ban
+#
+upld_fail2bn_cfg: true # upload fail2ban config file
+#
+instl_swrm_node: no # Install Docker swarm Service
+#
+addresolv: true # add cloudflare ad dns resolv address temporary to resolv.conf
+#
+instl_vctr: true

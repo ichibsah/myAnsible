@@ -1,0 +1,8 @@
+---
+- name: Configure WiFiBoss MikroTik router
+  hosts: wifiboss_router
+  gather_facts: false
+  become: false
+
+  roles:
+    - role: wifiboss_router

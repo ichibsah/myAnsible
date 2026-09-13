@@ -1,0 +1,27 @@
+---
+wifiboss_wan_interface: "WAN"
+wifiboss_lan_interface: "LAN-bridge"
+wifiboss_wan_address: "192.168.1.123/24"
+wifiboss_lan_address: "192.168.18.1/24"
+wifiboss_gateway: "192.168.1.1"
+wifiboss_dns_servers:
+  - "1.1.1.1"
+  - "8.8.8.8"
+
+wifiboss_hotspot_dns_name: "wifiboss.link"
+wifiboss_hotspot_profile: "WiFiBoss-HotSpot-Profile"
+wifiboss_hotspot_server: "WiFiBoss-HotSpot"
+
+wifiboss_dhcp_pool: "LAN-DHCP-POOL"
+wifiboss_dhcp_range: "192.168.18.10-192.168.18.200"
+wifiboss_dhcp_server: "LAN-DHCP"
+
+tikman_setup_url: ""
+tikman_configure_external_radius: false
+tikman_radius_server: ""
+tikman_radius_secret: ""
+
+wifiboss_create_test_user: false
+wifiboss_test_username: "router-test"
+wifiboss_test_password: ""
+wifiboss_remove_test_user: false

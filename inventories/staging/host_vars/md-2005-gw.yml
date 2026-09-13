@@ -1,0 +1,54 @@
+hostname_additional_hosts:
+  - ip_address: 10.3.0.254
+    hostname: md-2005-gw.md-shop.local
+    hostname_short: md-2005-gw
+  - ip_address: 192.168.0.80
+    hostname: md-2005-gw.md-shop.local
+    hostname_short: md-2005-gw
+
+  #
+# virthost01.skyline.lan:
+# ansible_connection: local  # this will overwrite any other type of connections. its needed here.
+ansible_become_pass: "{{ localhost_become_pass }}"
+#
+#  ## PRVS | CONFIG  ###
+prvs_copy_home: true # Copy default user's home files in place
+prvs_root_passwd: true # update root passward
+#
+dkr_copy_def_files: no # Copy default docker files to target server
+#
+crntb_activate_cronjobs: no
+#
+#
+#  ## APT | PACKAGES INSTALL  ###
+instl_def_pckg: true # Install complete packages. A 'no' will remove it from the host (apt_def_pckg_lst)
+instl_utl_pckg: true # Install complete packages. A 'no' will remove it from the host (apt_util_lst)
+sysd_strt_srvc: true # Start services
+instl_ansbl_pckg: true # Install ansible using PIP (pip_ansbl_pckg_lst and apt_ansbl_pckg_lst)
+instl_docker_pckg: true # Install Docker package (apt_docker_pckg_lst)
+apt_host_pckg_lst: # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
+  - bind9
+  - bind9utils
+  - bind9-doc
+  - dnsutils
+  - isc-dhcp-common
+  - isc-dhcp-server
+  - qemu-guest-agent
+# - qemu-system
+# - qemu-user-static
+pip_host_pckg_lst: # Install Host Specific PIP Packages when ansible is also installed
+
+apt_hst_strt_srvc_lst: # Ensure Host Specific Services are running.
+  - bind9
+  - isc-dhcp-server
+#
+instl_anydesk: true # install AnyDesk in this client
+#
+dsbl_dhcpvsx: true # Disable dhcp v6 in BIND9
+dsbl_dhcpvsx_regx: INTERFACESv4='ens18' # text that should change goes here eg. INTERFACESv4='ens18'
+#
+#
+interfaces:
+  - iface: eth1
+#
+strt_myiptbls_at_boot: true

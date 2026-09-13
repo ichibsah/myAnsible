@@ -1,0 +1,10 @@
+---
+# tasks file for routerOS
+- name: Job 01 | import task config
+  ansible.builtin.import_tasks:
+    file: config.yml
+  when: config
+  tags:
+#    - test
+    - config
+    

@@ -1,0 +1,121 @@
+ansible_os_family: "{{ ansible_facts.os_family | default('Debian') }}"
+#
+dmain_pstfx: .sawadogo.xyz
+#
+ansible_become_pass: "{{ ansible_become_pass }}"
+#
+dckr_bs_pth: /opt/docker
+#
+paused: false
+#
+apt_util_lst: #  # Install utilities packages
+  - ack-grep
+  - command-not-found
+  - curl
+  - dstat
+  - debconf
+  - dmidecode
+  - ethtool
+  - htop
+  - iftop
+  - iotop
+  - iperf
+  - ltrace
+  - nmap
+  - mosh
+  - mtr
+  - multitail
+  - ncdu
+  - pciutils
+  - pv
+  - smem
+  - socat
+  - sysstat
+  - tmux
+  - tree
+  - tshark
+  - whois
+  - iputils-tracepath
+  - lnav
+  - bat
+  # - cheat  # https://www.makeuseof.com/run-linux-commands-in-background/
+  - fish
+  - hstr
+  - telnetd
+  - telnet # systemctl status inetd
+#
+apt_def_pckg_lst: # Install Default Packages on All Host
+  - gpg
+  - unattended-upgrades
+  - chrony
+  - curl
+  - gnupg2
+  - software-properties-common
+  - ncdu
+  - git
+  - postfix
+  - mailutils
+  - tig
+  - net-tools
+  - rsync
+  - resolvconf
+  - bash-completion # https://github.com/cykerway/complete-alias
+  - cron
+  - net-tools
+#
+# apt_packages_list:
+# - python3-apt
+#
+# TODO: move this 3 elsewhere
+apt_ansbl_pckg_lst:
+  # - virtualenv
+  # - python3-django
+  # - python3-full
+  - ansible
+  - sshpass
+  - ansible-lint
+
+#
+pip_ansbl_pckg_lst: # Install packages using PIP for Ansible
+  - ansible
+  - passlib
+#
+apt_docker_pckg_lst: # Install packages using apt for Docker
+  - rsync
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+  - docker-compose
+  - docker-compose-plugin
+  - apt-transport-https
+  - ca-certificates
+  - python3-docker
+  - lsb-release
+  - gnupg2
+  - curl
+  - software-properties-common
+#
+deb_architecture: { "aarch64": "arm64", "x86_64": "amd64" }
+#
+pip_dckr_pckg_lst: # Install packages using PIP for Docker
+  - docker-compose
+#
+postfix_aliases: # https://github.com/Oefenweb/ansible-postfix https://github.com/geerlingguy/ansible-role-postfix
+  - user: $USER
+    alias: $USER@$HOSTNAME
+#
+apt_strt_srvc_lst: # Ensure Services are running.
+  - chronyd
+  - docker
+#
+apt_default_packages_post20:
+  - python3-apt
+#
+apt_default_packages_pre20:
+  - python-apt
+#
+apt_rmv_pckg_lst: # Remove APT package lists
+  - ansible
+#
+apt_anydsk_pckg_lst:
+  - anydesk

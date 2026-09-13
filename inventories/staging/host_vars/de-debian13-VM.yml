@@ -1,0 +1,152 @@
+hostname_additional_hosts:
+  - ip_address: 10.1.0.208
+    hostname: de-debian13-VM.skyline.lan
+    hostname_short: de-debian13-VM
+  - ip_address: 192.168.77.208
+    hostname: de-debian13-VM.skyline.lan
+    hostname_short: de-debian13-VM
+  - ip_address: 192.168.0.208
+    hostname: de-debian13-VM.skyline.lan
+    hostname_short: de-debian13-VM
+  #
+dckr_dmain_nme_pstfx: home.sawadogo.xyz
+# virthost01.skyline.lan:
+# ansible_connection: local  # this will overwrite any other type of connections. its needed here.
+ansible_become_pass: "{{ localhost_become_pass }}"
+#
+#  ## PRVS | CONFIG  ###
+prvs_copy_home: false # Copy default user's home files in place
+prvs_root_passwd: false # update root passward
+#
+dkr_copy_def_files: false # Copy default docker files to target server
+#
+crntb_activate_cronjobs: false
+#
+addLocalUser: true # add a local user to specific host
+#
+addresolv: true # add nameservers to resolv.conf
+#
+#  ## APT | PACKAGES INSTALL  ###
+instl_def_pckg: true # Install complete packages. A 'no' will remove it from the host (apt_def_pckg_lst)
+instl_utl_pckg: true # Install complete packages. A 'no' will remove it from the host (apt_util_lst)
+sysd_strt_srvc: true # Start services
+instl_ansbl_pckg: true # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
+instl_docker_pckg: true # Install Docker package (apt_docker_pckg_lst)
+apt_host_pckg_lst: # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
+  - cifs-utils
+  - isc-dhcp-common
+  - isc-dhcp-server
+  - kubectx
+#
+#
+pip_host_pckg_lst: # Install Host Specific PIP Packages when ansible is also installed
+#
+#
+# docker containers
+dckr_dpl_pihole: true
+dckr_dpl_iSpy: false
+dckr_dpl_semaphore: true
+dckr_dpl_trcmmnd: false
+dckr_dpl_npxymgmt: true
+dckr_dpl_gravity: true
+dckr_dpl_homepage: true
+dckr_dpl_wud: true
+dckr_dpl_webcheck: true
+dckr_dpl_uptmkm: true
+#
+apt_hst_strt_srvc_lst: # Ensure Host Specific Services are running.
+  - isc-dhcp-server
+#
+odoo_keep_alive: true # Install Odoo keep alive cronjob
+#
+#
+teams: true # Install teams-for-linux
+#
+vscode: true # Install Visual Studio Code
+#
+#
+instl_dhcp_srvc: true
+dsbl_dhcpvsx: true # Disable dhcp v6 in DHCP
+dsbl_dhcpvsx_regx: INTERFACESv4='eno1' # text that should change goes here eg. INTERFACESv4='ens18'
+#
+copy_iptables: true # Copy iptables to /root folder
+strt_myiptbls_at_boot: true
+#
+# interfaces:
+#   - iface: eth1
+#
+#
+# network interfaces
+# network_interfaces:
+#   - name: ens18
+#     role: lan
+#     address: 10.3.0.254
+#     netmask: 255.252.0.0
+#     gateway: 10.3.0.254
+#     dns_servers:
+#       - 10.3.0.254
+
+#   - name: ens19
+#     role: wan
+#     address: 192.168.0.80
+#     netmask: 255.255.255.0
+#     gateway: 192.168.0.1
+#     dns_servers:
+#       - 10.3.0.254
+#
+network_interfaces_check: true
+#
+network_interfaces:
+  - name: ens18
+    role: lan
+    method: static
+    gateway: "{{ ansible_default_ipv4.gateway | default(omit) }}"
+    dns_servers:
+      - 10.3.0.254
+
+  - name: ens19
+    role: wan
+    method: static
+    dns_servers:
+      - 10.3.0.254
+#
+network_comment_blocks:
+  - |
+    allow-hotplug ens19
+    iface ens19 inet static
+     address 192.168.77.253
+     netmask 255.255.255.0
+     gateway 192.168.77.254
+     dns-servers 10.3.0.254
+
+  - |
+    allow-hotplug ens19
+    iface ens19 inet dhcp
+
+#
+#
+localusers:
+  - name: mobile
+    shell: /bin/bash
+    groups:
+      - mobile
+    append: false
+    state: present
+    key: mobile.pub
+    create_home: true
+    local: true
+    hosts: de-debian13-VM
+  - name: lady
+    shell: /bin/bash
+    # group: lady
+    groups:
+      - sudo
+      - docker
+    append: true
+    state: present
+    key: lady.pub
+    gen_ssh_key: true
+    create_home: true
+    local: true
+    hosts: de-debian13-VM
+    bashrc: /home/ibrahim/sandbox/myAnsible/configs/files/home/ibrahim/.bashrc

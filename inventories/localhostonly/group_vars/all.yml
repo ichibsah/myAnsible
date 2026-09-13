@@ -1,0 +1,2 @@
+env: localhostonly
+nginx_port: 80
