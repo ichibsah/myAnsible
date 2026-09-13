@@ -1,7 +1,9 @@
 ---
 - name: Configure WiFiBoss MikroTik router
   hosts: all
-  gather_facts: false
+  gather_facts: true
+  ignore_errors: true
+  ignore_unreachable: false
   become: false
 
   roles:

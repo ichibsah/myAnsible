@@ -1,0 +1,71 @@
+---
+- name: Set RouterOS system identity
+  community.routeros.command:
+    commands:
+      - /system identity set name="{{ hostname }}"
+
+- name: Rename ether1 to WAN
+  community.routeros.command:
+    commands:
+      - /interface ethernet set [find default-name="{{ ether1 }}"] name=WAN
+
+- name: Rename ether2 to LAN
+  community.routeros.command:
+    commands:
+      - /interface ethernet set [find default-name="{{ ether2 }}"] name=LAN
+
+- name: Create ibrahim user with full access
+  community.routeros.command:
+    commands:
+      - >
+        /user add
+        name="{{ ssh_user }}"
+        group=full
+        password="{{ ibrahim_password }}"
+  no_log: true
+  register: create_user
+  failed_when:
+    - create_user.failed
+    - "'already have' not in (create_user.msg | default('') | lower)"
+    - "'already exists' not in (create_user.msg | default('') | lower)"
+
+- name: Upload Ibrahim public key to the router
+  ansible.netcommon.net_put:
+    src: "{{ ssh_pubkey }}"
+    dest: "ibrahim.pub"
+  delegate_to: localhost
+
+- name: Import Ibrahim public key for the user
+  community.routeros.command:
+    commands:
+      - >
+        /user ssh-keys import
+        user="{{ ssh_user }}"
+        public-key-file="ibrahim.pub"
+
+- name: Set WAN IP address
+  community.routeros.command:
+    commands:
+      - >
+        /ip address add
+        address="{{ WAN_IP }}/{{ WAN_PREFIX }}"
+        interface=WAN
+        comment="WAN address"
+
+- name: Restrict SSH service to the WAN network
+  community.routeros.command:
+    commands:
+      - >
+        /ip service set [find name=ssh]
+        disabled=no
+        address="{{ ssh_allowed_network }}"
+
+- name: Disable password-based SSH login
+  community.routeros.command:
+    commands:
+      - /ip ssh set always-allow-password-login=no
+
+- name: Remove uploaded public-key file
+  community.routeros.command:
+    commands:
+      - /file remove [find name="ibrahim.pub"]

@@ -1,6 +1,14 @@
 ---
 # tasks file for routerOS
-- name: Job 01 | import task config
+- name: Job 01 | import task ssh
+  ansible.builtin.import_tasks:
+    file: ssh.yml
+  when: ssh
+  tags:
+#    - test
+    - ssh
+#
+- name: Job 02 | import task config
   ansible.builtin.import_tasks:
     file: config.yml
   when: config

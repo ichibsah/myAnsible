@@ -46,5 +46,6 @@ else
     #ansible-playbook -i inventories/routeros/hosts.yml site.yml --ask-vault-pass --check
 
     # ansible-playbook -v -i inventories/routeros/hosts.yml run-routeros.yml --check # works
+    "$ANSIBLE_PLAYBOOK" -v -i "$INVENTORY" --tags ssh run-routeros.yml # works
     "$ANSIBLE_PLAYBOOK" -v -i "$INVENTORY" run-routeros.yml # works
 fi
