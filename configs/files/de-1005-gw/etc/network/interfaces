@@ -11,8 +11,8 @@ allow-hotplug eno1
 iface eno1 inet static
  address 10.1.0.254
  netmask 255.252.0.0
- gateway 192.168.0.80
- dns-servers 10.0.0.110 10.0.0.111
+ gateway 10.1.0.253
+ dns-servers 10.0.0.110 10.0.0.111 10.1.0.253
 #WLAN
 allow-hotplug eno2
 iface eno2 inet static
