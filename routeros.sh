@@ -47,5 +47,20 @@ else
 
     # ansible-playbook -v -i inventories/routeros/hosts.yml run-routeros.yml --check # works
     "$ANSIBLE_PLAYBOOK" -v -i "$INVENTORY" --tags ssh run-routeros.yml # works
-    "$ANSIBLE_PLAYBOOK" -v -i "$INVENTORY" run-routeros.yml # works
+    "$ANSIBLE_PLAYBOOK" -v -i "$INVENTORY" --tags config run-routeros.yml # works
 fi
+
+
+
+# run this first on server to create user ibrahim and enable ssh
+# /user add name=ibrahim group=full password="REPLACE_WITH_A_STRONG_PASSWORD"
+
+# /user print detail where name="ibrahim"
+
+# /ip service print where name=ssh
+
+# /ip service print where name=ssh
+
+# /ip service enable ssh
+
+# add dhcp client

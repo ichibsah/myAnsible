@@ -65,7 +65,7 @@
     commands:
       - /ip ssh set always-allow-password-login=no
 
-- name: Remove uploaded public-key file
-  community.routeros.command:
-    commands:
-      - /file remove [find name="ibrahim.pub"]
+# - name: Remove uploaded public-key file
+#   community.routeros.command:
+#     commands:
+# #      - /file remove [find name="ibrahim.pub"]

@@ -1,0 +1,17 @@
+- name: BACKUP - save binary backup and text export
+  community.routeros.command:
+    commands:
+      - /system backup save name=before-wifiboss-configuration
+      - /export file=before-wifiboss-configuration
+      - /file print where name~"before-wifiboss"
+  register: backup_result
+  changed_when: true
+
+- name: BACKUP - verify backup files exist # TODO: add checksum verification
+  community.routeros.command:
+    commands:
+      - /file print where name~"before-wifiboss"
+  register: backup_check
+  changed_when: false
+  failed_when: >
+    'before-wifiboss' not in (backup_check.stdout | join(' '))

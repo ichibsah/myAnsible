@@ -1,6 +1,6 @@
 ---
 wifiboss_wan_interface: "WAN"
-wifiboss_lan_interface: "LAN-bridge"
+wifiboss_lan_interface: "LAN"
 wifiboss_wan_address: "192.168.1.123/24"
 wifiboss_lan_address: "192.168.18.1/24"
 wifiboss_gateway: "192.168.1.1"

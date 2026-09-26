@@ -12,7 +12,7 @@ ssh_pubkey: "files/ibrahim.pub"
 
 # Restrict SSH to this WAN subnet.
 # Adjust this if your WAN network is not 10.1.0.0/24.
-ssh_allowed_network: "10.1.0.0/24"
+ssh_allowed_network: "10.0.0.0/14"
 
 ssh: true
 

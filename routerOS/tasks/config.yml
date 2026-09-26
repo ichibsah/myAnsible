@@ -1,22 +1,4 @@
 ---
-- name: BACKUP - save binary backup and text export
-  community.routeros.command:
-    commands:
-      - /system backup save name=before-wifiboss-configuration
-      - /export file=before-wifiboss-configuration
-      - /file print where name~"before-wifiboss"
-  register: backup_result
-  changed_when: true
-
-- name: BACKUP - verify backup files exist
-  community.routeros.command:
-    commands:
-      - /file print where name~"before-wifiboss"
-  register: backup_check
-  changed_when: false
-  failed_when: >
-    'before-wifiboss' not in (backup_check.stdout | join(' '))
-
 - name: INTERFACES - inspect interfaces
   community.routeros.command:
     commands:
@@ -26,25 +8,29 @@
   register: interface_check
   changed_when: false
 
-- name: INTERFACES - create interface lists and members
+- name: Display interface inspection results
+  ansible.builtin.debug:
+    msg: "{{ interface_check.stdout | join('\n') }}"
+
+- name: INTERFACES - create interface lists and members # TODO: does not work
   community.routeros.command:
     commands:
       - >
-        :if ([:len [/interface list find name="WAN"]] = 0) do={
-          /interface list add name=WAN comment="Internet interface"
-        }
+        :if ([:len [/interface list find where name="WAN"]] = 0) do={
+          /interface list add name=WAN comment="Internet interface";
+        };
       - >
-        :if ([:len [/interface list find name="LAN"]] = 0) do={
-          /interface list add name=LAN comment="Local network interfaces"
-        }
+        :if ([:len [/interface list find where name="LAN"]] = 0) do={
+          /interface list add name=LAN comment="Local network interfaces";
+        };
       - >
-        :if ([:len [/interface list member find list="WAN" interface="{{ wifiboss_wan_interface }}"]] = 0) do={
-          /interface list member add list=WAN interface="{{ wifiboss_wan_interface }}"
-        }
+        :if ([:len [/interface list member find where list="WAN" interface="{{ wifiboss_wan_interface }}"]] = 0) do={
+          /interface list member add list=WAN interface="{{ wifiboss_wan_interface }}";
+        };
       - >
-        :if ([:len [/interface list member find list="LAN" interface="{{ wifiboss_lan_interface }}"]] = 0) do={
-          /interface list member add list=LAN interface="{{ wifiboss_lan_interface }}"
-        }
+        :if ([:len [/interface list member find where list="LAN" interface="{{ wifiboss_lan_interface }}"]] = 0) do={
+          /interface list member add list=LAN interface="{{ wifiboss_lan_interface }}";
+        };
       - /interface list member print
   register: interface_config
   changed_when: true
@@ -52,7 +38,7 @@
     'WAN' not in (interface_config.stdout | join(' ')) or
     'LAN' not in (interface_config.stdout | join(' '))
 
-- name: IP ADDRESSES - configure WAN and LAN addresses
+- name: IP ADDRESSES - configure WAN and LAN addresses # TODO: add checks for existing addresses
   community.routeros.command:
     commands:
       - >
@@ -70,7 +56,7 @@
     wifiboss_wan_address not in (address_config.stdout | join(' ')) or
     wifiboss_lan_address not in (address_config.stdout | join(' '))
 
-- name: ROUTING - configure default route
+- name: ROUTING - configure default route # TODO: add checks for existing default route
   community.routeros.command:
     commands:
       - >
