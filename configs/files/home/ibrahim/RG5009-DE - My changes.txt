@@ -1,0 +1,626 @@
+# =========================================================
+# 1. BRIDGES
+# =========================================================
+
+/interface bridge
+add name=bridge protocol-mode=rstp comment="Main bridge"
+add name=lan protocol-mode=rstp comment="LAN bridge"
+add name=alex protocol-mode=rstp comment="Alex bridge"
+add name=meryem protocol-mode=rstp comment="Meryem bridge"
+add name=service protocol-mode=rstp comment="Service bridge"
+
+
+# =========================================================
+# 2. BRIDGE PORTS
+# =========================================================
+
+/interface bridge port
+add bridge=bridge interface=ether2
+add bridge=lan interface=ether3
+add bridge=bridge interface=ether4
+add bridge=meryem interface=ether5
+add bridge=bridge interface=ether6
+add bridge=alex interface=ether7
+add bridge=service interface=ether8
+
+
+# =========================================================
+# 3. ROUTER IP ADDRESSES
+# =========================================================
+
+/ip address
+add address=10.1.0.253/14 interface=lan comment="LAN gateway"
+add address=192.168.8.254/24 interface=meryem comment="Meryem gateway"
+add address=192.168.88.254/24 interface=alex comment="Alex gateway"
+add address=192.168.77.254/24 interface=bridge comment="WLAN gateway"
+add address=192.168.18.254/24 interface=service comment="Service network - no DHCP gateway"
+
+
+# =========================================================
+# 4. DHCP ADDRESS POOLS
+# =========================================================
+
+/ip pool
+add name=pool-lan ranges=10.1.0.200-10.1.0.249
+add name=pool-meryem ranges=192.168.8.200-192.168.8.249
+add name=pool-alex ranges=192.168.88.200-192.168.88.250
+add name=pool-bridge ranges=192.168.77.200-192.168.77.250
+add name=pool-service ranges=192.168.18.200-192.168.18.250
+
+
+# =========================================================
+# 5. DHCP NETWORK OPTIONS
+# =========================================================
+
+/ip dhcp-server network
+add address=10.0.0.0/14 gateway=10.1.0.253 dns-server=10.1.0.253 \
+    comment="LAN DHCP network"
+
+add address=192.168.8.0/24 gateway=192.168.8.254 dns-server=192.168.8.254 \
+    comment="Meryem DHCP network"
+
+add address=192.168.88.0/24 gateway=192.168.88.254 dns-server=192.168.88.254 \
+    comment="Alex DHCP network"
+
+add address=192.168.77.0/24 gateway=192.168.77.254 dns-server=192.168.77.254 \
+    comment="Main bridge DHCP network"
+
+add address=192.168.18.0/24 dns-none=yes \
+    comment="Service DHCP network - no gateway"
+
+
+# =========================================================
+# 6. DHCP SERVERS
+# =========================================================
+
+/ip dhcp-server
+add name=dhcp-lan interface=lan address-pool=pool-lan lease-time=1d disabled=no
+add name=dhcp-meryem interface=meryem address-pool=pool-meryem lease-time=1d disabled=no
+add name=dhcp-alex interface=alex address-pool=pool-alex lease-time=1d disabled=no
+add name=dhcp-bridge interface=bridge address-pool=pool-bridge lease-time=1d disabled=no
+add name=dhcp-service interface=service address-pool=pool-service lease-time=1d disabled=no
+
+
+# =========================================================
+# 7. DNS
+# =========================================================
+
+/ip dns
+set allow-remote-requests=yes
+
+
+# =========================================================
+# 8. WAN DHCP CLIENT
+# =========================================================
+
+/ip dhcp-client
+add interface=WAN-Gateway disabled=no comment="WAN address from upstream"
+
+
+# =========================================================
+# 9. INTERFACE LISTS
+# =========================================================
+
+/interface list
+add name=WAN
+add name=LAN
+
+/interface list member
+add interface=WAN-Gateway list=WAN
+add interface=lan list=LAN
+add interface=meryem list=LAN
+add interface=alex list=LAN
+add interface=bridge list=LAN
+add interface=service list=LAN
+
+
+# =========================================================
+# 10. NAT
+# =========================================================
+
+/ip firewall nat
+add chain=srcnat out-interface-list=WAN action=masquerade \
+    comment="Masquerade Internet traffic"
+
+
+# =========================================================
+# 11. FIREWALL INPUT
+# =========================================================
+
+/ip firewall filter
+add chain=input action=accept connection-state=established,related,untracked \
+    comment="Allow established and related input"
+
+add chain=input action=drop connection-state=invalid \
+    comment="Drop invalid input"
+
+add chain=input action=accept in-interface-list=LAN \
+    comment="Allow LAN access to router"
+
+add chain=input action=drop in-interface-list=WAN \
+    comment="Block unsolicited WAN access"
+
+
+# =========================================================
+# 12. FIREWALL FORWARD
+# =========================================================
+
+/ip firewall filter
+add chain=forward action=accept connection-state=established,related,untracked \
+    comment="Allow established and related forwarding"
+
+add chain=forward action=drop connection-state=invalid \
+    comment="Drop invalid forwarding"
+
+# This must appear before the general LAN-to-WAN rule.
+/ip firewall filter
+add chain=forward action=drop in-interface=service out-interface-list=WAN \
+    comment="Block Service Internet access"
+
+add chain=forward action=accept in-interface-list=LAN out-interface-list=WAN \
+    comment="Allow LAN bridges to Internet"
+
+add chain=forward action=drop in-interface-list=WAN \
+    connection-state=new connection-nat-state=!dstnat \
+    comment="Block unsolicited WAN forwarding"
+
+
+/interface bridge print
+/interface bridge port print
+/ip address print
+/ip pool print
+/ip dhcp-server print
+/ip dhcp-server lease print
+/ip dhcp-client print
+/ip route print
+/ip firewall nat print stats
+/ip firewall filter print stats
+
+/interface bridge port print
+
+# =========================================================
+# 6. CUSTOM DHCP OPTIONS
+# =========================================================
+
+/ip dhcp-server option
+add name=domain-name code=15 value="'skyline.lan'" force=yes
+add name=nntp-server code=71 value="'10.1.0.254'" force=yes
+add name=time-server code=42 value="'10.1.0.254'" force=yes
+add name=smtp-server code=69 value="'10.1.0.254'" force=yes
+
+
+# =========================================================
+# 7. DHCP OPTION SET
+# =========================================================
+
+/ip dhcp-server option sets
+add name=skyline-options \
+    options=domain-name,nntp-server,time-server,smtp-server
+
+
+# =========================================================
+# 8. APPLY OPTIONS TO DHCP NETWORKS
+# =========================================================
+
+/ip dhcp-server network
+set [find comment="LAN DHCP network"] \
+    dhcp-option-set=skyline-options
+
+set [find comment="Meryem DHCP network"] \
+    dhcp-option-set=skyline-options
+
+set [find comment="Alex DHCP network"] \
+    dhcp-option-set=skyline-options
+
+set [find comment="Main bridge DHCP network"] \
+    dhcp-option-set=skyline-options
+
+set [find comment="Service DHCP network - no gateway"] \
+    dhcp-option-set=skyline-options
+
+# =========================================================
+# STATIC DHCP LEASES
+# =========================================================
+
+/ip dhcp-server lease
+add address=192.168.77.6 mac-address=08:62:66:80:99:1C \
+    comment="Babs"
+
+add address=10.1.4.4 mac-address=08:62:66:80:9D:F4 \
+    comment="de-babs"
+
+add address=192.168.77.14 mac-address=3C:77:E6:88:25:AC \
+    comment="NPI7F9525"
+
+add address=10.1.5.1 mac-address=A0:D3:C1:7F:95:25 \
+    comment="de-1015-hpPTR"
+
+add address=192.168.77.18 mac-address=00:0F:00:35:AD:DF \
+    comment="andy-PC"
+
+add address=192.168.77.1 mac-address=00:10:C6:B1:EE:18 \
+    comment="Ladys-PC"
+
+add address=10.1.0.1 mac-address=1C:3B:F3:6C:17:49 \
+    comment="TL-SG1016DE"
+
+add address=192.168.77.161 mac-address=1C:87:2C:4A:94:00 \
+    comment="RT-AC68U-123"
+
+add address=192.168.77.164 mac-address=38:D5:47:1F:89:30 \
+    comment="RT-AC68U-124"
+
+add address=192.168.77.163 mac-address=14:DD:A9:71:8D:20 \
+    comment="RT-AC3200"
+
+add address=192.168.77.16 mac-address=50:7B:9D:CC:27:9B \
+    comment="lenovo"
+
+
+# =========================================================
+# STATIC DNS RECORDS
+# =========================================================
+
+/ip dns static
+add name=babs.skyline.lan address=192.168.77.6 comment="Babs"
+add name=de-babs.skyline.lan address=10.1.4.4 comment="de-babs"
+add name=npi7f9525.skyline.lan address=192.168.77.14 comment="NPI7F9525"
+add name=de-1015-hpptr.skyline.lan address=10.1.5.1 comment="de-1015-hpPTR"
+add name=andy-pc.skyline.lan address=192.168.77.18 comment="andy-PC"
+add name=ladys-pc.skyline.lan address=192.168.77.1 comment="Ladys-PC"
+add name=tl-sg1016de.skyline.lan address=10.1.0.1 comment="TL-SG1016DE"
+add name=rt-ac68u-123.skyline.lan address=192.168.77.161 comment="RT-AC68U-123"
+add name=rt-ac68u-124.skyline.lan address=192.168.77.164 comment="RT-AC68U-124"
+add name=rt-ac3200.skyline.lan address=192.168.77.163 comment="RT-AC3200"
+add name=lenovo.skyline.lan address=192.168.77.16 comment="lenovo"
+
+
+
+
+
+
+/**/
+TS
+
+/ip dhcp-server network
+set [find address=10.0.0.0/14] \
+    gateway=10.1.0.253 \
+    dns-server=10.0.0.110,10.0.0.111,10.1.0.253
+
+# Confirm all gateway IP addresses
+/ip address print
+
+# Confirm DHCP servers are enabled and attached to the correct bridges
+/ip dhcp-server print
+
+# Confirm DHCP clients and assigned addresses
+/ip dhcp-server lease print
+
+# Confirm the WAN default route exists
+/ip route print where dst-address=0.0.0.0/0
+
+/ip dns static
+add name=server1.skyline.lan address=10.1.0.10 comment="Server 1"
+add name=nas.skyline.lan address=10.1.0.20 comment="NAS"
+add name=printer.skyline.lan address=192.168.77.10 comment="Printer"
+add name=camera.skyline.lan address=192.168.18.10 comment="Camera"
+
+
+/ip dns static
+add name=server1 address=10.1.0.10
+add name=nas address=10.1.0.20
+
+
+# LAN: 10.0.0.0/14
+/ip dhcp-server lease
+add address=10.1.0.10 mac-address=AA:BB:CC:DD:EE:01 \
+    server=lan-dhcp comment="server1"
+
+# Meryem network: 192.168.8.0/24
+add address=192.168.8.10 mac-address=AA:BB:CC:DD:EE:02 \
+    server=meryem-dhcp comment="meryem-server"
+
+# Alex network: 192.168.88.0/24
+add address=192.168.88.10 mac-address=AA:BB:CC:DD:EE:03 \
+    server=alex-dhcp comment="alex-server"
+
+# Bridge/WLAN network: 192.168.77.0/24
+add address=192.168.77.10 mac-address=AA:BB:CC:DD:EE:04 \
+    server=bridge-dhcp comment="printer"
+
+
+/**/
+
+
+/*************************************************/
+
+RG5009-DE - My changes
+
+/interface bridge add name=bridge protocol-mode=rstp
+/interface bridge add name=lan protocol-mode=rstp
+/interface bridge add name=alex protocol-mode=rstp
+/interface bridge add name=meryem protocol-mode=rstp
+/interface bridge add name=service protocol-mode=rstp
+
+
+/interface bridge port
+add bridge=bridge interface=ether2
+add bridge=lan interface=ether3
+add bridge=bridge interface=ether4
+add bridge=meryem interface=ether5
+add bridge=bridge interface=ether6
+add bridge=alex interface=ether7
+add bridge=service interface=ether8
+
+/interface bridge print
+
+/interface bridge port print
+
+
+
+
+
+# DHCP address pools
+/ip pool
+add name=pool-bridge ranges=192.168.10.100-192.168.10.ระ254
+add name=pool-lan ranges=192.168.20.100-192.168.20.254
+add name=pool-alex ranges=192.168.30.100-192.168.30.254
+add name=pool-meryem ranges=192.168.40.100-192.168.40.254
+add name=pool-service ranges=192.168.50.100-192.168.50.254
+
+/ip dhcp-server network
+add address=10.0.0.0/14 gateway=10.1.0.253 dns-server=10.1.0.253 \
+    comment="LAN DHCP network"
+
+add address=192.168.8.0/24 gateway=192.168.8.254 dns-server=192.168.8.254 \
+    comment="Meryem DHCP network"
+
+add address=192.168.88.0/24 gateway=192.168.88.254 dns-server=192.168.88.254 \
+    comment="Alex DHCP network"
+
+add address=192.168.77.0/24 gateway=192.168.77.254 dns-server=192.168.77.254 \
+    comment="Bridge DHCP network"
+
+
+/ip dhcp-server
+add name=dhcp-bridge interface=bridge address-pool=pool-bridge lease-time=1d disabled=no
+add name=dhcp-lan interface=lan address-pool=pool-lan lease-time=1d disabled=no
+add name=dhcp-alex interface=alex address-pool=pool-alex lease-time=1d disabled=no
+add name=dhcp-meryem interface=meryem address-pool=pool-meryem lease-time=1d disabled=no
+add name=dhcp-service interface=service address-pool=pool-service lease-time=1d disabled=no
+
+/ip dns
+set allow-remote-requests=yes
+
+Bridge	Ports	Router IP	DHCP range
+bridge	ether2, ether4, ether6	192.168.10.1	192.168.10.100–254
+lan	ether3	192.168.20.1	192.168.20.100–254
+alex	ether7	192.168.30.1	192.168.30.100–254
+meryem	ether5	192.168.40.1	192.168.40.100–254
+service	ether8	192.168.50.1	192.168.50.100–254
+
+/ip address print
+/ip pool print
+/ip dhcp-server print
+/ip dhcp-server lease print
+
+###
+
+/ip dhcp-client
+add interface=WAN-Gateway disabled=no
+
+/ip firewall nat
+add chain=srcnat out-interface=WAN-Gateway action=masquerade \
+    comment="Internet access for all LAN bridges"
+
+/interface list
+add name=WAN
+add name=LAN
+
+/interface list member
+add interface=WAN-Gateway list=WAN
+add interface=bridge list=LAN
+add interface=meryem list=LAN
+add interface=alex list=LAN
+add interface=lan list=LAN
+
+/ip firewall filter
+add chain=input action=accept connection-state=established,related,untracked \
+    comment="Allow established and related router traffic"
+
+add chain=input action=drop connection-state=invalid \
+    comment="Drop invalid router traffic"
+
+add chain=input action=accept in-interface-list=LAN \
+    comment="Allow LAN access to the router"
+
+add chain=input action=drop in-interface-list=WAN \
+    comment="Block unsolicited WAN access to router"
+
+add chain=forward action=accept connection-state=established,related,untracked \
+    comment="Allow established and related forwarded traffic"
+
+add chain=forward action=drop connection-state=invalid \
+    comment="Drop invalid forwarded traffic"
+
+add chain=forward action=accept in-interface-list=LAN out-interface-list=WAN \
+    comment="Allow all LAN bridges to access Internet"
+
+add chain=forward action=drop in-interface-list=WAN connection-state=new \
+    connection-nat-state=!dstnat \
+    comment="Block unsolicited inbound WAN traffic"
+
+/ip dhcp-client print
+/ip route print
+/ip firewall nat print stats
+/ip firewall filter print stats
+
+# Router IP addresses
+/ip address
+add address=10.1.0.253/14 interface=lan comment="LAN gateway"
+add address=192.168.8.254/24 interface=meryem comment="Meryem gateway"
+add address=192.168.88.254/24 interface=alex comment="Alex gateway"
+add address=192.168.77.254/24 interface=bridge comment="WLAN gateway"
+
+/ip pool
+add name=pool-lan ranges=10.1.0.200-10.1.0.249
+add name=pool-meryem ranges=192.168.8.200-192.168.8.249
+add name=pool-alex ranges=192.168.88.200-192.168.88.250
+add name=pool-bridge ranges=192.168.77.200-192.168.77.250
+add name=pool-service ranges=192.168.18.200-192.168.18.250
+
+/ip dhcp-server network
+add address=10.0.0.0/14 gateway=10.1.0.253 dns-server=10.1.0.253 \
+    comment="LAN DHCP network"
+
+add address=192.168.8.0/24 gateway=192.168.8.254 dns-server=192.168.8.254 \
+    comment="Meryem DHCP network"
+
+add address=192.168.88.0/24 gateway=192.168.88.254 dns-server=192.168.88.254 \
+    comment="Alex DHCP network"
+
+add address=192.168.77.0/24 gateway=192.168.77.254 dns-server=192.168.77.254 \
+    comment="Bridge DHCP network"
+
+add address=192.168.18.0/24 dns-none=yes \
+    comment="Service DHCP network - no gateway"
+
+/ip dhcp-server
+add name=dhcp-lan interface=lan address-pool=pool-lan lease-time=1d disabled=no
+add name=dhcp-meryem interface=meryem address-pool=pool-meryem lease-time=1d disabled=no
+add name=dhcp-alex interface=alex address-pool=pool-alex lease-time=1d disabled=no
+add name=dhcp-bridge interface=bridge address-pool=pool-bridge lease-time=1d disabled=no
+add name=dhcp-service interface=service address-pool=pool-service lease-time=1d disabled=no
+
+
+/ip dns
+set allow-remote-requests=yes
+
+/ip firewall nat
+add chain=srcnat out-interface=WAN-Gateway action=masquerade \
+    comment="Internet access for all LAN networks"
+
+/interface list member
+add interface=lan list=LAN
+add interface=meryem list=LAN
+add interface=alex list=LAN
+add interface=bridge list=LAN
+
+# Service bridge IP
+/ip address
+add address=192.168.18.254/24 interface=service comment="Service network - no DHCP gateway"
+
+/ip dhcp-server network
+add address=192.168.18.0/24 dns-none=yes \
+    comment="Service DHCP network - no gateway"
+
+/ip dhcp-server
+add name=dhcp-service interface=service address-pool=pool-service \
+    lease-time=1d disabled=no
+
+/interface list member
+add interface=service list=LAN
+
+/ip firewall filter
+add chain=forward action=drop in-interface=service out-interface=WAN-Gateway \
+    comment="Block Service network Internet access"
+
+/ip firewall filter
+add chain=forward action=accept in-interface-list=LAN \
+    out-interface=WAN-Gateway comment="Allow LAN networks to Internet"
+
+
+
+
+
+/***************************/
+
+
+Yes. The usual and recommended setup is:
+
+MikroTik → RADIUS → Windows NPS → Active Directory Domain Services
+
+MikroTik generally should not authenticate directly against AD DS. Install and configure Network Policy Server (NPS) on Windows Server, join NPS to the domain, and let NPS validate users against AD.
+
+1. Configure Windows Server
+On the Windows Server:
+
+Install the Network Policy Server role.
+Register NPS in Active Directory:
+Open NPS
+Right-click NPS (Local)
+Select Register server in Active Directory
+Add the MikroTik as a RADIUS Client:
+Friendly name: MikroTik
+Address: 10.1.0.253 or the MikroTik source address used for RADIUS
+Shared secret: create a strong secret
+Create a Network Policy allowing the required AD users or groups.
+Allow the required authentication method, commonly PAP for MikroTik administrative login or MS-CHAPv2 for supported VPN/PPP scenarios.
+Allow UDP ports 1812 for authentication and 1813 for accounting through the Windows Firewall.
+NPS uses AD users and groups for authorization, so you can create a group such as MikroTik-Admins and permit only that group.
+
+2. Add the NPS server to MikroTik
+Assuming your Windows NPS server is 10.1.0.254:
+
+routeros
+
+
+/radius
+add address=10.1.0.254 \
+    secret="CHANGE_THIS_TO_THE_SAME_NPS_SECRET" \
+    service=login \
+    authentication-port=1812 \
+    accounting-port=1813 \
+    protocol=udp \
+    comment="Windows NPS / Active Directory"
+Enable RADIUS authentication for MikroTik administrator logins:
+
+routeros
+
+
+/user aaa
+set use-radius=yes accounting=yes
+You can test with WinBox, WebFig, SSH, or the terminal using a domain account.
+
+Use either:
+
+text
+
+
+username
+or:
+
+text
+
+
+DOMAIN\username
+depending on how the NPS policy is configured.
+
+3. Optional: use RADIUS for VPN, hotspot, or Wi-Fi
+For PPP/VPN authentication:
+
+routeros
+
+
+/ppp aaa
+set use-radius=yes accounting=yes
+For HotSpot:
+
+routeros
+
+
+/ip hotspot profile
+set [find] use-radius=yes
+For wireless WPA-Enterprise, configure the relevant security profile to use RADIUS and create an NPS policy for the wireless authentication method.
+
+Important security recommendations
+Keep at least one local MikroTik administrator account as a recovery account:
+
+routeros
+
+
+/user
+add name=local-admin group=full password="USE_A_LONG_UNIQUE_PASSWORD"
+Do not remove local authentication until RADIUS has been tested successfully. Also restrict RADIUS access in the Windows Firewall so only the MikroTik can send requests to UDP ports 1812 and 1813.
+
+The RADIUS shared secret must match exactly on both MikroTik and NPS. MikroTik supports RADIUS for services such as router login, PPP/VPN, HotSpot, and wireless authentication. 
