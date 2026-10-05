@@ -40,9 +40,9 @@
 - name: Job 07.02 | import task interfaces
   ansible.builtin.import_tasks:
     file: interfaces.yml
-  when: network_interfaces_check
   tags:
     - interfaces
+    - config
 #    - test
 #
 - name: Job 08 | import task symlink
@@ -63,6 +63,11 @@
 - name: Job 10 | import task dhcp
   ansible.builtin.import_tasks:
     file: dhcp.yml
+  tags:
+    - dhcp
+    - config
+#   - test
+
   #when: apt_host_pckg_lst | contains bind9
 #
 - name: Job 11 | import task myiptable

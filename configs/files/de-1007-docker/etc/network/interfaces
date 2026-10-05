@@ -12,5 +12,5 @@ allow-hotplug ens3
 iface ens3 inet static
  address 10.0.0.137
  netmask 255.252.0.0
- gateway 10.1.0.254
- dns-nameservers 10.0.0.110 10.0.0.111
+ gateway 10.1.0.253
+ dns-nameservers 10.0.0.110 10.0.0.111 10.1.0.253

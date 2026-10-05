@@ -18,4 +18,12 @@ echo "Logging ansible output to $LOGFILE"
 
 # Run playbook and write both stdout and stderr to the timestamped log (also show on console)
 #ansible-playbook -v --limit '!gh-servers' run-dockers.yml 2>&1 | tee -a "$LOGFILE"
-ansible-playbook -v --limit '!gh-servers !localhost' run-configs.yml 2>&1 | tee -a "$LOGFILE" # works
+# ansible-playbook -v --limit '!gh-servers !localhost' run-configs.yml 2>&1 | tee -a "$LOGFILE" # works
+#
+if [[ $# -gt 0 ]]; then
+    #ansible-playbook -v "$@" run-main.yml 2>&1 | tee -a "$LOGFILE"
+    ansible-playbook -v --limit '!gh-servers !localhost' run-configs.yml 2>&1 | tee -a "$LOGFILE" # works
+else
+    #ansible-playbook -v --limit '!gh-servers !localhost' run-main.yml
+    ansible-playbook -v --limit '!gh-servers !localhost' run-configs.yml
+fi

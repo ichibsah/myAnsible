@@ -25,6 +25,7 @@ crntb_activate_cronjobs: no
 addLocalUser: yes                # add a local user to specific host
 #
 #
+#
 ### APT | PACKAGES INSTALL ###
 instl_def_pckg: yes                       # Install complete packages. A 'no' will remove it from the host (apt_def_pckg_lst)
 instl_utl_pckg: yes                        # Install complete packages. A 'no' will remove it from the host (apt_util_lst)
