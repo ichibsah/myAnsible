@@ -90,7 +90,8 @@
 #/***/
 - name: Restart KRdp user service
   become: true
-  become_user: "{{ krdp_user }}"
+  #become_user: "{{ krdp_user }}" 
+  become_user: "{{ krdp_user | default('root') }}"
   environment:
     XDG_RUNTIME_DIR: "/run/user/{{ krdp_uid }}"
     DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/{{ krdp_uid }}/bus"

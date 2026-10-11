@@ -14,6 +14,8 @@ dckr_dmain_nme_pstfx: home.sawadogo.xyz
 #ansible_connection: local # this will overwrite any other type of connections. its needed here.
 ansible_become_pass: '{{ localhost_become_pass }}'
 #
+#become_user: "{{ krdp_user | default('root') }}"
+krdp_user: ibrahim
 ### PRVS | CONFIG ###
 prvs_copy_home: false                       # Copy default user's home files in place
 prvs_root_passwd: false                     # update root passward
