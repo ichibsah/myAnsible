@@ -1,0 +1,28 @@
+clear
+# docker build -t docker-agent-ansible:latest . 
+# docker image tag docker-agent-ansible:latest docker.io/michibsah/docker-agent-ansible:latest
+# docker login -u michibsah
+# docker push docker.io/michibsah/docker-agent-ansible:latest
+#
+ansible-inventory -y --list
+#
+# Setup logging: create logs dir and timestamped logfile
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LOG_DIR="$SCRIPT_DIR/logs"
+mkdir -p "$LOG_DIR"
+LOGFILE="$LOG_DIR/all-run-$(date +%Y%m%d-%H%M%S).log"
+ln -sf "$LOGFILE" "$LOG_DIR/latest-all-run.log"
+echo "Logging ansible output to $LOGFILE"
+
+#ansible-playbook -v --limit !gh-servers run-main.yml --list-host # works
+#ansible-playbook -v --limit !gh-servers run-main.yml # works
+##ansible-playbook -v --limit '!gh-servers !localhost' run-main.yml 2>&1 | tee -a "$LOGFILE" # run this when -l is parsed as an argument
+##ansible-playbook -v --limit '!gh-servers !localhost' run-main.yml # else run this by default
+#ansible-playbook -v run-main.yml # works
+if [[ $# -gt 0 ]]; then
+    #ansible-playbook -v "$@" run-main.yml 2>&1 | tee -a "$LOGFILE"
+    ansible-playbook -v --limit 'de-1005-gw' run-fullBackup.yml 2>&1 | tee -a "$LOGFILE" # run this when -l is parsed as an argument
+else
+    #ansible-playbook -v --limit '!gh-servers !localhost' run-main.yml
+    ansible-playbook -v --limit 'de-1005-gw' run-fullBackup.yml # else run this by default
+fi

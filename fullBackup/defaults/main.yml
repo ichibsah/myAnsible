@@ -1,0 +1,35 @@
+---
+# defaults file for fullBackup
+
+backup_share: "//10.1.0.131/backups"
+backup_mount: "/net/backup"
+
+backup_paths:
+
+  - path: /home
+    excludes:
+      - ".cache"
+      - ".docker"
+      - ".dotnet"
+      - ".npm"
+      - ".vscode"
+
+  - path: /etc
+    excludes: []
+  
+  - path: /var/www
+    excludes:
+    - "cache"
+    - "tmp"
+
+  - path: /opt
+    excludes: []
+
+# Optional future examples
+#  - path: /var/www
+#    excludes:
+#      - "cache"
+#      - "tmp"
+#
+#  - path: /opt
+#    excludes: []

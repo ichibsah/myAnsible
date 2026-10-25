@@ -1,0 +1,54 @@
+---
+# tasks file for fullBackup
+
+- block:
+
+    - name: Mount backup share
+      ansible.posix.mount:
+        src: "{{ backup_share }}"
+        path: "{{ backup_mount }}"
+        opts: "rw,vers=3,file_mode=0777,dir_mode=0777,username=ibrahim@skyline,password={{ localhost_become_pass }}"
+        fstype: cifs
+        state: ephemeral
+
+    - name: Create host backup directory
+      ansible.builtin.file:
+        path: "{{ backup_mount }}/{{ inventory_hostname }}"
+        state: directory
+        mode: "0777"
+
+    - name: Create rsync exclude list
+      ansible.builtin.copy:
+        dest: /tmp/backup_excludes.lst
+        mode: "0644"
+        content: |
+          {% for item in backup_excludes %}
+          {{ item }}
+          {% endfor %}
+
+    - name: Backup configured folders
+      ansible.builtin.command:
+        cmd: >
+          rsync -aAXH
+          --delete
+          --exclude-from=/tmp/backup_excludes.lst
+          {{ item }}/
+          {{ backup_mount }}/{{ inventory_hostname }}{{ item }}/
+      loop: "{{ backup_paths }}"
+      loop_control:
+        label: "{{ item }}"
+      become: true
+
+  always:
+
+    - name: Remove temporary exclude file
+      ansible.builtin.file:
+        path: /tmp/backup_excludes.lst
+        state: absent
+
+    - name: Unmount backup share
+      ansible.posix.mount:
+        path: "{{ backup_mount }}"
+        state: unmounted
+      ignore_errors: true
+      

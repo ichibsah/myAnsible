@@ -1,0 +1,171 @@
+create an ansible full backup role playbook. follow this steps but feel free to give recommandtion.
+extablish connection to remote server:
+        ansible.posix.mount:
+      src: //10.1.0.131/backups/
+      path: /net/backup
+      opts: "rw,vers=3,file_mode=0777,dir_mode=0777,username=ibrahim@skyline,password={{ localhost_become_pass }}"
+      fstype: cifs
+      #state: present
+      state: ephemeral
+
+in that folder create or use a folder that matches the host name of the server thats is going to be backed up. ie de-1005-gw
+into that folder you will backup the following while maintaing rights and recursive.
+    home
+    etc
+create an exception list of folders that should be left out of the backup i.e .cache .docker .donet .npm .vscode
+after backup, disconnet the mounted folder.
+
+
+For a reliable backup role, I would recommend using rsync rather than Ansible's copy module because:
+
+Preserves ownership, permissions, timestamps, links, ACLs, and extended attributes.
+Handles exclusions easily.
+Efficient for repeated backups.
+Provides clear logging and error handling.
+
+
+/****/
+
+Role Structure
+Plain Text
+roles/
+└── full_backup/
+├── defaults/
+│ └── main.yml
+├── tasks/
+│ └── main.yml
+└── vars/
+└── main.yml
+defaults/main.yml
+YAML
+---
+backup_share: "//10.1.0.131/backups"
+backup_mount: "/net/backup"
+ 
+backup_excludes:
+- ".cache"
+- ".docker"
+- ".dotnet"
+- ".npm"
+- ".vscode"
+tasks/main.yml
+YAML
+---
+- name: Mount backup share
+ansible.posix.mount:
+src: "{{ backup_share }}"
+path: "{{ backup_mount }}"
+opts: "rw,vers=3,file_mode=0777,dir_mode=0777,username=ibrahim@skyline,password={{ localhost_become_pass }}"
+fstype: cifs
+state: ephemeral
+ 
+- name: Create hostname backup directory
+ansible.builtin.file:
+path: "{{ backup_mount }}/{{ inventory_hostname }}"
+state: directory
+mode: '0777'
+ 
+- name: Create rsync exclude file
+ansible.builtin.copy:
+dest: /tmp/backup_exclude.lst
+mode: '0644'
+content: |
+{% for item in backup_excludes %}
+{{ item }}
+{% endfor %}
+ 
+- name: Backup /home
+ansible.builtin.command:
+cmd: >
+rsync -aAXH --delete
+--exclude-from=/tmp/backup_exclude.lst
+/home/
+{{ backup_mount }}/{{ inventory_hostname }}/home/
+become: true
+ 
+- name: Backup /etc
+ansible.builtin.command:
+cmd: >
+rsync -aAXH --delete
+--exclude-from=/tmp/backup_exclude.lst
+/etc/
+{{ backup_mount }}/{{ inventory_hostname }}/etc/
+become: true
+ 
+- name: Remove temporary exclude file
+ansible.builtin.file:
+path: /tmp/backup_exclude.lst
+state: absent
+ 
+- name: Unmount backup share
+ansible.posix.mount:
+path: "{{ backup_mount }}"
+state: unmounted
+Example Playbook
+YAML
+---
+- name: Full System Backup
+hosts: all
+become: true
+ 
+roles:
+- full_backup
+Suggested Improvements
+1. Add Timestamped Backups
+
+Instead of overwriting the previous backup:
+
+YAML
+backup_folder: "{{ backup_mount }}/{{ inventory_hostname }}/{{ ansible_date_time.date }}"
+
+Example:
+
+Plain Text
+/net/backup/de-1005-gw/2026-10-25/
+2. Store Logs
+YAML
+- name: Backup /home
+shell: >
+rsync -aAXH --delete
+--exclude-from=/tmp/backup_exclude.lst
+/home/
+{{ backup_mount }}/{{ inventory_hostname }}/home/
+>> /var/log/ansible-backup.log 2>&1
+3. Verify Share Availability First
+YAML
+- name: Verify backup target is mounted
+ansible.builtin.command: mountpoint -q {{ backup_mount }}
+register: mount_check
+changed_when: false
+ 
+4. Exclude Additional Non-Essential Data
+
+Often useful:
+
+YAML
+backup_excludes:
+- ".cache"
+- ".docker"
+- ".dotnet"
+- ".npm"
+- ".vscode"
+- "Downloads"
+- "node_modules"
+- ".local/share/Trash"
+5. Always Unmount Even if Backup Fails
+
+Wrap in a block:
+
+YAML
+- block:
+# mount and backup tasks here
+ 
+always:
+- name: Unmount backup share
+ansible.posix.mount:
+path: "{{ backup_mount }}"
+state: unmounted
+
+This is the approach I would use in production because it guarantees cleanup and preserves Linux permissions and ownership correctly during the backup.
+
+Use a block with always for cleanupAdd CIFS credentials securelyInclude a backup verification step

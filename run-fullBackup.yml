@@ -1,0 +1,7 @@
+---
+- name: Full System Backup
+  hosts: allservers
+  become: true
+
+  roles:
+    - fullBackup
