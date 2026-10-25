@@ -3,6 +3,12 @@
 
 - block:
 
+    - name: Create backup mount point
+      ansible.builtin.file:
+        path: "{{ backup_mount }}"
+        state: directory
+        mode: "0755"
+
     - name: Mount backup share
       ansible.posix.mount:
         src: "{{ backup_share }}"
@@ -46,9 +52,10 @@
         path: /tmp/backup_excludes.lst
         state: absent
 
-    - name: Unmount backup share
-      ansible.posix.mount:
-        path: "{{ backup_mount }}"
-        state: unmounted
-      ignore_errors: true
-      
+    # - name: Unmount backup share
+    #   ansible.posix.mount:
+    #     path: "{{ backup_mount }}"
+    #     state: unmounted
+    #   ignore_errors: true
+
+  when: fullBackup | default(false) and backup_paths is defined and backup_paths | length > 0
