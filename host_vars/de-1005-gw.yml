@@ -25,6 +25,7 @@ crntb_activate_cronjobs: no
 addLocalUser: yes                # add a local user to specific host
 #
 #
+fullBackup: true               # enable full backup of host
 #
 ### APT | PACKAGES INSTALL ###
 instl_def_pckg: yes                       # Install complete packages. A 'no' will remove it from the host (apt_def_pckg_lst)
@@ -37,6 +38,11 @@ apt_host_pckg_lst:                        # Install Host Specific Packages (keep
 - isc-dhcp-common
 - isc-dhcp-server
 - kubectx
+- fzf
+- zoxide
+- tldr
+- ncdu
+- btop
 #
 #
 pip_host_pckg_lst:                        # Install Host Specific PIP Packages when ansible is also installed
