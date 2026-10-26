@@ -33,3 +33,10 @@ instl_filebot_pckg: no                    # Install Filebot on system
 addresolv: no                             # add cloudflare ad dns resolv address temporary to resolv.conf
 #
 instl_vctr: no
+#
+maintenance_tasks:
+  docker_prune: true
+  upgrade_system: true
+  upgrade_pip_packages: true
+  upgrade_ansible: false
+#

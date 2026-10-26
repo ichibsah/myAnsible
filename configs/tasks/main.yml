@@ -160,7 +160,7 @@
 - name: Job 22 | import task wol
   ansible.builtin.import_tasks:
     file: wol.yml
-#  when: odoo_keep_alive
+  when: wol
   tags:
 #   - test
     - wol

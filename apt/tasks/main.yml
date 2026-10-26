@@ -1,4 +1,4 @@
-
+---
 # Improved Ansible tasks with cross-OS support (Ubuntu/Debian/Fedora/RHEL)
 # Comments included
 
@@ -15,15 +15,19 @@
 
 # Import additional modules
 - name: Import Docker tasks
-  ansible.builtin.import_tasks: file=docker.yml
+  ansible.builtin.import_tasks:
+    file: docker.yml
 
 - name: Import Filebot tasks
-  ansible.builtin.import_tasks: file=filebot.yml
+  ansible.builtin.import_tasks:
+    file: filebot.yml
 
 - name: Import Vector tasks
-  ansible.builtin.import_tasks: file=vector.yml
+  ansible.builtin.import_tasks:
+    file: vector.yml
   when: instl_def_pckg and instl_vctr
 
 # Reboot last
 - name: Reboot system
-  ansible.builtin.import_tasks: file=reboot.yml
+  ansible.builtin.import_tasks:
+    file: reboot.yml

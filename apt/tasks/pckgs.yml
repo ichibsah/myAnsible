@@ -1,91 +1,99 @@
+---
+- name: Upgrade OS packages
+  apt:
+    upgrade: dist
+    update_cache: true
+  when:
+    - ansible_os_family == "Debian"
+    - maintenance_tasks.upgrade_system
 
-# Reset sources list only for Ubuntu < 20.04
-- name: Reset APT sources list
-  template:
-    src: etc_apt_sources.list.j2
-    dest: /etc/apt/sources.list
-  when: ansible_os_family == 'Debian' and ansible_facts['distribution'] == 'Ubuntu' and ansible_facts['distribution_version'] is version('20.04', '<')
+- name: Docker prune
+  command: docker system prune -af
+  when:
+    - maintenance_tasks.docker_prune
+    - docker_check.rc == 0
 
-# Update package cache (APT/YUM/DNF supported)
+- name: Upgrade packages via pip-review
+  command: pip-review --auto
+  when: maintenance_tasks.upgrade_pip_packages
+  failed_when: false
+
+- name: Upgrade pip and ansible
+  pip:
+    name:
+      - pip
+      - ansible
+    state: latest
+  when: maintenance_tasks.upgrade_ansible
+
+# /*********/
+# Update package cache
 - name: Update package cache
   package:
-    update_cache: yes
-  when: ansible_os_family in ['Debian', 'RedHat']
+    update_cache: true
 
-# Install default packages dynamically
-- name: Install default packages
+# Manage default packages
+- name: Manage default packages
   package:
     name: "{{ apt_def_pckg_lst }}"
-    state: present
-  when: instl_def_pckg
-
-# Remove default packages if disabled
-- name: Remove default packages
-  package:
-    name: "{{ apt_def_pckg_lst }}"
-    state: absent
-  when: not instl_def_pckg and not kill_remove
+    state: "{{ 'present' if instl_def_pckg else 'absent' }}"
+  when: instl_def_pckg or not kill_remove
 
 # Install host-specific packages
-- name: Install host specific packages
+- name: Install host-specific packages
   package:
-    name: "{{ item }}"
+    name: "{{ apt_host_pckg_lst }}"
     state: present
-  loop: "{{ apt_host_pckg_lst | default([]) }}"
-  when: apt_host_pckg_lst | length > 0
+  when: apt_host_pckg_lst | default([]) | length > 0
 
-# Install utility packages (single pass)
+# Install utility packages
 - name: Install utility packages
   package:
     name: "{{ apt_util_lst }}"
     state: present
+  when: instl_utl_pckg
   register: utility_status
 
-# Retry missing packages one-by-one
-- name: Retry failed utility packages
+# Retry utilities one by one if bulk install failed
+- name: Retry utility packages individually
   package:
     name: "{{ item }}"
     state: present
   loop: "{{ apt_util_lst }}"
-  when: utility_status is failed
+  when:
+    - instl_utl_pckg
+    - utility_status is failed
 
-# Remove utilities
-- name: Remove Utilities
+# Remove utility packages
+- name: Remove utility packages
   package:
     name: "{{ apt_util_lst }}"
     state: absent
-  when: not instl_utl_pckg and not kill_remove
+  when:
+    - not instl_utl_pckg
+    - not kill_remove
 
-# PIP installs
+# Install pip packages
 - name: Install pip packages
   pip:
     name: "{{ pip_host_pckg_lst }}"
     state: present
   when: instl_ansbl_pckg
 
-# Start services
-- name: Ensure services are running
-  systemd:
+# Manage common services
+- name: Manage services
+  service:
     name: "{{ item }}"
-    state: started
-    enabled: yes
+    state: "{{ 'started' if sysd_strt_srvc else 'stopped' }}"
+    enabled: "{{ sysd_strt_srvc }}"
   loop: "{{ apt_strt_srvc_lst }}"
-  when: sysd_strt_srvc
+  when: sysd_strt_srvc or not kill_remove
 
-# Host-specific services
-- name: Ensure host-specific services are running
-  systemd:
+# Start host-specific services
+- name: Start host-specific services
+  service:
     name: "{{ item }}"
     state: started
-    enabled: yes
+    enabled: true
   loop: "{{ apt_hst_strt_srvc_lst | default([]) }}"
-  when: apt_hst_strt_srvc_lst | length > 0
-
-# Stop services if disabled
-- name: Stop disabled services
-  systemd:
-    name: "{{ item }}"
-    state: stopped
-    enabled: no
-  loop: "{{ apt_strt_srvc_lst }}"
-  when: not sysd_strt_srvc and not kill_remove
+  when: apt_hst_strt_srvc_lst | default([]) | length > 0

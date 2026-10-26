@@ -9,6 +9,13 @@ hostname_additional_hosts:
 apt_hst_strt_srvc_lst:                    # Ensure Services are running.
   - chronyd
 #
+apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
+  - fzf
+  - zoxide
+  - tldr
+  - ncdu
+  - btop
+#
 ### PRVS | CONFIG ###
 prvs_copy_home: yes                       # Copy default user's home files in place
 prvs_root_passwd: yes                     # update root passward

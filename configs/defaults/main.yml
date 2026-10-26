@@ -36,6 +36,11 @@ docker3: false                                    # Install Docker
 teams: no                                           # Install teams-for-linux
 teams_for_linux_channel: stable   # or "beta"
 #
+wol: false                                            # Install Wake-on-LAN
+#
+#
+#
+#
 #
 addLocalUser: no                # add a local user to specific host
 #
