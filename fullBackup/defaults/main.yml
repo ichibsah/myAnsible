@@ -1,8 +1,9 @@
 ---
 # defaults file for fullBackup
 
-backup_share: "//10.1.0.131/backups"
+# backup_share: "//10.1.0.131/backups"
 backup_mount: "/net/backup"
+backup_share: "//10.1.0.131/virthost"
 
 backup_paths:
 

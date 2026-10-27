@@ -9,12 +9,24 @@
         state: directory
         mode: "0755"
 
+    - name: Show backup target
+      ansible.builtin.debug:
+        msg:
+          - "Share: {{ backup_share }}"
+          - "Mount: {{ backup_mount }}"
+
     - name: Mount backup share
       ansible.posix.mount:
         src: "{{ backup_share }}"
         path: "{{ backup_mount }}"
-        opts: "rw,vers=3,file_mode=0777,dir_mode=0777,username=ibrahim@skyline,password={{ localhost_become_pass }}"
         fstype: cifs
+        opts: >-
+          rw,
+          vers=3.0,
+          file_mode=0777,
+          dir_mode=0777,
+          username=ibrahim@skyline.lan,
+          password={{ localhost_become_pass }}
         state: ephemeral
 
     - name: Create host backup directory
@@ -52,10 +64,13 @@
         path: /tmp/backup_excludes.lst
         state: absent
 
-    # - name: Unmount backup share
-    #   ansible.posix.mount:
-    #     path: "{{ backup_mount }}"
-    #     state: unmounted
-    #   ignore_errors: true
+    - name: Unmount backup share
+      ansible.posix.mount:
+        path: "{{ backup_mount }}"
+        state: unmounted
+      ignore_errors: true
 
-  when: fullBackup | default(false) and backup_paths is defined and backup_paths | length > 0
+  when:
+    - fullBackup | default(false)
+    - backup_paths is defined
+    - backup_paths | length > 0

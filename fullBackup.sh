@@ -10,8 +10,8 @@ ansible-inventory -y --list
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LOG_DIR="$SCRIPT_DIR/logs"
 mkdir -p "$LOG_DIR"
-LOGFILE="$LOG_DIR/all-run-$(date +%Y%m%d-%H%M%S).log"
-ln -sf "$LOGFILE" "$LOG_DIR/latest-all-run.log"
+LOGFILE="$LOG_DIR/fullBackup-run-$(date +%Y%m%d-%H%M%S).log"
+ln -sf "$LOGFILE" "$LOG_DIR/latest-fullBackup-run.log"
 echo "Logging ansible output to $LOGFILE"
 
 #ansible-playbook -v --limit !gh-servers run-main.yml --list-host # works
