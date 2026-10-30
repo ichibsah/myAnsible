@@ -6,7 +6,7 @@ all:
         #d86df44.imsawadogo.com:
         #112e275.imsawadogo.com:
         #a35a0d3.imsawadogo.com:
-        #4a999ff.imsawadogo.com:
+        #de-1011-vps.imsawadogo.com:
         #de-jump.imsawadogo.com:
         #deb1202.imsawadogo.com:          
       children:
@@ -16,7 +16,7 @@ all:
             #d86df44.imsawadogo.com:
             #112e275.imsawadogo.com:
             #a35a0d3.imsawadogo.com:
-            #4a999ff.imsawadogo.com:
+            #de-1011-vps.imsawadogo.com:
             #de-jump.imsawadogo.com:
             #deb1202.imsawadogo.com:
             #mgmt.skyline.lan:  
@@ -53,7 +53,7 @@ all:
             #d86df44.imsawadogo.com:
             #112e275.imsawadogo.com:
             #a35a0d3.imsawadogo.com:
-            #4a999ff.imsawadogo.com:
+            #de-1011-vps.imsawadogo.com:
         firstimeonly:
           #ansible_remote_user: root
           #ansible_ssh_user: root
@@ -62,7 +62,7 @@ all:
             #d86df44.imsawadogo.com:
             #112e275.imsawadogo.com:
             #a35a0d3.imsawadogo.com:
-            #4a999ff.imsawadogo.com:
+            #de-1011-vps.imsawadogo.com:
             #deb12_01.imsawadogo.com:
               #ansible_ssh_pass: '{{localhost_become_pass}}'
               #ansible_ssh_pass: '{{deb12_01_become_pass}}'
@@ -113,7 +113,7 @@ all:
             #d86df44.imsawadogo.com:
             #112e275.imsawadogo.com:
             #a35a0d3.imsawadogo.com:
-            #4a999ff.imsawadogo.com:
+            #de-1011-vps.imsawadogo.com:
             #deb12_01.imsawadogo.com:
               #ansible_ssh_pass: '{{localhost_become_pass}}'
               #ansible_ssh_pass: '{{deb12_01_become_pass}}'

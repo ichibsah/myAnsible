@@ -309,7 +309,7 @@
  1314  ./allBackups 
  1315  cd logs/
  1316  ll
- 1317  cat 4a999ffBackup.log-2022-10-14 
+ 1317  cat de-1011-vpsBackup.log-2022-10-14 
  1318  ll
  1319  r
  1320  sudo shutdown -r now
@@ -321,12 +321,12 @@
  1326  ll
  1327  cd logs/
  1328  ll
- 1329  cat 4a999ffBackup.log-2022-10-14 
+ 1329  cat de-1011-vpsBackup.log-2022-10-14 
  1330  crontab -e
  1331  ll
  1332  crontab -e
  1333  ll
- 1334  cat 4a999ffBackup.log-2022-10-16
+ 1334  cat de-1011-vpsBackup.log-2022-10-16
  1335  cat homeBackup.log-2022-10-16
  1336  ..
  1337  ll
@@ -430,21 +430,21 @@
  1435  a
  1436  catmylog 
  1437  ll
- 1438  cat 4a999ffBackup.log-2022-10-26
+ 1438  cat de-1011-vpsBackup.log-2022-10-26
  1439  cat homeBackup.log-2022-10-26
  1440  ll
  1441  ..
  1442  ll
- 1443  ./4a999ffBackup 
+ 1443  ./de-1011-vpsBackup 
  1444  ll
  1445  ./v-HostBackup 
  1446  cd /root/
  1447  ll
  1448  nano 1min.sh 
  1449  nano allBackups 
- 1450  nano 4a999ffBackup 
+ 1450  nano de-1011-vpsBackup 
  1451  nano  homeBackup 
- 1452  nano 4a999ffBackup 
+ 1452  nano de-1011-vpsBackup 
  1453  nano v-HostBackup 
  1454  cd /root/
  1455  ll
@@ -555,7 +555,7 @@
  1560  cd /root/
  1561  ll
  1562  cat allBackups 
- 1563  cat 4a999ffBackup 
+ 1563  cat de-1011-vpsBackup 
  1564  ll
  1565  cd logs/
  1566  ll
@@ -572,13 +572,13 @@
  1577  nmap -sS 95.222.31.202
  1578  cd /root/
  1579  ll
- 1580  cat 4a999ffBackup 
+ 1580  cat de-1011-vpsBackup 
  1581  ssh-add -L
- 1582  ssh root@4a999ff.online-server.cloud
- 1583  nano 4a999ffBackup 
- 1584  cat 4a999ffBackup 
- 1585  ssh root@4a999ff.online-server.cloud -o PubkeyAuthentication=no
- 1586  ssh root@4a999ff.online-server.cloud
+ 1582  ssh root@de-1011-vps.online-server.cloud
+ 1583  nano de-1011-vpsBackup 
+ 1584  cat de-1011-vpsBackup 
+ 1585  ssh root@de-1011-vps.online-server.cloud -o PubkeyAuthentication=no
+ 1586  ssh root@de-1011-vps.online-server.cloud
  1587  cd scripts/
  1588  ./mntReddot.sh 
  1589  cat ./mntReddot.sh 

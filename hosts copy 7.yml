@@ -6,7 +6,7 @@ all:
       hosts:
         d86df44:
           ansible_host: 217.160.100.194
-        4a999ff:
+        de-1011-vps:
           ansible_host: 212.227.191.142
         de-jump:
           ansible_host: 212.227.151.179
@@ -40,7 +40,7 @@ all:
           ansible_host: 10.1.0.225
     ionos:
       hosts:
-        4a999ff:
+        de-1011-vps:
           ansible_host: 212.227.191.142
         de-1010-xl:
           ansible_host: 85.215.157.19
@@ -80,10 +80,10 @@ all:
         #   ansible_host: 10.1.0.245
         #   ansible_ssh_user: ibrahim           
         #   ansible_ssh_pass: '{{localhost_become_pass}}'
-        # 4a999ff:
+        # de-1011-vps:
         #   ansible_host: 212.227.191.142
         #   ansible_ssh_user: root           
-        #   ansible_ssh_pass: '{{fistime4a999ff}}'
+        #   ansible_ssh_pass: '{{fistimede-1011-vps}}'
         # de-debian13-vps:
         #   ansible_host: 217.154.243.72
         #   ansible_ssh_pass: '{{de_debian13_vps_become_pass}}'

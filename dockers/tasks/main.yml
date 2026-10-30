@@ -7,7 +7,7 @@
     owner: ibrahim
     group: ibrahim
     mode: 0744
-  when: ansible_os_family == 'Debian' and dkr_copy_def_files # ansible_hostname != 'virthost01' or ansible_hostname != '4a999ff' 
+  when: ansible_os_family == 'Debian' and dkr_copy_def_files # ansible_hostname != 'virthost01' or ansible_hostname != 'de-1011-vps' 
 
 - name: Job 02 | Copy extended docker files to target host
   copy:

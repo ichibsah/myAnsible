@@ -7,7 +7,7 @@ all:
       #ansible_host: 217.160.144.31
     #a35a0d3:
       #ansible_host: 217.160.100.209
-    4a999ff:
+    de-1011-vps:
       ansible_host: 212.227.191.142
     de-jump:
       ansible_host: 212.227.151.179
@@ -34,11 +34,11 @@ all:
         d86df44:
         #112e275:
         #a35a0d3:
-        4a999ff:
+        de-1011-vps:
         de-jump:
         deb1202:
       vars:
-        ansible_ssh_common_args: '-o ProxyCommand="ssh -p 22 -W %h:%p -q ibrahim@4a999ff.imsawadogo.com"'    
+        ansible_ssh_common_args: '-o ProxyCommand="ssh -p 22 -W %h:%p -q ibrahim@de-1011-vps.imsawadogo.com"'    
     swarm_nodes:
       hosts:
         d86df44:
@@ -75,7 +75,7 @@ all:
         #a35a0d3
           #ansible_ssh_pass: '{{localhost_become_pass}}'
           #ansible_ssh_pass: '{{a35a0d3_become_pass}}'
-        #4a999ff
+        #de-1011-vps
         #de-jump:
           #ansible_ssh_pass: '{{localhost_become_pass}}'
           #ansible_ssh_pass: '{{deb12_01_become_pass}}'
@@ -120,7 +120,7 @@ all:
         ##d86df44:
         #112e275:
         #a35a0d3:
-        4a999ff:
+        de-1011-vps:
         de-jump:
         deb1202:           
         de-1006-dns:
@@ -130,7 +130,7 @@ all:
         de-1010-xl:
         gh-dev-xl:
       vars:
-        ansible_ssh_common_args: '-o ProxyCommand="ssh -p 22 -W %h:%p -q ibrahim@4a999ff.imsawadogo.com"'   
+        ansible_ssh_common_args: '-o ProxyCommand="ssh -p 22 -W %h:%p -q ibrahim@de-1011-vps.imsawadogo.com"'   
 #
     plesk_install:
       hosts:

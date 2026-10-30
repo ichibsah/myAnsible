@@ -1,10 +1,10 @@
 #!/bin/bash
-#filename: 4a999ffBackup
-#ssh root@4a999ff.online-server.cloud -o PubkeyAuthentication=no
+#filename: de-1011-vpsBackup
+#ssh root@de-1011-vps.online-server.cloud -o PubkeyAuthentication=no
 source="ibrahim@a35a0d3.online-server.cloud:/opt/docker/"
 output="/mnt/v-Host/a35a0d3/backup/docker/"
-#source1="root@4a999ff.online-server.cloud:/var/www/vhosts/"
-#output1="/mnt/v-Host/4a999ff/vhost/"
+#source1="root@de-1011-vps.online-server.cloud:/var/www/vhosts/"
+#output1="/mnt/v-Host/de-1011-vps/vhost/"
 # checking if script is run as root
 #if [ $(id -u) -ne 0 ]
 #then

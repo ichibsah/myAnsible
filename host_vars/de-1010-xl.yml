@@ -44,10 +44,10 @@ apt_host_pckg_lst:                        # Install Host Specific Packages (keep
   - telnetd
   - telnet    # systemctl status inetd
 dckr_fldr_lst:                            # Docker folder list that will be copied when set in the host variable
-  - { fldr: "4a999ff" }
+  - { fldr: "de-1011-vps" }
 
 crntb_fldr_lst:                            # Crontab folder list that will be copied when set in the host variable
-  - { fldr: "4a999ff" }
+  - { fldr: "de-1011-vps" }
 #
 # my ignore ip list for fail2ban is here: /etc/fail2ban/jail.local
 fail2ban_whitelist: true                               # Enable Fail2Ban whitelist configuration

@@ -7,7 +7,7 @@ all:
         112e275.imsawadogo.com:
         a35a0d3.imsawadogo.com:
         #b0235ee.imsawadogo.com:
-        4a999ff.imsawadogo.com:
+        de-1011-vps.imsawadogo.com:
       children:
         provision:
           hosts: 
@@ -18,7 +18,7 @@ all:
             #b0235ee.imsawadogo.com: 
               #ansible_become_pass: '{{ b0235ee_become_pass }}'
               #ansible_ssh_user: root
-            4a999ff.imsawadogo.com:
+            de-1011-vps.imsawadogo.com:
           vars:
             #ansible_user: root
             #ansible_ssh_user: root
@@ -44,7 +44,7 @@ all:
             d86df44.imsawadogo.com:
             a35a0d3.imsawadogo.com:
             #b0235ee.imsawadogo.com:
-            4a999ff.imsawadogo.com:
+            de-1011-vps.imsawadogo.com:
             #virthost01.skyline.lan:
             #msvr02.skyline.lan:
             #  #ansible_become_method: su
@@ -56,7 +56,7 @@ all:
         ansible_become: yes
         ansible_become_method: sudo
         #ansible_become_user=root # this will affect the root home user eg. .bashrc -> dont use it
-        #ansible_become=yes # this will set it globally, which afftect 4a999ff
+        #ansible_become=yes # this will set it globally, which afftect de-1011-vps
         #ansible_become_method=sudo
 ####      
     local:

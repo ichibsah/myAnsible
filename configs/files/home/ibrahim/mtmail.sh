@@ -27,7 +27,7 @@ postsuper -r ALL
 postqueue -f
 
 hostname -f
-hostnamectl set-hostname 4a999ff.imsawadogo.com
+hostnamectl set-hostname de-1011-vps.imsawadogo.com
 hostnamectl set-hostname de-1010-xl.imsawadogo.com
 hostnamectl set-hostname mail.imsawadogo.com
 

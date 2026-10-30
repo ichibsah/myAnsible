@@ -129,11 +129,11 @@ if [ ! "$SSH_AUTH_SOCK" ] || [ $agent_run_state = 2 ]; then
     agent_start
     ssh-add
     ssh-add ~/.ssh/id_rsa
-    ssh-add ~/.ssh/ibrahim@4a999ff.key
+    ssh-add ~/.ssh/ibrahim@de-1011-vps.key
 elif [ "$SSH_AUTH_SOCK" ] && [ $agent_run_state = 1 ]; then
     ssh-add
     ssh-add ~/.ssh/id_rsa
-    ssh-add ~/.ssh/ibrahim@4a999ff.key
+    ssh-add ~/.ssh/ibrahim@de-1011-vps.key
 fi
 
 unset env
@@ -141,7 +141,7 @@ unset env
 #eval "$(ssh-agent -s)"
 #ssh-add ~/.ssh/id_rsa
 ssh-add ~/.ssh/id_rsa
-ssh-add ~/.ssh/ibrahim@4a999ff.key 
+ssh-add ~/.ssh/ibrahim@de-1011-vps.key 
 #ssh-add -L
 #
 git config --global user.name $USER
