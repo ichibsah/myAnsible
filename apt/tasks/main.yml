@@ -12,6 +12,9 @@
 - name: Ensure package configuration is applied
   ansible.builtin.import_tasks:
     file: pckgs.yml
+  tags:
+    - packages
+    - localhost
 
 # Import additional modules
 - name: Import Docker tasks

@@ -39,12 +39,28 @@
     state: "{{ 'present' if instl_def_pckg else 'absent' }}"
   when: instl_def_pckg or not kill_remove
 
-# Install host-specific packages
+- name: Debug apt_host_pckg_lst
+  debug:
+    msg:
+      - "apt_host_pckg_lst={{ apt_host_pckg_lst | default('UNDEFINED') }}"
+      - "length={{ (apt_host_pckg_lst | default([], true)) | length }}"
+
+
 - name: Install host-specific packages
   package:
-    name: "{{ apt_host_pckg_lst }}"
+    name: "{{ item }}"
     state: present
-  when: apt_host_pckg_lst | default([]) | length > 0
+  loop: "{{ apt_host_pckg_lst }}"
+  register: pkg_results
+  ignore_errors: true
+  when: (apt_host_pckg_lst | default([], true)) | length > 0
+
+- name: Show failed packages
+  debug:
+    msg: "Failed to install {{ item.item }}"
+  loop: "{{ pkg_results.results }}"
+  when: item.failed | default(false)
+
 
 # Install utility packages
 - name: Install utility packages

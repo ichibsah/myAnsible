@@ -45,17 +45,17 @@
 - name: Job 08 | import task watchtower
   ansible.builtin.import_tasks:
     file: 0000-watchtower.yml
-  #when: apt_host_pckg_lst | contains bind9
+  
 #
 - name: Job 09 | import task dozzle
   ansible.builtin.import_tasks:
     file: 8892-dozzle.yml
-  #when: apt_host_pckg_lst | contains bind9
+  
 #
 - name: Job 10 | import task iSpy
   ansible.builtin.import_tasks:
     file: 8099-iSpy.yml
-  #when: apt_host_pckg_lst | contains bind9
+  
 #
 - name: Job 11 | import task semaphore
   ansible.builtin.import_tasks:
@@ -76,7 +76,7 @@
 - name: Job 13 | import task truecommand
   ansible.builtin.import_tasks:
     file: 3006-truecommand.yml
-  #when: apt_host_pckg_lst | contains bind9
+  
 #
 - name: Job 14 | import task pihole
   ansible.builtin.import_tasks:
@@ -89,12 +89,12 @@
 - name: Job 15 | import task gravity
   ansible.builtin.import_tasks:
     file: 8008-gravity.yml
-  #when: apt_host_pckg_lst | contains bind9
+  
 #
 - name: Job 16 | import task homepage
   ansible.builtin.import_tasks:
     file: 3550-homepage.yml
-  #when: apt_host_pckg_lst | contains bind9
+  
 #
 - name: Job 17 | import task plex
   ansible.builtin.import_tasks:
@@ -112,7 +112,7 @@
 - name: Job 18 | import task tubesync
   ansible.builtin.import_tasks:
     file: 4848-tubesync.yml
-  #when: apt_host_pckg_lst | contains bind9
+  
 #
 - name: Job 19 | import task YoutubeDl
   ansible.builtin.import_tasks:
@@ -126,12 +126,12 @@
 - name: Job 20 | import task opensubtitles
   ansible.builtin.import_tasks:
     file: 0000-opensubtitles.yml
-  #when: apt_host_pckg_lst | contains bind9
+  
 #
 - name: Job 21 | import task tautulli
   ansible.builtin.import_tasks:
     file: 8181-tautulli.yml
-  #when: apt_host_pckg_lst | contains bind9
+  
 #
 - name: Job 22 | import task overseerr
   ansible.builtin.import_tasks:
@@ -144,7 +144,7 @@
 - name: Job 23 | import task emby
   ansible.builtin.import_tasks:
     file: 8096-emby.yml
-  #when: apt_host_pckg_lst | contains bind9
+  
 #
 - name: Job 23.1 | import task emby
   ansible.builtin.import_tasks:
@@ -157,32 +157,32 @@
 - name: Job 24 | import task invidious
   ansible.builtin.import_tasks:
     file: 7601-invidious.yml
-  #when: apt_host_pckg_lst | contains bind9
+  
 #
 - name: Job 25 | import task rxresume
   ansible.builtin.import_tasks:
     file: 8662-rxresume.yml
-  #when: apt_host_pckg_lst | contains bind9
+  
 #
 - name: Job 26 | import task resume
   ansible.builtin.import_tasks:
     file: 5050-resume.yml
-  #when: apt_host_pckg_lst | contains bind9
+  
 #
 - name: Job 27 | import task resume
   ansible.builtin.import_tasks:
     file: 3555-wud.yml
-  #when: apt_host_pckg_lst | contains bind9
+  
 #
 - name: Job 28 | import task webpdf
   ansible.builtin.import_tasks:
     file: 25568-webpdf.yml
-  #when: apt_host_pckg_lst | contains bind9
+  
 #
 - name: Job 29 | import task stirling-pdf
   ansible.builtin.import_tasks:
     file: 25568-stirling-pdf.yml
-  #when: apt_host_pckg_lst | contains bind9
+  
 #
 - name: Job 30 | import task meryem
   ansible.builtin.import_tasks:

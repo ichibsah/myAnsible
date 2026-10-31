@@ -15,6 +15,7 @@ apt_host_pckg_lst:                        # Install Host Specific Packages (keep
   - tldr
   - ncdu
   - btop
+  - wtmpdb
 #
 ### PRVS | CONFIG ###
 prvs_copy_home: yes                       # Copy default user's home files in place
@@ -33,7 +34,7 @@ sysd_strt_srvc: yes                       # Start services
 instl_ansbl_pckg: no                      # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
 instl_docker_pckg: yes                    # Install Docker package (apt_docker_pckg_lst)
 instl_gthb_ky: yes                        # add id_rsa to only ibrahim to allow local server access to git
-apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
+#
 dckr_fldr_lst:                            # Docker folder list that will be copied when set in the host variable
 - { fldr: "de-1011-vps" }
 
@@ -70,7 +71,7 @@ localusers:
       #- sudo
       - docker
     append: True
-    state: present
+    state: absent
     key: joel.pub
     gen_ssh_key: True
     create_home: True
@@ -84,7 +85,7 @@ localusers:
       #- sudo
       - docker
     append: True
-    state: present
+    state: absent
     key: joshua.pub
     gen_ssh_key: True
     create_home: True
