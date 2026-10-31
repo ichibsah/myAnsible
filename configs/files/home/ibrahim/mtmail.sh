@@ -44,9 +44,10 @@ multitail -e sasl_username= "/var/log/maillog" -e smtpd "/var/log/maillog"
 multitail -e Login "/var/log/maillog" -e dovecot "/var/log/maillog" -e smtpd "/var/log/maillog" "/var/log/auth.log"
 multitail -e auth "/var/log/maillog" -e dovecot "/var/log/maillog" -e postfix "/var/log/maillog"
 
+#1011
 multitail -e pam_unix "/var/log/auth.log" -e invalid "/var/log/auth.log" -e ssh "/var/log/auth.log"
 
-
+#1010
 sudo multitail -e ban "/var/log/fail2ban.log" -e unban "/var/log/fail2ban.log" -e ssh "/var/log/fail2ban.log" "/var/log/fail2ban.log"
 
 #conntrack
@@ -265,3 +266,45 @@ mkswap /swapfile
 swapon /swapfile
 echo '/swapfile none swap sw 0 0' >> /etc/fstab
 
+/****/
+SSH troubleshooting:
+/****/
+sudo sshd -T | grep -E 'permitrootlogin|passwordauthentication|pubkeyauthentication'
+
+grep "Accepted" /var/log/auth.log
+
+journalctl -u ssh --since "24 hours ago" | grep Accepted
+
+last -a | head -50
+
+awk -F: '$3 >= 1000 {print $1}' /etc/passwd
+
+sudo apt install unattended-upgrades
+sudo dpkg-reconfigure unattended-upgrades
+
+Recommended hardened SSH configuration
+Port 2222
+PermitRootLogin no
+PasswordAuthentication no
+PubkeyAuthentication yes
+PermitEmptyPasswords no
+MaxAuthTries 3
+LoginGraceTime 30
+AllowUsers ibrahim
+
+#See who's attacking the most
+journalctl -u ssh | grep "Failed password" | \
+awk '{print $(NF-3)}' | \
+sort | uniq -c | sort -nr | head -20
+
+#I have seen cloud providers create files like:
+grep -R . /etc/ssh/sshd_config.d/
+ibrahim@de-1011-vps:~$ sudo !!
+sudo grep -R . /etc/ssh/sshd_config.d/
+/etc/ssh/sshd_config.d/50-cloud-init.conf:PasswordAuthentication yes
+ibrahim@de-1011-vps:~$ 
+
+#Prevent cloud-init from reverting it
+sudo grep -R "ssh_pwauth" /etc/cloud/
+
+sudo journalctl -u ssh --since "10 minutes ago"
