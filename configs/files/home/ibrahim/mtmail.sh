@@ -308,3 +308,5 @@ ibrahim@de-1011-vps:~$
 sudo grep -R "ssh_pwauth" /etc/cloud/
 
 sudo journalctl -u ssh --since "10 minutes ago"
+
+last -i | head -20
