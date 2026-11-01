@@ -1,0 +1,4 @@
+env: production
+nginx_port: 80
+
+ansible_os_family: "{{ ansible_facts.os_family | default('Debian') }}"

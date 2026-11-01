@@ -24,5 +24,6 @@ if [[ $# -gt 0 ]]; then
     ansible-playbook -v --limit '!gh-servers !localhost' run-main.yml 2>&1 | tee -a "$LOGFILE" # run this when -l is parsed as an argument
 else
     #ansible-playbook -v --limit '!gh-servers !localhost' run-main.yml
-    ansible-playbook -v --limit '!gh-servers !localhost' run-main.yml # else run this by default
+    #ansible-playbook -v --limit '!gh-servers !localhost' run-main.yml # else run this by default
+    ansible-playbook -v -i 'inventories/production/hosts.yml' run-main.yml # else run this by default
 fi

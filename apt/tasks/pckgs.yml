@@ -1,4 +1,5 @@
 ---
+# optimised
 - name: Upgrade OS packages
   apt:
     upgrade: dist

@@ -1,0 +1,10 @@
+dmain_pstfx: .sawadogo.xyz
+#
+apt_host_pckg_lst:                        # Install Host Specific Packages on all systems on ionos
+  - fzf
+  - zoxide
+  - tldr
+  - ncdu
+  - btop
+  - wtmpdb
+#

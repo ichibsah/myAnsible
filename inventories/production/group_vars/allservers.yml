@@ -1,0 +1,6 @@
+---
+# Set location-specific variables in group_vars/my_location files. All groups are children of the all group, so variables set here override those set in group_vars/all:
+# file: /etc/ansible/group_vars/boston
+#ntp_server: boston-time.example.com
+#vars_files:
+#  - ansible-vault.yml 
