@@ -39,30 +39,57 @@
     name: "{{ apt_def_pckg_lst }}"
     state: "{{ 'present' if instl_def_pckg else 'absent' }}"
   when: instl_def_pckg or not kill_remove
-
-- name: Debug apt_host_pckg_lst
-  debug:
+#
+- name: Debug package source lists
+  ansible.builtin.debug:
     msg:
       - "apt_host_pckg_lst={{ apt_host_pckg_lst | default('UNDEFINED') }}"
-      - "length={{ (apt_host_pckg_lst | default([], true)) | length }}"
+      - "apt_grp_pckg_lst={{ apt_grp_pckg_lst | default('UNDEFINED') }}"
+      - "apt_host_pckg_lst length={{ (apt_host_pckg_lst | default([], true)) | length }}"
+      - "apt_grp_pckg_lst length={{ (apt_grp_pckg_lst | default([], true)) | length }}"
 
+- name: Build package list
+  ansible.builtin.set_fact:
+    apt_packages: >-
+      {{
+        (
+          (apt_grp_pckg_lst | default([], true))
+          +
+          (apt_host_pckg_lst | default([], true))
+        ) | unique
+      }}
 
-- name: Install host-specific packages
-  package:
+- name: Debug combined package list
+  ansible.builtin.debug:
+    var: apt_packages
+
+- name: Install packages
+  ansible.builtin.package:
     name: "{{ item }}"
     state: present
-  loop: "{{ apt_host_pckg_lst }}"
+  loop: "{{ apt_packages }}"
   register: pkg_results
   ignore_errors: true
-  when: (apt_host_pckg_lst | default([], true)) | length > 0
+  when: apt_packages | length > 0
 
 - name: Show failed packages
-  debug:
-    msg: "Failed to install {{ item.item }}"
-  loop: "{{ pkg_results.results }}"
+  ansible.builtin.debug:
+    msg:
+      - "Failed to install {{ item.item }}"
+      - "Error: {{ item.msg | default('Unknown error') }}"
+  loop: "{{ pkg_results.results | default([]) }}"
   when: item.failed | default(false)
-
-
+  
+- name: Package installation summary
+  ansible.builtin.debug:
+    msg:
+      - "Requested packages: {{ apt_packages | length }}"
+      - "Successful installs: {{ pkg_results.results | rejectattr('failed', 'defined') | list | length }}"
+      - "Failed installs: {{ pkg_results.results | selectattr('failed', 'defined') | list | length }}"
+  when:
+    - pkg_results is defined
+    - pkg_results.results is defined
+#
 # Install utility packages
 - name: Install utility packages
   package:
