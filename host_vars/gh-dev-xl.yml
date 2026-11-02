@@ -32,7 +32,8 @@ instl_docker_pckg: yes                    # Install Docker package (apt_docker_p
 #
 apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
   - python3-virtualenv
-  - #bind9
+  #- bind9
+#
 dckr_fldr_lst:                            # Docker folder list that will be copied when set in the host variable
 - #{ fldr: "de-1011-vps" }
 
