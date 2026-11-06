@@ -3,7 +3,7 @@
 #   interfaces_file:
 #     dest: /etc/network/interfaces
 #     iface:  "{{interfaces.iface}}"
-#     backup: yes
+#     backup: true
 #     state: present
 #     mode: 0644
 #     owner: root

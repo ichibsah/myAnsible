@@ -22,7 +22,7 @@
 - name: Enable and start Netdata
   systemd:
     name: netdata
-    enabled: yes
+    enabled: true
     state: started
 
 # --------------------------------------------------
@@ -99,7 +99,7 @@
 - name: Install VS Code
   apt:
     name: code
-    update_cache: yes
+    update_cache: true
     state: present
 
 #
@@ -136,7 +136,7 @@
 - name: Install Google Chrome
   apt:
     name: google-chrome-stable
-    update_cache: yes
+    update_cache: true
     state: present
 
 #

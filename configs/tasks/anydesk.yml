@@ -5,7 +5,7 @@
   apt_key:
     url: https://keys.anydesk.com/repos/DEB-GPG-KEY
     state: present 
-    validate_certs: yes
+    validate_certs: true
   when: instl_anydesk
 #  
 - name: Job 02 | Add AnyDesk Repo
@@ -13,8 +13,8 @@
     repo: "deb http://deb.anydesk.com/ all main"
     state: present 
     mode: 0644 
-    update_cache: yes 
-    validate_certs: yes 
+    update_cache: true 
+    validate_certs: true 
   when: instl_anydesk
 #  
 - name: Job 03 | Install AnyDesk Package

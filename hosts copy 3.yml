@@ -53,7 +53,7 @@ all:
       vars:
         ansible_user: ibrahim
         ansible_ssh_user: ibrahim
-        ansible_become: yes
+        ansible_become: true
         ansible_become_method: sudo
         #ansible_become_user=root # this will affect the root home user eg. .bashrc -> dont use it
         #ansible_become=yes # this will set it globally, which afftect de-1011-vps
@@ -65,6 +65,6 @@ all:
       vars:
         ansible_user: ibrahim 
         #ansible_become_user: ibrahim
-        ansible_become: yes
+        ansible_become: true
         ansible_become_method: sudo
         ansible_become_pass: '{{ localhost_become_pass }}'

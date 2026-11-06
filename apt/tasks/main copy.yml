@@ -23,15 +23,15 @@
 # TODO: takes 68.88s to run. needs review
 - name: Job 02 | Update the apt cache
   apt:
-    update_cache: yes
+    update_cache: true
     upgrade: safe #
-    force_apt_get: yes #
+    force_apt_get: true #
     cache_valid_time: "{{apt_cache_valid_time}}"
   when: ansible_os_family == "Debian"
 #
 - name: Job 02.1 | Update the yum cache
   dnf:
-    update_cache: yes
+    update_cache: true
   when: ansible_os_family != "Debian"
   tags: 
     - #test
@@ -81,7 +81,7 @@
 # TODO: run below when above fails
 # - name: Job 05 | INSTALL default packages
 #   apt:
-#     update_cache: yes
+#     update_cache: true
 #     pkg: "{{ item }}"
 #     state: present
 #   loop:
@@ -90,8 +90,8 @@
 #
 - name: Job 06 | REMOVE default packages # REMOVE #
   ansible.builtin.package:
-    autoremove: yes
-    autoclean: yes
+    autoremove: true
+    autoclean: true
     pkg: "{{ apt_def_pckg_lst }}"
     state: absent
   when: not instl_def_pckg and not kill_remove
@@ -196,7 +196,7 @@
   systemd: 
     name: "{{ item }}"
     state: started
-    enabled: yes
+    enabled: true
   with_items: 
     "{{apt_strt_srvc_lst}}"
   when: sysd_strt_srvc
@@ -206,7 +206,7 @@
 #   systemd: 
 #     name: "{{ item }}"
 #     state: started
-#     enabled: yes
+#     enabled: true
 #   with_items: 
 #     "{{apt_started_services_list}}"
 #   when: apt_started_services_list.0 is define
@@ -217,7 +217,7 @@
   systemd: 
     name: "{{ item }}"
     state: started
-    enabled: yes
+    enabled: true
   with_items: 
     "{{apt_hst_strt_srvc_lst}}"
   when: apt_hst_strt_srvc_lst.0 is defined

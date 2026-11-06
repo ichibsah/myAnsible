@@ -48,11 +48,11 @@
     copy:
       src: "{{ common_path }}/logs/catalina.out"
       dest: "{{ common_path }}/logs/catalina.out.ansible.{{ lookup('pipe', 'date +%Y%m%d-%H%M') }}"
-      remote_src: yes
-    ignore_errors: yes    # if log is not available play will run without breaking the execution
+      remote_src: true
+    ignore_errors: true    # if log is not available play will run without breaking the execution
 
   - name: Remove catalina.out
     file:
       path: "{{ common_path }}/logs/catalina.out"
       state: absent
-    ignore_errors: yes    # if log is not available play will run without breaking the execution
+    ignore_errors: true    # if log is not available play will run without breaking the execution

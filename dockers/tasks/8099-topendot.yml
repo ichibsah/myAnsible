@@ -11,9 +11,9 @@
     #repo: https://github.com/skylinewebservice/opendot.git
     repo: git@github.com:skylinewebservice/opendot.git
     dest: "{{ working_dir2 }}"
-    force: yes
-    clone: yes
-    update: yes
+    force: true
+    clone: true
+    update: true
     remote: origin
     version: new-features
   #check_mode: true
@@ -136,12 +136,12 @@
 #   refspec:  # not required. Add an additional refspec to be fetched. If version is set to a I(SHA-1) not reachable from any branch or tag, this option may be necessary to specify the ref containing the I(SHA-1). Uses the same syntax as the 'git fetch' command. An example value could be "refs/meta/config".
 #   force: no # not required. If C(yes), any modified files in the working repository will be discarded.  Prior to 0.7, this was always 'yes' and could not be disabled.  Prior to 1.9, the default was `yes`
 #   depth:  # not required. Create a shallow clone with a history truncated to the specified number or revisions. The minimum possible value is C(1), otherwise ignored. Needs I(git>=1.9.1) to work correctly.
-#   clone: yes # not required. If C(no), do not clone the repository even if it does not exist locally
-#   update: yes # not required. If C(no), do not retrieve new revisions from the origin repository Operations like archive will work on the existing (old) repository and might not respond to changes to the options version or remote.
+#   clone: true # not required. If C(no), do not clone the repository even if it does not exist locally
+#   update: true # not required. If C(no), do not retrieve new revisions from the origin repository Operations like archive will work on the existing (old) repository and might not respond to changes to the options version or remote.
 #   executable:  # not required. Path to git executable to use. If not supplied, the normal mechanism for resolving binary paths will be used.
 #   bare: no # not required. if C(yes), repository will be created as a bare repo, otherwise it will be a standard repo with a workspace.
 #   umask:  # not required. The umask to set before doing any checkouts, or any other repository maintenance.
-#   recursive: yes # not required. if C(no), repository will be cloned without the --recursive option, skipping sub-modules.
+#   recursive: true # not required. if C(no), repository will be cloned without the --recursive option, skipping sub-modules.
 #   track_submodules: no # not required. if C(yes), submodules will track the latest commit on their master branch (or other branch specified in .gitmodules).  If C(no), submodules will be kept at the revision specified by the main project. This is equivalent to specifying the --remote flag to git submodule update.
 #   verify_commit: no # not required. if C(yes), when cloning or checking out a C(version) verify the signature of a GPG signed commit. This requires C(git) version>=2.1.0 to be installed. The commit MUST be signed and the public key MUST be present in the GPG keyring.
 #   archive:  # not required. Specify archive file path with extension. If specified, creates an archive file of the specified format containing the tree structure for the source tree. Allowed archive formats ["zip", "tar.gz", "tar", "tgz"] This will clone and perform git archive from local directory as not all git servers support git archive.

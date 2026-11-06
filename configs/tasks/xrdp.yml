@@ -5,19 +5,19 @@
       - xfce4
       - xfce4-goodies
     state: present
-    update_cache: yes
+    update_cache: true
 
 - name: Ensure xrdp service enabled
   systemd:
     name: xrdp
-    enabled: yes
+    enabled: true
     state: started
 
 - name: Add xrdp user to ssl-cert group (for TLS key access)
   user:
     name: xrdp
     groups: ssl-cert
-    append: yes
+    append: true
 
 - name: Configure XFCE session for all users
   copy:

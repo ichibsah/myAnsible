@@ -1,7 +1,7 @@
 ---
 # defaults file for dockers
 #
-dkr_copy_def_files: yes                   # Copy default docker files to target host
+dkr_copy_def_files: true                   # Copy default docker files to target host
 #
 dkr_copy_etx_files: no                    # Copy extended docker files to target host
 #

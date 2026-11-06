@@ -17,8 +17,8 @@
     #repo: "deb [arch=amd64] https://download.docker.com/linux/debian bullseye stable" # TODO use facts variables
     state: present # not required. choices: absent;present. A source string state.
     mode: 0644 # not required. The octal mode for newly created files in sources.list.d
-    update_cache: yes # not required. Run the equivalent of C(apt-get update) when a change occurs.  Cache updates are run after making changes.
-    validate_certs: yes
+    update_cache: true # not required. Run the equivalent of C(apt-get update) when a change occurs.  Cache updates are run after making changes.
+    validate_certs: true
   # the when here is no longer requred.  
   #when: instl_docker_pckg and (ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] < "12") #bullseye    
   #when: instl_docker_pckg and (ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] < "12") #bullseye    
@@ -32,8 +32,8 @@
 #     #repo: "deb [arch=amd64] https://download.docker.com/linux/debian bookworm stable" # TODO use facts variables
 #     state: present # not required. choices: absent;present. A source string state.
 #     mode: 0644 # not required. The octal mode for newly created files in sources.list.d
-#     update_cache: yes # not required. Run the equivalent of C(apt-get update) when a change occurs.  Cache updates are run after making changes.
-#     validate_certs: yes
+#     update_cache: true # not required. Run the equivalent of C(apt-get update) when a change occurs.  Cache updates are run after making changes.
+#     validate_certs: true
 #   when: instl_docker_pckg and (ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] >= "12") #bookworm
 #   tags: test
 # 
@@ -100,7 +100,7 @@
   user:
     name: ibrahim # required. Name of the user to create, remove or modify.
     groups: docker 
-    append: yes
+    append: true
 
 
 #

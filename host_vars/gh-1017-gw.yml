@@ -31,11 +31,11 @@ apt_hst_strt_srvc_lst:                # Ensure Services are running.
   - #psa
 #
 ### APT | PACKAGES INSTALL ###
-# instl_def_pckg: yes                       # Install complete packages. A 'no' will remove it from the host (apt_def_pckg_lst)
-# instl_utl_pckg: yes                        # Install complete packages. A 'no' will remove it from the host (apt_util_lst)
-# sysd_strt_srvc: yes                       # Start services
+# instl_def_pckg: true                       # Install complete packages. A 'no' will remove it from the host (apt_def_pckg_lst)
+# instl_utl_pckg: true                        # Install complete packages. A 'no' will remove it from the host (apt_util_lst)
+# sysd_strt_srvc: true                       # Start services
 # instl_ansbl_pckg: no                      # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
-# instl_docker_pckg: yes                    # Install Docker package (apt_docker_pckg_lst)
+# instl_docker_pckg: true                    # Install Docker package (apt_docker_pckg_lst)
 # apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
 #   - python3-virtualenv
 #   - #bind9
@@ -49,17 +49,17 @@ crntb_actvt_crnjbs_mrym: no
 dckr_dpl_meryem: no
 dckr_dpl_anasse: no
 ##
-addresolv: yes                            # add cloudflare ad dns resolv address temporary to resolv.conf
+addresolv: true                            # add cloudflare ad dns resolv address temporary to resolv.conf
 #
-addLocalUser: yes                # add a local user to specific host
+addLocalUser: true                # add a local user to specific host
 #
 #
 ### APT | PACKAGES INSTALL ###
-instl_def_pckg: yes                       # Install complete packages. A 'no' will remove it from the host (apt_def_pckg_lst)
-instl_utl_pckg: yes                        # Install complete packages. A 'no' will remove it from the host (apt_util_lst)
-sysd_strt_srvc: yes                       # Start services
-instl_ansbl_pckg: yes                      # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
-instl_docker_pckg: yes                    # Install Docker package (apt_docker_pckg_lst)
+instl_def_pckg: true                       # Install complete packages. A 'no' will remove it from the host (apt_def_pckg_lst)
+instl_utl_pckg: true                        # Install complete packages. A 'no' will remove it from the host (apt_util_lst)
+sysd_strt_srvc: true                       # Start services
+instl_ansbl_pckg: true                      # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
+instl_docker_pckg: true                    # Install Docker package (apt_docker_pckg_lst)
 apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
 - cifs-utils
 - isc-dhcp-common
@@ -71,34 +71,34 @@ apt_host_pckg_lst:                        # Install Host Specific Packages (keep
 pip_host_pckg_lst:                        # Install Host Specific PIP Packages when ansible is also installed
 #
 #
-getflix_cronjob: yes                           # Install getflix cronjob
+getflix_cronjob: true                           # Install getflix cronjob
 #
 # docker containers
-dckr_dpl_pihole: yes
+dckr_dpl_pihole: true
 dckr_dpl_iSpy: no
-dckr_dpl_semaphore: yes
+dckr_dpl_semaphore: true
 dckr_dpl_trcmmnd: no
-dckr_dpl_npxymgmt: yes
-dckr_dpl_gravity: yes
-dckr_dpl_homepage: yes
-dckr_dpl_wud: yes
-dckr_dpl_webcheck: yes
-dckr_dpl_uptmkm: yes
-dckr_dpl_rsume: yes 
+dckr_dpl_npxymgmt: true
+dckr_dpl_gravity: true
+dckr_dpl_homepage: true
+dckr_dpl_wud: true
+dckr_dpl_webcheck: true
+dckr_dpl_uptmkm: true
+dckr_dpl_rsume: true 
 #
 #apt_hst_strt_srvc_lst:                          # Ensure Host Specific Services are running.
   #- isc-dhcp-server
 #
 #
 #
-instl_dhcp_srvc: yes
-dsbl_dhcpvsx: yes                               # Disable dhcp v6 in DHCP
+instl_dhcp_srvc: true
+dsbl_dhcpvsx: true                               # Disable dhcp v6 in DHCP
 dsbl_dhcpvsx_regx: INTERFACESv4='eno1'          # text that should change goes here eg. INTERFACESv4='ens18'
 #
-copy_iptables: yes                                   # Copy iptables to /root folder
-strt_myiptbls_at_boot: yes
+copy_iptables: true                                   # Copy iptables to /root folder
+strt_myiptbls_at_boot: true
 myiptbls_flnm: "/root/myiptable-gh.sh"
-strt_mygw_at_boot: yes
+strt_mygw_at_boot: true
 mygw_flnm: "/root/gw-gh.sh"
 #
 # interfaces:

@@ -10,12 +10,12 @@
     repo: https://github.com/ichibsah/chatbot-ui.git
     #repo: https://github.com/mckaywrigley/chatbot-ui
     dest: "{{ working_dir }}"
-    force: yes
-    clone: yes
-    update: yes
+    force: true
+    clone: true
+    update: true
     remote: origin
     key_file: /home/ibrahim/.ssh/id_rsa # file must exist on remote server
-    accept_hostkey: yes
+    accept_hostkey: true
   check_mode: false
   register: changes_in_git_pull
 #

@@ -16,7 +16,7 @@
     repo: deb [arch=all] https://get.filebot.net/deb/ universal main # TODO use facts variables
     state: present # not required. choices: absent;present. A source string state.
     mode: 0644 # not required. The octal mode for newly created files in sources.list.d
-    update_cache: yes # not required. Run the equivalent of C(apt-get update) when a change occurs.  Cache updates are run after making changes.
+    update_cache: true # not required. Run the equivalent of C(apt-get update) when a change occurs.  Cache updates are run after making changes.
     validate_certs: no
   when: instl_filebot_pckg
   tags:

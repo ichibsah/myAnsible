@@ -14,12 +14,12 @@
       - gnome-session
       - gnome-remote-desktop
     state: absent
-    purge: yes
+    purge: true
   when: "'gnome-shell' in ansible_facts.packages"
 
 - name: Autoremove unused packages
   apt:
-    autoremove: yes
+    autoremove: true
 
 # --------------------------------------------------
 # Install XRDP + XFCE + Fail2ban
@@ -31,7 +31,7 @@
       - xfce4
       - xfce4-goodies
       - fail2ban
-    update_cache: yes
+    update_cache: true
     state: present
 
 # --------------------------------------------------
@@ -40,13 +40,13 @@
 - name: Enable and start xrdp
   systemd:
     name: xrdp
-    enabled: yes
+    enabled: true
     state: started
 
 - name: Enable and start fail2ban
   systemd:
     name: fail2ban
-    enabled: yes
+    enabled: true
     state: started
 
 # --------------------------------------------------
@@ -63,7 +63,7 @@
   lineinfile:
     path: /etc/pam.d/xrdp-sesman
     line: "auth required pam_succeed_if.so user != root"
-    create: yes
+    create: true
 
 # --------------------------------------------------
 # XRDP TLS permission fix
@@ -72,7 +72,7 @@
   user:
     name: xrdp
     groups: ssl-cert
-    append: yes
+    append: true
 
 # --------------------------------------------------
 # Configure XFCE session

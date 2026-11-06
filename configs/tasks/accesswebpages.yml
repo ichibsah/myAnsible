@@ -19,7 +19,7 @@
       ansible.builtin.uri:
         url: "{{ site.url }}"
         method: GET
-        return_content: yes
+        return_content: true
         status_code: 200
       register: access_result
       ignore_errors: no
@@ -35,7 +35,7 @@
           username: "{{ site.username }}"
           password: "{{ site.password }}"
         body_format: form-urlencoded
-        return_content: yes
+        return_content: true
         status_code: 200
       register: login_result
       ignore_errors: no
@@ -46,7 +46,7 @@
           - "'success' in login_result.json"
         fail_msg: "❌ Login failed for {{ site.url }}"
       when: login_result.json is defined
-      ignore_errors: yes  # Prevents full stop on failure
+      ignore_errors: true  # Prevents full stop on failure
 
     - name: Report login status
       #ansible.builtin.shell: echo "$(date) - INFO: Login successful for {{ site.url }} - Response: {{ login_result.status }}" >> /var/log/ansible_webpage_access.log
@@ -55,10 +55,10 @@
       ansible.builtin.uri:
         url: "{{ site.logout_url }}"
         method: GET
-        return_content: yes
+        return_content: true
         status_code: 200
       register: logout_result
-      ignore_errors: yes
+      ignore_errors: true
 
     - name: Report logout status
       #ansible.builtin.shell: echo "$(date) - INFO: Logout successful for {{ site.url }} - Status: {{ logout_result.status }}" >> /var/log/ansible_webpage_access.log

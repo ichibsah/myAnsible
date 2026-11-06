@@ -11,10 +11,10 @@ apt_mirror_url: http://us.archive.ubuntu.com  # the mirror from where to install
 apt_cache_valid_time: 3600                    # Time (in seconds) the apt cache stays valid
 apt_install_recommends: no                    # whether or not to install the "recommended" packages
 apt_install_suggests: no                      # whether or not to install the "suggested" packages
-apt_autoremove: yes                           # remove packages that are no longer needed for dependencies
-apt_autoremove_recommends: yes                # whether to automatically remove "recommended" packages
-apt_autoremove_suggests: yes                  # whether to automatically remove "suggested" packages
-apt_autoclean: yes                            # remove .deb files for packages no longer on your system
+apt_autoremove: true                           # remove packages that are no longer needed for dependencies
+apt_autoremove_recommends: true                # whether to automatically remove "recommended" packages
+apt_autoremove_suggests: true                  # whether to automatically remove "suggested" packages
+apt_autoclean: true                            # remove .deb files for packages no longer on your system
 apt_default_packages:
   - python-apt
   - unattended-upgrades

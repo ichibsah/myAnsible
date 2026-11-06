@@ -56,5 +56,5 @@
 - name: Install teams-for-linux
   ansible.builtin.apt:
     name: teams-for-linux
-    update_cache: yes
+    update_cache: true
     state: present

@@ -9,4 +9,4 @@ hostname_additional_hosts:
 apt_host_packages_list:                   # Install Host Specific Packages
 #
 #
-instl_swrm_node: yes                                 # Install Docker swarm Service
+instl_swrm_node: true                                 # Install Docker swarm Service

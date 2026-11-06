@@ -16,7 +16,7 @@
     #update_password: always
     #shell: "{{item.shell}}"
     groups: "{{ item.groups }}"
-    system: yes
+    system: true
     #password: "{{ localhost_become_pass | password_hash('sha512') }}"
     append: "{{ item.append }}"
     create_home: false

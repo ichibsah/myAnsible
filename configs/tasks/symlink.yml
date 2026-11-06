@@ -8,7 +8,7 @@
     dest: '{{ item.dest }}'
     owner: ibrahim
     group: ibrahim
-    force: yes
+    force: true
     follow: false
     state: link
   loop:
