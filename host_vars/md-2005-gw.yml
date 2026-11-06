@@ -15,9 +15,9 @@ ansible_become_pass: '{{ localhost_become_pass }}'
 prvs_copy_home: true                       # Copy default user's home files in place
 prvs_root_passwd: true                     # update root passward
 #
-dkr_copy_def_files: no                   # Copy default docker files to target server
+dkr_copy_def_files: false                   # Copy default docker files to target server
 #
-crntb_activate_cronjobs: no
+crntb_activate_cronjobs: false
 #
 #
 ### APT | PACKAGES INSTALL ###

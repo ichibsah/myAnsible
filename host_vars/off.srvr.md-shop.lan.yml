@@ -9,11 +9,11 @@ ansible_become_pass: '{{ localhost_become_pass }}'
 ansible_connection: local
 
 ### PRVS | CONFIG ###
-prvs_copy_home: no                       # Copy default user's home files in place
+prvs_copy_home: false                       # Copy default user's home files in place
 prvs_root_passwd: true                     # update root passward
 #
-dkr_copy_def_files: no                   # Copy default docker files to target server
-dkr_copy_etx_files: no                   # # Copy extended docker files to target host
+dkr_copy_def_files: false                   # Copy default docker files to target server
+dkr_copy_etx_files: false                   # # Copy extended docker files to target host
 
 #
 crntb_activate_cronjobs: true

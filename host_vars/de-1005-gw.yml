@@ -15,12 +15,12 @@ dckr_dmain_nme_pstfx: home.sawadogo.xyz
 ansible_become_pass: '{{ localhost_become_pass }}'
 #
 ### PRVS | CONFIG ###
-prvs_copy_home: no                       # Copy default user's home files in place
-prvs_root_passwd: no                     # update root passward
+prvs_copy_home: false                       # Copy default user's home files in place
+prvs_root_passwd: false                     # update root passward
 #
-dkr_copy_def_files: no                   # Copy default docker files to target server
+dkr_copy_def_files: false                   # Copy default docker files to target server
 #
-crntb_activate_cronjobs: no
+crntb_activate_cronjobs: false
 #
 addLocalUser: true                # add a local user to specific host
 #
@@ -56,9 +56,9 @@ pip_host_pckg_lst:                        # Install Host Specific PIP Packages w
 #
 # docker containers
 dckr_dpl_pihole: true
-dckr_dpl_iSpy: no
+dckr_dpl_iSpy: false
 dckr_dpl_semaphore: true
-dckr_dpl_trcmmnd: no
+dckr_dpl_trcmmnd: false
 dckr_dpl_npxymgmt: true
 dckr_dpl_gravity: true
 dckr_dpl_homepage: true

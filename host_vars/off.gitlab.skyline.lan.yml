@@ -18,7 +18,7 @@ prvs_root_passwd: true                     # update root passward
 #
 dkr_copy_def_files: true                   # Copy default docker files to target server
 #
-crntb_activate_cronjobs: no
+crntb_activate_cronjobs: false
 #
 #
 dckr_fldr_lst:                            # Docker folder list that will be copied when set in the host variable

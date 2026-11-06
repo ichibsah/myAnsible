@@ -21,9 +21,9 @@ pip_install_package_lists:                # Install packages using PIP
 #
 ansible_become_pass: '{{ localhost_become_pass }}'
 #
-prvs_copy_home: no              # Copy default user's home files in place
+prvs_copy_home: false              # Copy default user's home files in place
 #
-dkr_copy_def_files: no          # Copy default docker files to target server
+dkr_copy_def_files: false          # Copy default docker files to target server
 #
 apt_install_utilities_base: true           # Install utilities packages default settings
 
