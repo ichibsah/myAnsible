@@ -2,7 +2,7 @@
 # tasks file for configs
 - name: Job 1001-1001 | import task timezone
   ansible.builtin.import_tasks:
-    file: timezone.yml
+    file: locales.yml
   tags:
     - timezone
     - localhost
@@ -10,14 +10,14 @@
 #
 - name: Job 1001-1002 | import task locales
   ansible.builtin.import_tasks:
-    file: locales.yml
+    file: timezone.yml
   when: ansible_os_family == "Debian"
   tags:
     - locales
     - localhost
     #- test#
 #
-- name: Job 1001-1002 | import task locales
+- name: Job 1001-1002 | import task sleepy
   ansible.builtin.import_tasks:
     file: sleepy.yml
   when: ansible_os_family == "Debian"
