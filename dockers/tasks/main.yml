@@ -18,29 +18,31 @@
     mode: 0744
   when: ansible_os_family == 'Debian' and dkr_copy_etx_files # ansible_hostname == 'a35a0d3'
 
-- name: Job 03 | Copy Specific docker folder(s) to target host
-  copy:
-    src: "files/{{ansible_hostname}}/docker"
-    #src: "files/{{item.fldr}}/docker"
-    dest: "/opt/"
+- name: Check for host-specific Docker files on the controller
+  ansible.builtin.stat:
+    path: "{{ role_path }}/files/{{ ansible_hostname }}/docker"
+  delegate_to: localhost
+  become: false
+  register: host_docker_files
+  when: ansible_os_family == 'Debian'
+
+- name: Copy host-specific Docker files when available
+  ansible.builtin.copy:
+    src: "{{ role_path }}/files/{{ ansible_hostname }}/docker"
+    dest: /opt/
     owner: ibrahim
     group: ibrahim
-    mode: 0744
-  #with_items:
-    #"{{ dckr_fldr_lst }}"
-  #when: dckr_fldr_lst.0 is defined
-  tags: 
-    - #test
-#
-#TODO: find a way to imporve the copy - shut it down and use docker deploy
-- name: Job 04 | Copy docker folder(s) to target host that matches "ansible_hostname"
-  copy:
-    src: "files/{{ansible_hostname}}/docker"
-    dest: "/opt/"
-    owner: ibrahim
-    group: ibrahim
-    mode: 0744
-  #when: ansible_hostname != 'virthost01'
+    mode: "0744"
+  when:
+    - ansible_os_family == 'Debian'
+    - host_docker_files.stat.isdir | default(false)
+
+- name: Report missing host-specific Docker files
+  ansible.builtin.debug:
+    msg: "Skipping host-specific Docker files: {{ role_path }}/files/{{ ansible_hostname }}/docker does not exist on the controller."
+  when:
+    - ansible_os_family == 'Debian'
+    - not (host_docker_files.stat.isdir | default(false))
 #
 - name: Job 08 | import task watchtower
   ansible.builtin.import_tasks:

@@ -5,14 +5,26 @@
 ###############################################################################
 
 # -----------------------------------------------------------------------------
-# Add Docker CE APT repository (universal repo for all supported Debian releases)
+# Configure Docker's signing key and APT repository
 # -----------------------------------------------------------------------------
-- name: Job 20.01 | Add Docker CE APT repository
-  apt_repository:
+- name: Job 20.01 | Ensure APT keyrings directory exists
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: "0755"
+
+- name: Job 20.02 | Install Docker CE APT signing key
+  ansible.builtin.get_url:
+    url: "https://download.docker.com/linux/{{ ansible_distribution | lower }}/gpg"
+    dest: /etc/apt/keyrings/docker.asc
+    mode: "0644"
+
+- name: Job 20.03 | Add Docker CE APT repository
+  ansible.builtin.apt_repository:
     repo: >-
       deb [arch={{ [ansible_architecture]
                    | map('extract', deb_architecture)
-                   | first }}]
+                   | first }} signed-by=/etc/apt/keyrings/docker.asc]
       https://download.docker.com/{{ ansible_system | lower }}/{{ ansible_distribution | lower }}
       {{ ansible_distribution_release }} stable
     state: present
@@ -23,7 +35,7 @@
 # -----------------------------------------------------------------------------
 # Ensure required Python tooling is installed system-wide
 # -----------------------------------------------------------------------------
-- name: Job 20.03 | Install system Python and pip packages
+- name: Job 20.04 | Install system Python and pip packages
   apt:
     pkg:
       - python3
@@ -36,7 +48,7 @@
 # -----------------------------------------------------------------------------
 # Install Docker packages via APT
 # -----------------------------------------------------------------------------
-- name: Job 20.04 | Install Docker packages
+- name: Job 20.05 | Install Docker packages
   apt:
     pkg: "{{ apt_docker_pckg_lst }}"
     state: present
@@ -45,7 +57,7 @@
 # -----------------------------------------------------------------------------
 # Install Docker Python modules (required for Ansible docker_* modules)
 # -----------------------------------------------------------------------------
-- name: Job 20.05 | Install Docker Python modules
+- name: Job 20.06 | Install Docker Python modules
   pip:
     name: "{{ pip_dckr_pckg_lst }}"
     state: present
