@@ -28,3 +28,7 @@ else
     #ansible-playbook -v --limit '!gh-servers !localhost' run-main.yml # else run this by default
     ansible-playbook -v -i 'inventories/production/hosts.yml' run-main.yml # else run this by default
 fi
+
+yamllint "$LOGFILE"
+yamlfmt -w "$LOGFILE"
+ansible-lint "$LOGFILE"
