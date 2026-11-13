@@ -93,7 +93,7 @@
 # Install utility packages
 - name: Install utility packages
   package:
-    name: "{{ apt_util_lst }}"
+    name: "{{ apt_util_lst | unique}}"
     state: present
   when: instl_utl_pckg
   register: utility_status
@@ -103,7 +103,7 @@
   package:
     name: "{{ item }}"
     state: present
-  loop: "{{ apt_util_lst }}"
+  loop: "{{ apt_util_lst | unique }}"
   when:
     - instl_utl_pckg
     - utility_status is failed
@@ -111,7 +111,7 @@
 # Remove utility packages
 - name: Remove utility packages
   package:
-    name: "{{ apt_util_lst }}"
+    name: "{{ apt_util_lst | unique }}"
     state: absent
   when:
     - not instl_utl_pckg
@@ -120,7 +120,7 @@
 # Install pip packages
 - name: Install pip packages
   pip:
-    name: "{{ pip_host_pckg_lst }}"
+    name: "{{ pip_host_pckg_lst | unique}}"
     state: present
   when: instl_ansbl_pckg
 

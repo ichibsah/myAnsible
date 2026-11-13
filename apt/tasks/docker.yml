@@ -8,30 +8,81 @@
 # -----------------------------------------------------------------------------
 # Configure Docker's signing key and APT repository
 # -----------------------------------------------------------------------------
-- name: Job 20.01 | Ensure APT keyrings directory exists
-  ansible.builtin.file:
-    path: /etc/apt/keyrings
-    state: directory
-    mode: "0755"
+- name: Check for Plesk-managed Docker repository
+  ansible.builtin.stat:
+    path: /etc/apt/keyrings/plesk-ext-docker.gpg
+  register: plesk_docker_keyring
 
-- name: Job 20.02 | Install Docker CE APT signing key
-  ansible.builtin.get_url:
-    url: "https://download.docker.com/linux/{{ ansible_distribution | lower }}/gpg"
-    dest: /etc/apt/keyrings/docker.asc
-    mode: "0644"
-
-- name: Job 20.03 | Add Docker CE APT repository
-  ansible.builtin.apt_repository:
-    repo: >-
+- name: Define Docker APT repository
+  ansible.builtin.set_fact:
+    apt_docker_repository: >-
       deb [arch={{ [ansible_architecture]
                    | map('extract', deb_architecture)
                    | first }} signed-by=/etc/apt/keyrings/docker.asc]
       https://download.docker.com/{{ ansible_system | lower }}/{{ ansible_distribution | lower }}
       {{ ansible_distribution_release }} stable
+
+- name: Remove the duplicate Docker repository when Plesk manages it
+  ansible.builtin.apt_repository:
+    repo: "{{ apt_docker_repository }}"
+    state: absent
+    update_cache: false
+  when: plesk_docker_keyring.stat.exists
+
+- name: Install Docker APT prerequisites
+  ansible.builtin.apt:
+    name:
+      - ca-certificates
+      - curl
+    state: present
+  when: not plesk_docker_keyring.stat.exists
+
+- name: Job 20.01 | Ensure APT keyrings directory exists
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: "0755"
+  when: not plesk_docker_keyring.stat.exists
+
+- name: Job 20.02 | Install Docker CE APT signing key
+  ansible.builtin.command:
+    argv:
+      - curl
+      - --fail
+      - --location
+      - --silent
+      - --show-error
+      - --output
+      - /etc/apt/keyrings/docker.asc.tmp
+      - "https://download.docker.com/linux/{{ ansible_distribution | lower }}/gpg"
+    creates: /etc/apt/keyrings/docker.asc
+  when: not plesk_docker_keyring.stat.exists
+
+- name: Install Docker CE APT signing key
+  ansible.builtin.command:
+    argv:
+      - install
+      - -m
+      - "0644"
+      - /etc/apt/keyrings/docker.asc.tmp
+      - /etc/apt/keyrings/docker.asc
+    creates: /etc/apt/keyrings/docker.asc
+  when: not plesk_docker_keyring.stat.exists
+
+- name: Remove temporary Docker signing key file
+  ansible.builtin.file:
+    path: /etc/apt/keyrings/docker.asc.tmp
+    state: absent
+  when: not plesk_docker_keyring.stat.exists
+
+- name: Job 20.03 | Add Docker CE APT repository
+  ansible.builtin.apt_repository:
+    repo: "{{ apt_docker_repository }}"
     state: present
     mode: "0644"
     update_cache: true
     validate_certs: true
+  when: not plesk_docker_keyring.stat.exists
 
 # -----------------------------------------------------------------------------
 # Ensure required Python tooling is installed system-wide
@@ -53,6 +104,7 @@
   apt:
     pkg: "{{ apt_docker_pckg_lst }}"
     state: present
+    update_cache: true
   when: instl_docker_pckg
 
 # -----------------------------------------------------------------------------

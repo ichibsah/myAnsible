@@ -18,13 +18,6 @@
     - docker
     - packages
 
-- name: Ensure package configuration is applied
-  ansible.builtin.import_tasks:
-    file: pckgs.yml
-  tags:
-    - packages
-    - localhost
-
 - name: Import Docker tasks
   ansible.builtin.import_tasks:
     file: docker.yml
@@ -32,6 +25,13 @@
   tags:
     - docker
     - packages
+
+- name: Ensure package configuration is applied
+  ansible.builtin.import_tasks:
+    file: pckgs.yml
+  tags:
+    - packages
+    - localhost
 
 - name: Import Filebot tasks
   ansible.builtin.import_tasks:

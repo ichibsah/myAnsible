@@ -1,0 +1,143 @@
+---
+# optimised
+- name: Upgrade OS packages
+  apt:
+    upgrade: dist
+    update_cache: true
+  when:
+    - ansible_os_family == "Debian"
+    - maintenance_tasks.upgrade_system
+
+- name: Docker prune
+  command: docker system prune -af
+  when:
+    - maintenance_tasks.docker_prune
+    - docker_check.rc == 0
+
+- name: Upgrade packages via pip-review
+  command: pip-review --auto
+  when: maintenance_tasks.upgrade_pip_packages
+  failed_when: false
+
+- name: Upgrade pip and ansible
+  pip:
+    name:
+      - pip
+      - ansible
+    state: latest
+  when: maintenance_tasks.upgrade_ansible
+
+# /*********/
+# Update package cache
+- name: Update package cache
+  package:
+    update_cache: true
+
+# Manage default packages
+- name: Manage default packages
+  package:
+    name: "{{ apt_def_pckg_lst }}"
+    state: "{{ 'present' if instl_def_pckg else 'absent' }}"
+  when: instl_def_pckg or not kill_remove
+#
+- name: Debug package source lists
+  ansible.builtin.debug:
+    msg:
+      - "apt_host_pckg_lst={{ apt_host_pckg_lst | default('UNDEFINED') }}"
+      - "apt_grp_pckg_lst={{ apt_grp_pckg_lst | default('UNDEFINED') }}"
+      - "apt_host_pckg_lst length={{ (apt_host_pckg_lst | default([], true)) | length }}"
+      - "apt_grp_pckg_lst length={{ (apt_grp_pckg_lst | default([], true)) | length }}"
+
+- name: Build package list
+  ansible.builtin.set_fact:
+    apt_packages: >-
+      {{
+        (
+          (apt_grp_pckg_lst | default([], true))
+          +
+          (apt_host_pckg_lst | default([], true))
+        ) | unique
+      }}
+
+- name: Debug combined package list
+  ansible.builtin.debug:
+    var: apt_packages
+
+- name: Install packages
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ apt_packages }}"
+  register: pkg_results
+  ignore_errors: true
+  when: apt_packages | length > 0
+
+- name: Show failed packages
+  ansible.builtin.debug:
+    msg:
+      - "Failed to install {{ item.item }}"
+      - "Error: {{ item.msg | default('Unknown error') }}"
+  loop: "{{ pkg_results.results | default([]) }}"
+  when: item.failed | default(false)
+
+- name: Package installation summary
+  ansible.builtin.debug:
+    msg:
+      - "Requested packages: {{ apt_packages | length }}"
+      - "Successful installs: {{ pkg_results.results | rejectattr('failed', 'defined') | list | length }}"
+      - "Failed installs: {{ pkg_results.results | selectattr('failed', 'defined') | list | length }}"
+  when:
+    - pkg_results is defined
+    - pkg_results.results is defined
+#
+# Install utility packages
+- name: Install utility packages
+  package:
+    name: "{{ apt_util_lst | unique}}"
+    state: present
+  when: instl_utl_pckg
+  register: utility_status
+
+# Retry utilities one by one if bulk install failed
+- name: Retry utility packages individually
+  package:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ apt_util_lst | unique }}"
+  when:
+    - instl_utl_pckg
+    - utility_status is failed
+
+# Remove utility packages
+- name: Remove utility packages
+  package:
+    name: "{{ apt_util_lst | unique }}"
+    state: absent
+  when:
+    - not instl_utl_pckg
+    - not kill_remove
+
+# Install pip packages
+- name: Install pip packages
+  pip:
+    name: "{{ pip_host_pckg_lst | unique}}"
+    state: present
+  when: instl_ansbl_pckg
+
+# Manage common services
+- name: Manage services
+  service:
+    name: "{{ item }}"
+    state: "{{ 'started' if sysd_strt_srvc else 'stopped' }}"
+    enabled: "{{ sysd_strt_srvc }}"
+  loop: "{{ apt_strt_srvc_lst }}"
+  when: sysd_strt_srvc or not kill_remove
+
+# Start host-specific services
+- name: Start host-specific services
+  service:
+    name: "{{ item }}"
+    state: started
+    enabled: true
+  loop: "{{ apt_hst_strt_srvc_lst | default([]) }}"
+  when: apt_hst_strt_srvc_lst | default([]) | length > 0

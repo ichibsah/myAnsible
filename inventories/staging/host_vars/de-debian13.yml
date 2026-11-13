@@ -61,7 +61,7 @@ dckr_dpl_uptmkm: true
 dckr_dpl_n8n: true  # add n8n to this list and set it to true to have it deployed on the target host
 #
 apt_hst_strt_srvc_lst:  # Ensure Host Specific Services are running.
-  - isc-dhcp-server
+#  - isc-dhcp-server
 #
 odoo_keep_alive: true  # Install Odoo keep alive cronjob
 #
