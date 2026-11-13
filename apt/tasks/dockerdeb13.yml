@@ -1,103 +1,102 @@
 ---
-###############################################################################
-# Docker installation and removal
-# Reference:
-# https://computingforgeeks.com/install-docker-ce-on-linux-systems/
-###############################################################################
-
-# -----------------------------------------------------------------------------
-# Configure Docker's signing key and APT repository
-# -----------------------------------------------------------------------------
-- name: Job 20.01 | Ensure APT keyrings directory exists
-  ansible.builtin.file:
-    path: /etc/apt/keyrings
-    state: directory
-    mode: "0755"
-
-- name: Job 20.02 | Install Docker CE APT signing key
-  ansible.builtin.get_url:
-    url: "https://download.docker.com/linux/{{ ansible_distribution | lower }}/gpg"
-    dest: /etc/apt/keyrings/docker.asc
-    mode: "0644"
-
-- name: Job 20.03 | Add Docker CE APT repository
-  ansible.builtin.apt_repository:
-    repo: >-
-      deb [arch={{ [ansible_architecture]
-                   | map('extract', deb_architecture)
-                   | first }} signed-by=/etc/apt/keyrings/docker.asc]
-      https://download.docker.com/{{ ansible_system | lower }}/{{ ansible_distribution | lower }}
-      {{ ansible_distribution_release }} stable
-    state: present
-    mode: "0644"
-    update_cache: true
-    validate_certs: true
-
-# -----------------------------------------------------------------------------
-# Ensure required Python tooling is installed system-wide
-# -----------------------------------------------------------------------------
-- name: Job 20.04 | Install system Python and pip packages
-  apt:
-    pkg:
-      - python3
-      - python3-apt
-      - python3-pip
-      - python3-full
-      - pip
-    state: latest
-
-# -----------------------------------------------------------------------------
-# Install Docker packages via APT
-# -----------------------------------------------------------------------------
-- name: Job 20.05 | Install Docker packages
-  apt:
-    pkg: "{{ apt_docker_pckg_lst }}"
-    state: present
+- name: Install Docker CE on Debian 13
   when: instl_docker_pckg
+  block:
+    - name: Install Docker APT prerequisites
+      ansible.builtin.apt:
+        name:
+          - ca-certificates
+          - curl
+        state: present
 
-# -----------------------------------------------------------------------------
-# Install Docker Python modules (required for Ansible docker_* modules)
-# -----------------------------------------------------------------------------
-- name: Job 20.06 | Install Docker Python modules
-  pip:
-    name: "{{ pip_dckr_pckg_lst }}"
-    state: present
-  when: instl_docker_pckg
+    - name: Remove conflicting Docker packages
+      ansible.builtin.apt:
+        name:
+          - docker.io
+          - docker-compose
+          - docker-doc
+          - docker-buildx
+          - podman-docker
+          - containerd
+          - runc
+        state: absent
 
-# -----------------------------------------------------------------------------
-# Remove Docker packages (cleanup mode)
-# -----------------------------------------------------------------------------
-- name: Job 20.07 | Remove Docker APT packages
-  apt:
-    pkg: "{{ apt_docker_pckg_lst }}"
+    - name: Ensure APT keyrings directory exists
+      ansible.builtin.file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: "0755"
+
+    - name: Download Docker's official APT signing key
+      ansible.builtin.command:
+        argv:
+          - curl
+          - --fail
+          - --location
+          - --silent
+          - --show-error
+          - --output
+          - /etc/apt/keyrings/docker.asc.tmp
+          - https://download.docker.com/linux/debian/gpg
+        creates: /etc/apt/keyrings/docker.asc
+
+    - name: Install Docker's APT signing key
+      ansible.builtin.command:
+        argv:
+          - install
+          - -m
+          - "0644"
+          - /etc/apt/keyrings/docker.asc.tmp
+          - /etc/apt/keyrings/docker.asc
+        creates: /etc/apt/keyrings/docker.asc
+
+    - name: Remove temporary Docker signing key file
+      ansible.builtin.file:
+        path: /etc/apt/keyrings/docker.asc.tmp
+        state: absent
+
+    - name: Detect Debian package architecture
+      ansible.builtin.command: dpkg --print-architecture
+      register: docker_deb_architecture
+      changed_when: false
+
+    - name: Configure Docker's official APT repository
+      ansible.builtin.copy:
+        dest: /etc/apt/sources.list.d/docker.sources
+        mode: "0644"
+        content: |
+          Types: deb
+          URIs: https://download.docker.com/linux/debian
+          Suites: {{ ansible_distribution_release }}
+          Components: stable
+          Architectures: {{ docker_deb_architecture.stdout }}
+          Signed-By: /etc/apt/keyrings/docker.asc
+
+    - name: Install Docker Engine, CLI, plugins, and Python SDK
+      ansible.builtin.apt:
+        name: "{{ apt_docker_pckg_lst }}"
+        state: present
+        update_cache: true
+
+    - name: Ensure Docker is enabled and running
+      ansible.builtin.service:
+        name: docker
+        enabled: true
+        state: started
+
+    - name: Ensure docker group exists
+      ansible.builtin.group:
+        name: docker
+        state: present
+
+    - name: Add ibrahim to the docker group
+      ansible.builtin.user:
+        name: ibrahim
+        groups: docker
+        append: true
+
+- name: Remove Docker packages
+  ansible.builtin.apt:
+    name: "{{ apt_docker_pckg_lst }}"
     state: absent
   when: not instl_docker_pckg and not kill_remove
-
-- name: Job 20.08 | Remove Docker Python modules
-  pip:
-    name: "{{ pip_dckr_pckg_lst }}"
-    state: absent
-  when: not instl_docker_pckg and not kill_remove
-
-###############################################################################
-# User and group configuration
-# These tasks must run last
-###############################################################################
-
-# -----------------------------------------------------------------------------
-# Ensure docker group exists
-# -----------------------------------------------------------------------------
-- name: Job 21.98 | Ensure docker group exists
-  group:
-    name: docker
-    state: present
-
-# -----------------------------------------------------------------------------
-# Add user to docker group
-# -----------------------------------------------------------------------------
-- name: Job 21.99 | Add user to docker group
-  user:
-    name: ibrahim
-    groups: docker
-    append: true
-# ``

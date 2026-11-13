@@ -79,19 +79,12 @@ pip_ansbl_pckg_lst:                      # Install packages using PIP for Ansibl
   - passlib
 #
 apt_docker_pckg_lst:                      # Install packages using apt for Docker
-  - rsync
   - docker-ce
   - docker-ce-cli
   - containerd.io
-  - docker-compose
+  - docker-buildx-plugin
   - docker-compose-plugin
-  - apt-transport-https
-  - ca-certificates
   - python3-docker
-  - lsb-release
-  - gnupg2
-  - curl
-  - software-properties-common
 #
 deb_architecture: {
   "aarch64": "arm64",
