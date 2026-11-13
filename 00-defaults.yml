@@ -1,96 +1,380 @@
 ---
-# defaults file for all default values
-instl_anydesk: no                                   # Install AnyDesk
-#
-crntb_activate_cronjobs: no
-#
-crntb_actvt_crnjbs_vrnssg: no
-#
-crntb_actvt_crnjbs_mrym: no
-#
-dkr_copy_def_files: true                   # Copy default docker files to target host
-#
-dkr_copy_etx_files: no                    # Copy extended docker files to target host
-#
-dckr_fldr_lst:                            # Docker folder list that will be copied when set in the host variable
-#
-dsbl_dhcpvsx: no                          # Disable dhcp v6
-#
-instl_dhcp_srvc: no                       # Install DHCP Service
-# /*******/
----
-# # file: apt/defaults/main.yml
-include: pckg.yml
+# Reference catalog of every role's defaults/main.yml variables.
+# This file is not loaded by playbooks. Copy selected role variables to host_vars
+# as top-level variables; role namespaces here prevent duplicate keys.
+# Credentials and site-specific endpoints/network values are placeholders.
+role_defaults:
+  apt:
+    # APT configuration
+    apt_autoclean: true
+    apt_autoremove: true
+    apt_autoremove_recommends: false
+    apt_autoremove_suggests: false
+    apt_cache_valid_time: 3600
+    apt_clean: false
+    apt_install_recommends: false
+    apt_install_suggests: false
+    apt_mirror_url: http://archive.ubuntu.com
+    apt_reset_source_list: false
+    apt_update_gen_conf: false
 
-apt_reset_source_list: no                 # reset the /etc/apt/sources.list to the default
-apt_mirror_url: http://archive.ubuntu.com  # the mirror from where to install packages
-apt_cache_valid_time: 3600                # Time (in seconds) the apt cache stays valid
-apt_update_gen_conf: no                   # Update the general configuration (/etc/apt/apt.conf.d/10general)
-apt_install_recommends: no                # whether or not to install the "recommended" packages
-apt_install_suggests: no                  # whether or not to install the "suggested" packages
-apt_autoremove: true                       # remove packages that are no longer needed for dependencies
-apt_clean: no                             # remove all cached .deb files
-apt_autoremove_recommends: no             # whether to automatically remove "recommended" packages
-apt_autoremove_suggests: no               # whether to automatically remove "suggested" packages
-apt_autoclean: true                        # remove .deb files for packages no longer on your system
-kill_remove: true                          # Temporaly "REMOVE" kill switch
-#
-### APT | PACKAGES INSTALL ###
-instl_def_pckg: true                       # Install complete packages. A 'no' will remove it from the host (apt_def_pckg_lst)
-instl_utl_pckg: no                        # Install complete packages. A 'no' will remove it from the host (apt_util_lst)
-sysd_strt_srvc: true                       # Start services
-instl_ansbl_pckg: no                      # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
-instl_docker_pckg: true                    # Install Docker package (apt_docker_pckg_lst)
-apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty by default. use host_var to overwrite it)
+    # Package, service, and maintenance controls
+    apt_host_pckg_lst: null
+    apt_hst_strt_srvc_lst: null
+    instl_ansbl_pckg: false
+    instl_def_pckg: true
+    instl_docker_pckg: false
+    instl_filebot_pckg: false
+    instl_utl_pckg: false
+    instl_vctr: false
+    kill_remove: true
+    maintenance_tasks:
+      docker_prune: true
+      upgrade_ansible: false
+      upgrade_pip_packages: true
+      upgrade_system: true
+    pip_host_pckg_lst: null
+    sysd_strt_srvc: true
+    addresolv: false
 
-pip_host_pckg_lst:                        # Install Host Specific PIP Packages when ansible is also installed (keep this empty. use host_var to overwrite it)
-#
-apt_hst_strt_srvc_lst:                    # Ensure Host Specific Services are running.
-#
-copy_iptables: true                                   # Copy iptables to /root folder
-#
-# /*******/
-# docker containers
-dckr_dpl_pihole: no
-dckr_dpl_npxymgmt: no
-dckr_dpl_trcmmnd: no
-dckr_dpl_homepage: no
+  archived_bashrc_revoked: {}
 
-# /*******/
-hostname_hostname: "{{ inventory_hostname }}"
-hostname_hostname_short: "{{ inventory_hostname_short }}"
-hostname_additional_hosts: []
-hostname_hostname_use_full: true
-hostname_hostname_ip_address: '127.0.1.1'
-# /*******/
-# defaults for provisions
-#
-prvs_copy_home: true             # Copy default user's home files in place
-prvs_root_passwd: no            # update root passward
+  configs:
+    # Feature switches
+    addLocalUser: false
+    backup_home: false
+    copy_iptables: false
+    docker3: false
+    getflix_cronjob: false
+    gnomerdp: false
+    instl_anydesk: false
+    instl_dhcp_srvc: false
+    instl_grafana: false
+    instl_swrm_mstr: false
+    instl_swrm_node: false
+    krdp: false
+    network_interfaces_check: false
+    odoo_keep_alive: false
+    postfix: false
+    servercleanup: false
+    start_prtd: false
+    start_rsync: false
+    strt_mygw_at_boot: false
+    strt_myiptbls_at_boot: false
+    teams: false
+    upld_fail2bn_cfg: false
+    vscode: false
+    wol: false
+    xrdp: false
 
-# users:                        # use this to override the default account
-#   - name: root
-#     shell: /bin/bash
-#     groups:
-#       - docker
-#     append: True
-#     state: present
-#     key: root.pub
-#     create_home: True
-#     local: True
-#     hosts: all
-#   - name: ibrahim
-#     shell: /bin/bash
-#     groups:
-#       - adm
-#       - sudo
-#       - docker
-#     append: True
-#     state: present
-#     key: ibrahim.pub
-#     create_home: True
-#     local: True
-#     hosts: all
-# /*******/
-# /*******/
-# /*******/
+    # DHCP, firewall, and host utility settings
+    dsbl_dhcpvsx: false
+    dsbl_dhcpvsx_regx: null
+    fail2ban_service_name: fail2ban
+    fail2ban_whitelist: false
+    fail2ban_whitelist_file: /etc/fail2ban/jail.d/whitelist.conf
+    fail2ban_default_jails:
+      - plesk-apache
+      - plesk-apache-badbot
+      - plesk-dovecot
+      - plesk-modsecurity
+      - plesk-one-week-ban
+      - plesk-panel
+      - plesk-permanent-ban
+      - plesk-postfix
+      - plesk-proftpd
+      - plesk-roundcube
+      - plesk-wordpress
+      - recidive
+      - ssh
+    ipsets:
+      - name: swarm_nodes
+        type: hash:net
+        set: []
+      - name: swarm_master
+        type: hash:net
+        set: []
+    mygw_flnm: /root/gw-gh.sh
+    myiptbls_flnm: /root/myiptable.sh
+    prtd:
+      - dvc: /dev/sdb
+      - lbl: backup
+      - strt: 0%
+      - end: 100%
+    public_ip_service_url: https://api.ipify.org
+
+    # Grafana endpoints and credentials; provide account values via Vault/host_vars.
+    grafana_cloud_api_key: ""
+    loki_url: ""
+    logs_username: ""
+    metrics_username: ""
+    prometheus_url: ""
+
+    # URL monitor
+    url_monitor_cron_day: "*"
+    url_monitor_cron_hour: "*"
+    url_monitor_cron_minute: "0"
+    url_monitor_cron_month: "*"
+    url_monitor_cron_special_time: hourly
+    url_monitor_cron_weekday: "*"
+    url_monitor_enable_lock: false
+    url_monitor_enable_teams_alerts: true
+    url_monitor_env_file: /etc/url-check.env
+    url_monitor_http_timeout: 30
+    url_monitor_lock_file: /var/lock/url_check.lock
+    url_monitor_log_dir: /var/log/url-check
+    url_monitor_log_dir_mode: "0755"
+    url_monitor_require_curl: true
+    url_monitor_script_group: root
+    url_monitor_script_mode: "0750"
+    url_monitor_script_owner: root
+    url_monitor_script_path: /usr/local/bin/url_check.sh
+    url_monitor_target_url: ""
+    url_monitor_cron_user: root
+
+    # Visual Studio Code repository
+    vscode_architectures: amd64,arm64,armhf
+    vscode_keyring_path: /usr/share/keyrings/microsoft.gpg
+    vscode_package: code
+    vscode_repo_url: https://packages.microsoft.com/repos/code
+
+    # RDP and desktop services
+    gnome_rdp_cert_city: ""
+    gnome_rdp_cert_cn: "{{ inventory_hostname }}"
+    gnome_rdp_cert_country: DE
+    gnome_rdp_cert_dir: /var/lib/gnome-remote-desktop/.local/share/gnome-remote-desktop
+    gnome_rdp_cert_email: admin@example.invalid
+    gnome_rdp_cert_org: Example Organization
+    gnome_rdp_cert_path: "/home/{{ gnome_rdp_user }}/.ssh"
+    gnome_rdp_cert_state: ""
+    gnome_rdp_cert_unit: IT
+    gnome_rdp_port: 3389
+    gnome_rdp_system: false
+    gnome_rdp_user: rdpuser
+    krdp_certificate_days: 365
+    krdp_certificate_file: "{{ krdp_data_directory }}/krdp.crt"
+    krdp_config_file: "{{ krdp_user_home }}/.config/krdpserverrc"
+    krdp_data_directory: "{{ krdp_user_home }}/.local/share/krdpserver"
+    krdp_enable_service: true
+    krdp_firewall_source: ""
+    krdp_generate_certificate: true
+    krdp_key_file: "{{ krdp_data_directory }}/krdp.key"
+    krdp_manage_firewall: true
+    krdp_packages:
+      - krdp
+      - systemsettings
+      - openssl
+    krdp_port: 3389
+    krdp_service_name: app-org.kde.krdpserver.service
+    krdp_user: "{{ ansible_user }}"
+    teams_for_linux_channel: stable
+
+  crontab:
+    crntb_activate_cronjobs: false
+    crntb_actvt_crnjbs_mrym: false
+    crntb_actvt_crnjbs_vrnssg: false
+
+  dockers:
+    # Docker file and path settings
+    dckr_dmain_nme_pstfx: example.invalid
+    dckr_fldr_lst:
+      - fldr: none
+    dkr_copy_def_files: true
+    dkr_copy_etx_files: false
+    dsbl_dhcpvsx: false
+    include_vars:
+      file: n8n.yml
+    log_dir: "{{ working_dir }}logs"
+    working_dir: "{{ dckr_bs_pth }}/meryem-8090/"
+    working_dir_skyline: "{{ dckr_bs_pth }}/skyline-8094/"
+
+    # Container deployment switches
+    dckr_dpl_activ: false
+    dckr_dpl_anasse: false
+    dckr_dpl_blingbody: false
+    dckr_dpl_emby: false
+    dckr_dpl_emby_gh: false
+    dckr_dpl_gpt: false
+    dckr_dpl_gravity: false
+    dckr_dpl_homepage: false
+    dckr_dpl_iSpy: false
+    dckr_dpl_invdus: false
+    dckr_dpl_jmj: false
+    dckr_dpl_meryem: false
+    dckr_dpl_n8n: false
+    dckr_dpl_npxymgmt: false
+    dckr_dpl_opendot: false
+    dckr_dpl_opnsbttls: false
+    dckr_dpl_overseerr: false
+    dckr_dpl_plex: false
+    dckr_dpl_plex_gh: false
+    dckr_dpl_pihole: false
+    dckr_dpl_reddot_africa: false
+    dckr_dpl_rsume: false
+    dckr_dpl_rustdesk: false
+    dckr_dpl_rxrsum: false
+    dckr_dpl_semaphore: false
+    dckr_dpl_skyline: false
+    dckr_dpl_spotube: false
+    dckr_dpl_tautulli: false
+    dckr_dpl_trcmmnd: false
+    dckr_dpl_tubesync: false
+    dckr_dpl_uptmkm: false
+    dckr_dpl_webcheck: false
+    dckr_dpl_webpdf: false
+    dckr_dpl_wud: false
+    dckr_dpl_youtubedl: false
+
+  fullBackup:
+    backup_mount: /net/backup
+    backup_paths:
+      - path: /home
+        excludes:
+          - .cache
+          - .docker
+          - .dotnet
+          - .npm
+          - .vscode
+      - path: /etc
+        excludes: []
+      - path: /var/www
+        excludes:
+          - cache
+          - tmp
+      - path: /opt
+        excludes: []
+    backup_share: "//backup-server/virthost"
+
+  hostname:
+    hostname_additional_hosts: []
+    hostname_hostname: "{{ hostname_additional_hosts[0].hostname }}"
+    hostname_hostname_ip_address: 127.0.1.1
+    hostname_hostname_short: "{{ inventory_hostname_short }}"
+    hostname_hostname_use_full: true
+
+  icinga:
+    groups:
+      - icinga
+      - icingacmd
+    users:
+      - name: icinga
+        shell: /bin/bash
+        append: true
+        groups: icinga
+        state: present
+        key: icinga.pub
+        create_home: false
+        local: true
+      - name: icingasrv
+        shell: /bin/bash
+        groups: icingacmd
+        append: true
+        state: present
+        key: icingacmd.pub
+        create_home: false
+        local: true
+
+  otds:
+    tomcat_archive_dest: /tmp/apache-tomcat-{{ tomcat_ver }}.tar.gz
+    tomcat_archive_url: "https://archive.apache.org/dist/tomcat/tomcat-{{ tomcat_v_num }}/v{{ tomcat_ver }}/bin/apache-tomcat-{{ tomcat_ver }}.tar.gz"
+    tomcat_v_num: 9
+    tomcat_ver: 9.0.64
+    ui_admin_pass: ""
+    ui_admin_username: admin
+    ui_manager_pass: ""
+    ui_manager_user: manager
+
+  provisions:
+    addLocalUser: false
+    default_lang: en_GB.UTF-8
+    default_locale: en_GB.UTF-8
+    default_timezone: Europe/Berlin
+    instl_gthb_ky: false
+    locale_lang: en_GB.UTF-8
+    prvs_copy_home: true
+    prvs_root_passwd: false
+    users:
+      - name: root
+        shell: /bin/bash
+        groups:
+          - docker
+        append: true
+        state: present
+        key: root.pub
+        create_home: true
+        local: true
+        hosts: all
+      - name: ibrahim
+        shell: /bin/bash
+        groups:
+          - adm
+          - sudo
+          - docker
+        append: true
+        state: present
+        key: ibrahim.pub
+        create_home: true
+        local: true
+        hosts: all
+
+  proxmox: {}
+  reboot: {}
+
+  routerOS:
+    config: false
+    ssh: false
+    tikman_configure_external_radius: false
+    tikman_radius_secret: ""
+    tikman_radius_server: ""
+    tikman_setup_url: ""
+    wifiboss_create_test_user: false
+    wifiboss_dhcp_pool: LAN-DHCP-POOL
+    wifiboss_dhcp_range: ""
+    wifiboss_dhcp_server: LAN-DHCP
+    wifiboss_dns_servers:
+      - 1.1.1.1
+      - 8.8.8.8
+    wifiboss_gateway: ""
+    wifiboss_hotspot_dns_name: example.invalid
+    wifiboss_hotspot_profile: WiFiBoss-HotSpot-Profile
+    wifiboss_hotspot_server: WiFiBoss-HotSpot
+    wifiboss_lan_address: ""
+    wifiboss_remove_test_user: false
+    wifiboss_test_password: ""
+    wifiboss_test_username: router-test
+    wifiboss_wan_address: ""
+    wifiboss_wan_interface: WAN
+    wifiboss_lan_interface: LAN
+
+  solr:
+    solr_config_file: /etc/default/{{ solr_service_name }}.in.sh
+    solr_connect_host: localhost
+    solr_cores:
+      - collection1
+    solr_create_user: true
+    solr_default_core_path: "{% if solr_version.split('.')[0] < '9' %}{{ solr_install_path }}/example/files/conf/{% else %}{{ solr_install_path }}/server/solr/configsets/_default/conf/{% endif %}"
+    solr_group: "{{ solr_user }}"
+    solr_home: /var/{{ solr_service_name }}
+    solr_host: 0.0.0.0
+    solr_install_dir: /opt
+    solr_install_path: /opt/{{ solr_service_name }}
+    solr_log_file_path: /var/log/solr.log
+    solr_mirror: https://archive.apache.org/dist
+    solr_opts: "$SOLR_OPTS -Dlog4j2.formatMsgNoLookups=true"
+    solr_port: "8983"
+    solr_remove_cruft: false
+    solr_restart_handler_enabled: true
+    solr_service_manage: true
+    solr_service_name: solr
+    solr_service_state: started
+    solr_timezone: UTC
+    solr_user: solr
+    solr_version: "8.11.2"
+    solr_workspace: /root
+    solr_xms: 256M
+    solr_xmx: 512M
+
+  ssh:
+    allowrootlogin: false
+
+  win_update: {}
