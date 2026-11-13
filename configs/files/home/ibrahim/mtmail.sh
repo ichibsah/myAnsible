@@ -9,7 +9,7 @@ systemctl status clamav-daemon
 sudo systemctl restart clamav-daemon
 sudo systemctl enable clamav-daemon
 
-# sudo apt install amavisd-new -y # 
+# sudo apt install amavisd-new -y #
 systemctl status amavis
 systemctl restart amavis
 sudo systemctl enable amavis
@@ -97,9 +97,9 @@ smtpd_delay_reject = yes (in nano /etc/postfix/main.cf)
 postconf smtpd_recipient_restrictions
 
 
-	
-	
-	
+
+
+
 smtpd_delay_reject = yes
 
 smtpd_recipient_restrictions =
@@ -118,7 +118,7 @@ smtpd_recipient_restrictions =
     permit_mynetworks,
     permit_sasl_authenticated,
     reject_unauth_destination
-	
+
 unknown_local_recipient_reject_code = 550
 
 #  Add basic anti-spam protection
@@ -135,12 +135,12 @@ smtpd_sender_restrictions =
     reject_unknown_sender_domain
 
 
-	
+
 /**/
 mkdir -p /usr/local/psa/admin/conf/templates/custom/postfix
 cp /usr/local/psa/admin/conf/templates/default/postfix/main.cf \
    /usr/local/psa/admin/conf/templates/custom/postfix/main.cf
-   
+
 #see fix-postfix.sh for more details
 
 #test run
@@ -302,7 +302,7 @@ grep -R . /etc/ssh/sshd_config.d/
 ibrahim@de-1011-vps:~$ sudo !!
 sudo grep -R . /etc/ssh/sshd_config.d/
 /etc/ssh/sshd_config.d/50-cloud-init.conf:PasswordAuthentication yes
-ibrahim@de-1011-vps:~$ 
+ibrahim@de-1011-vps:~$
 
 #Prevent cloud-init from reverting it
 sudo grep -R "ssh_pwauth" /etc/cloud/
@@ -310,3 +310,6 @@ sudo grep -R "ssh_pwauth" /etc/cloud/
 sudo journalctl -u ssh --since "10 minutes ago"
 
 last -i | head -20
+
+
+/****/
