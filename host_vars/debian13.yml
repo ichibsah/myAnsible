@@ -10,7 +10,6 @@ hostname_additional_hosts:
     #   hostname: debian13.skyline.lan
     #   hostname_short: debian13
     #
-dckr_dmain_nme_pstfx: home.sawadogo.xyz
 # virthost01.skyline.lan:
 # ansible_connection: local # this will overwrite any other type of connections. its needed here.
 ansible_become_pass: '{{ localhost_become_pass }}'
@@ -19,20 +18,16 @@ ansible_become_pass: '{{ localhost_become_pass }}'
 krdp_user: ibrahim
 ### PRVS | CONFIG ###
 prvs_copy_home: false                       # Copy default user's home files in place
-prvs_root_passwd: false                     # update root passward
 #
 dkr_copy_def_files: false                   # Copy default docker files to target server
 #
-crntb_activate_cronjobs: false
 #
 addLocalUser: true                # add a local user to specific host
 #
 addresolv: true                       # add nameservers to resolv.conf
 #
 ### APT | PACKAGES INSTALL ###
-instl_def_pckg: true                       # Install complete packages. A 'no' will remove it from the host (apt_def_pckg_lst)
 instl_utl_pckg: true                        # Install complete packages. A 'no' will remove it from the host (apt_util_lst)
-sysd_strt_srvc: true                       # Start services
 instl_ansbl_pckg: true                      # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
 instl_docker_pckg: true                    # Install Docker package (apt_docker_pckg_lst)
 apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
@@ -53,7 +48,6 @@ docker3: true                                    # Install Docker
 dckr_dpl_pihole: true
 dckr_dpl_ispy: false
 dckr_dpl_semaphore: true
-dckr_dpl_trcmmnd: false
 dckr_dpl_npxymgmt: true
 dckr_dpl_gravity: true
 dckr_dpl_homepage: true
@@ -76,7 +70,6 @@ dsbl_dhcpvsx_regx: INTERFACESv4='eno1'          # text that should change goes h
 copy_iptables: true                                   # Copy iptables to /root folder
 strt_myiptbls_at_boot: true
 #
-gnomerdp: false                                # Install and configure GNOME Remote Desktop (RDP)
 #
 krdp: true                                      # Install and configure KDE Remote Desktop (KRDP)
 #

@@ -11,7 +11,6 @@ hostname_additional_hosts:
     #  hostname: gh-1017-gw.skyline.lan
     #  hostname_short: gh-1017-gw
     #
-dckr_dmain_nme_pstfx: home.sawadogo.xyz
 # virthost01.skyline.lan:
 # ansible_connection: local # this will overwrite any other type of connections. its needed here.
 ansible_become_pass: '{{ localhost_become_pass }}'
@@ -20,11 +19,9 @@ default_timezone: Africa/Accra  # default timezone
 #
 ### PRVS | CONFIG ###
 prvs_copy_home: false                       # Copy default user's home files in place
-prvs_root_passwd: false                     # update root passward
 #
 dkr_copy_def_files: false                   # Copy default docker files to target server
 #
-crntb_activate_cronjobs: false
 #
 apt_hst_strt_srvc_lst:                # Ensure Services are running.
   - chronyd
@@ -46,9 +43,6 @@ dckr_fldr_lst:                            # Docker folder list that will be copi
 crntb_fldr_lst:                            # Crontab folder list that will be copied when set in the host variable
   -  # { fldr: "de-1011-vps" }
 
-crntb_actvt_crnjbs_mrym: false
-dckr_dpl_meryem: false
-dckr_dpl_anasse: false
 ##
 addresolv: true                            # add cloudflare ad dns resolv address temporary to resolv.conf
 #
@@ -56,9 +50,7 @@ addLocalUser: true                # add a local user to specific host
 #
 #
 ### APT | PACKAGES INSTALL ###
-instl_def_pckg: true                       # Install complete packages. A 'no' will remove it from the host (apt_def_pckg_lst)
 instl_utl_pckg: true                        # Install complete packages. A 'no' will remove it from the host (apt_util_lst)
-sysd_strt_srvc: true                       # Start services
 instl_ansbl_pckg: true                      # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
 instl_docker_pckg: true                    # Install Docker package (apt_docker_pckg_lst)
 apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
@@ -69,16 +61,13 @@ apt_host_pckg_lst:                        # Install Host Specific Packages (keep
 # - kubectx
 
 
-pip_host_pckg_lst:                        # Install Host Specific PIP Packages when ansible is also installed
 #
 #
 getflix_cronjob: true                           # Install getflix cronjob
 #
 # docker containers
 dckr_dpl_pihole: true
-dckr_dpl_iSpy: false
 dckr_dpl_semaphore: true
-dckr_dpl_trcmmnd: false
 dckr_dpl_npxymgmt: true
 dckr_dpl_gravity: true
 dckr_dpl_homepage: true
@@ -100,7 +89,6 @@ copy_iptables: true                                   # Copy iptables to /root f
 strt_myiptbls_at_boot: true
 myiptbls_flnm: "/root/myiptable-gh.sh"
 strt_mygw_at_boot: true
-mygw_flnm: "/root/gw-gh.sh"
 #
 # interfaces:
 #   - iface: eth1
