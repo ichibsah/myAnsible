@@ -4,9 +4,9 @@
 - name: Job 01 | import task tomcat
   ansible.builtin.import_tasks:
     file: tomcat.yml
-  #when: 
+  # when:
   tags:
-    - #test
+    -  # test
     - tomcat
 # $ ps aux|grep tomcat
 # $ systemctl status tomcat
@@ -15,7 +15,7 @@
 # sh tomcat/bin/version.sh
 # sudo find / -name "version.sh"
 # /usr/local/tomcat/bin/catalina.sh version
-# cd /usr/mack/apache-tomcat-x.0.xx/bin 
+# cd /usr/mack/apache-tomcat-x.0.xx/bin
 # # ./version.sh
 # sudo /etc/init.d/tomcat version
 # cd %CATALINA_HOME%\bin

@@ -3,133 +3,133 @@ all:
   children:
     ionos:
       hosts:
-        #d86df44.imsawadogo.com:
-        #112e275.imsawadogo.com:
-        #a35a0d3.imsawadogo.com:
-        #de-1011-vps.imsawadogo.com:
-        #de-jump.imsawadogo.com:
-        #deb1202.imsawadogo.com:          
+      # d86df44.imsawadogo.com:
+      # 112e275.imsawadogo.com:
+      # a35a0d3.imsawadogo.com:
+      # de-1011-vps.imsawadogo.com:
+      # de-jump.imsawadogo.com:
+      # deb1202.imsawadogo.com:
       children:
         allservers:
-          hosts: 
-            #msrv02.skyline.lan:
-            #d86df44.imsawadogo.com:
-            #112e275.imsawadogo.com:
-            #a35a0d3.imsawadogo.com:
-            #de-1011-vps.imsawadogo.com:
-            #de-jump.imsawadogo.com:
-            #deb1202.imsawadogo.com:
-            #mgmt.skyline.lan:  
-              #ansible_host: 192.168.14.244          
-            #solr.skyline.lan:
-            #jenkins.skyline.lan:
-            #gitlab.skyline.lan: 
-             # ansible_host: 192.168.14.223:
-            #virthost01.skyline.lan:
-              #ansible_host: 192.168.14.254
-            #docker.skyline.lan:
-              #ansible_host: 192.168.77.212
-            #mdsrvr.skyline.lan:
-              #ansible_host: 192.168.77.213
-            #home-1006-vm-dns:
-              #ansible_host: 10.0.0.136
-            #home-1007-vm-docker:
-              #ansible_host: 10.0.0.137
+          hosts:
+            # msrv02.skyline.lan:
+            # d86df44.imsawadogo.com:
+            # 112e275.imsawadogo.com:
+            # a35a0d3.imsawadogo.com:
+            # de-1011-vps.imsawadogo.com:
+            # de-jump.imsawadogo.com:
+            # deb1202.imsawadogo.com:
+            # mgmt.skyline.lan:
+            # ansible_host: 192.168.14.244
+            # solr.skyline.lan:
+            # jenkins.skyline.lan:
+            # gitlab.skyline.lan:
+            # ansible_host: 192.168.14.223:
+            # virthost01.skyline.lan:
+            # ansible_host: 192.168.14.254
+            # docker.skyline.lan:
+            # ansible_host: 192.168.77.212
+            # mdsrvr.skyline.lan:
+            # ansible_host: 192.168.77.213
+            # home-1006-vm-dns:
+            # ansible_host: 10.0.0.136
+            # home-1007-vm-docker:
+            # ansible_host: 10.0.0.137
             md-2005-gw:
               ansible_host: 10.3.0.254
             md-2007-docker:
               ansible_host: 10.3.0.137
         swarm:
           hosts:
-            #d86df44.imsawadogo.com:
-            #112e275.imsawadogo.com:
-            #a35a0d3.imsawadogo.com: # master
-            #de-jump.imsawadogo.com:
-            #deb1202.imsawadogo.com:
-            #b0235ee.imsawadogo.com:
+          # d86df44.imsawadogo.com:
+          # 112e275.imsawadogo.com:
+          # a35a0d3.imsawadogo.com: # master
+          # de-jump.imsawadogo.com:
+          # deb1202.imsawadogo.com:
+          # b0235ee.imsawadogo.com:
         sandbox:
           hosts:
-            #msvr02.skyline.lan:
-            #d86df44.imsawadogo.com:
-            #112e275.imsawadogo.com:
-            #a35a0d3.imsawadogo.com:
-            #de-1011-vps.imsawadogo.com:
+          # msvr02.skyline.lan:
+          # d86df44.imsawadogo.com:
+          # 112e275.imsawadogo.com:
+          # a35a0d3.imsawadogo.com:
+          # de-1011-vps.imsawadogo.com:
         firstimeonly:
-          #ansible_remote_user: root
-          #ansible_ssh_user: root
-          hosts: 
-            #msrv02.skyline.lan:
-            #d86df44.imsawadogo.com:
-            #112e275.imsawadogo.com:
-            #a35a0d3.imsawadogo.com:
-            #de-1011-vps.imsawadogo.com:
-            #deb12_01.imsawadogo.com:
-              #ansible_ssh_pass: '{{localhost_become_pass}}'
-              #ansible_ssh_pass: '{{deb12_01_become_pass}}'
-            #deb12_02.imsawadogo.com:
-              #ansible_ssh_pass: '{{localhost_become_pass}}'
-              #ansible_ssh_pass: '{{deb12_02_become_pass}}'
-            #pve01.skyline.lan:
-              #ansible_ssh_pass: '{{localhost_become_pass}}'
-              #ansible_host: 192.168.77.95
-            #mgmt.skyline.lan:
-              #ansible_ssh_pass: '{{localhost_become_pass}}'
-              #ansible_host: 192.168.77.244              
-            #docker.skyline.lan:
-              #ansible_ssh_pass: '{{localhost_become_pass}}'
-              #ansible_host: 192.168.77.212
-            #mdsrvr.skyline.lan:
-              #ansible_ssh_pass: '{{localhost_become_pass}}'
-              #ansible_host: 192.168.77.213
-            #pve2.skyline.lan:
-              #ansible_host: 192.168.77.97
-            #home-1006-vm-dns:
-            #home-1007-vm-docker:
-            #md-2005-gw:
-            #md-2007-docker:
-              #ansible_host: 10.3.0.137
-              #ansible_ssh_pass: '{{localhost_become_pass}}'
-              #ansible_ssh_pass: '{{deb12_01_become_pass}}'
+          # ansible_remote_user: root
+          # ansible_ssh_user: root
+          hosts:
+          # msrv02.skyline.lan:
+          # d86df44.imsawadogo.com:
+          # 112e275.imsawadogo.com:
+          # a35a0d3.imsawadogo.com:
+          # de-1011-vps.imsawadogo.com:
+          # deb12_01.imsawadogo.com:
+          # ansible_ssh_pass: '{{localhost_become_pass}}'
+          # ansible_ssh_pass: '{{deb12_01_become_pass}}'
+          # deb12_02.imsawadogo.com:
+          # ansible_ssh_pass: '{{localhost_become_pass}}'
+          # ansible_ssh_pass: '{{deb12_02_become_pass}}'
+          # pve01.skyline.lan:
+          # ansible_ssh_pass: '{{localhost_become_pass}}'
+          # ansible_host: 192.168.77.95
+          # mgmt.skyline.lan:
+          # ansible_ssh_pass: '{{localhost_become_pass}}'
+          # ansible_host: 192.168.77.244
+          # docker.skyline.lan:
+          # ansible_ssh_pass: '{{localhost_become_pass}}'
+          # ansible_host: 192.168.77.212
+          # mdsrvr.skyline.lan:
+          # ansible_ssh_pass: '{{localhost_become_pass}}'
+          # ansible_host: 192.168.77.213
+          # pve2.skyline.lan:
+          # ansible_host: 192.168.77.97
+          # home-1006-vm-dns:
+          # home-1007-vm-docker:
+          # md-2005-gw:
+          # md-2007-docker:
+          # ansible_host: 10.3.0.137
+          # ansible_ssh_pass: '{{localhost_become_pass}}'
+          # ansible_ssh_pass: '{{deb12_01_become_pass}}'
           vars:
-            #ansible_ssh_pass: '{{localhost_become_pass}}'
-            #ansible_remote_user: root
-            #ansible_remote_user: ibrahim
-            #ansible_ssh_user: root            
-            #ansible_ssh_user: ibrahim
+          # ansible_ssh_pass: '{{localhost_become_pass}}'
+          # ansible_remote_user: root
+          # ansible_remote_user: ibrahim
+          # ansible_ssh_user: root
+          # ansible_ssh_user: ibrahim
         windows_users:
-          #ansible_remote_user: ibrahim@skyline
-          #ansible_ssh_user: ibrahim@skyline
-          #ansible_user: ibrahim@skyline
-          #ansible_ssh_pass: '{{localhost_become_pass}}'
-          hosts: 
-            #lenevo.skyline.lan:
-            #andy.skyline.lan:
-              #ansible_host: 192.168.77.18
-            #lady.skyline.lan:
-              #ansible_host: 192.168.77.1
-            #babs.skyline.lan:
-            #  ansible_host: 192.168.77.6
-            #msrv02.skyline.lan:
-            #d86df44.imsawadogo.com:
-            #112e275.imsawadogo.com:
-            #a35a0d3.imsawadogo.com:
-            #de-1011-vps.imsawadogo.com:
-            #deb12_01.imsawadogo.com:
-              #ansible_ssh_pass: '{{localhost_become_pass}}'
-              #ansible_ssh_pass: '{{deb12_01_become_pass}}'
-            #deb12_02.imsawadogo.com:
-              #ansible_ssh_pass: '{{localhost_become_pass}}'
-              #ansible_ssh_pass: '{{deb12_02_become_pass}}'
-######
-####      
+          # ansible_remote_user: ibrahim@skyline
+          # ansible_ssh_user: ibrahim@skyline
+          # ansible_user: ibrahim@skyline
+          # ansible_ssh_pass: '{{localhost_become_pass}}'
+          hosts:
+          # lenevo.skyline.lan:
+          # andy.skyline.lan:
+          # ansible_host: 192.168.77.18
+          # lady.skyline.lan:
+          # ansible_host: 192.168.77.1
+          # babs.skyline.lan:
+          #  ansible_host: 192.168.77.6
+          # msrv02.skyline.lan:
+          # d86df44.imsawadogo.com:
+          # 112e275.imsawadogo.com:
+          # a35a0d3.imsawadogo.com:
+          # de-1011-vps.imsawadogo.com:
+          # deb12_01.imsawadogo.com:
+    # ansible_ssh_pass: '{{localhost_become_pass}}'
+    # ansible_ssh_pass: '{{deb12_01_become_pass}}'
+    # deb12_02.imsawadogo.com:
+    # ansible_ssh_pass: '{{localhost_become_pass}}'
+    # ansible_ssh_pass: '{{deb12_02_become_pass}}'
+    ######
+    ####
     local:
       hosts:
-        #virthost01.skyline.lan:
-        #localhost: # having this enable will connect to the localhost twice, which will work but the hostname update for this 'localhost' will fail.
-####
+      # virthost01.skyline.lan:
+      # localhost: # having this enable will connect to the localhost twice, which will work but the hostname update for this 'localhost' will fail.
+    ####
     vms:
       hosts:
-        #solr.skyline.lan: 
-        #  ansible_host: 192.168.14.223
+      # solr.skyline.lan:
+      #  ansible_host: 192.168.14.223
 #
 #

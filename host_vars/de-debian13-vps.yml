@@ -1,17 +1,18 @@
+---
 hostname_additional_hosts:
   - ip_address: 217.154.243.72
     hostname: de-debian13-vps.imsawadogo.com
     hostname_short: de-debian13-vps
-  # - ip_address: 192.168.77.201
-  #   hostname: de-debian13-vps.skyline.lan
-  #   hostname_short: de-debian13-vps
-  # - ip_address: 192.168.0.201
-  #   hostname: de-debian13-vps.skyline.lan
-  #   hostname_short: de-debian13-vps
-  #
+    # - ip_address: 192.168.77.201
+    #   hostname: de-debian13-vps.skyline.lan
+    #   hostname_short: de-debian13-vps
+    # - ip_address: 192.168.0.201
+    #   hostname: de-debian13-vps.skyline.lan
+    #   hostname_short: de-debian13-vps
+    #
 dckr_dmain_nme_pstfx: home.sawadogo.xyz
-#virthost01.skyline.lan: 
-#ansible_connection: local # this will overwrite any other type of connections. its needed here.
+# virthost01.skyline.lan:
+# ansible_connection: local # this will overwrite any other type of connections. its needed here.
 ansible_become_pass: '{{ localhost_become_pass }}'
 #
 ### PRVS | CONFIG ###
@@ -34,15 +35,15 @@ instl_ansbl_pckg: true                      # Install ansible using PIP (pip_ans
 instl_docker_pckg: true                    # Install Docker package (apt_docker_pckg_lst)
 apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
   - cifs-utils
-  #- isc-dhcp-common
-  #- isc-dhcp-server
-  #- kubectx
-  #- python3-docker
-  #- docker-cli
+  # - isc-dhcp-common
+  # - isc-dhcp-server
+  # - kubectx
+  # - python3-docker
+  # - docker-cli
 #
 #
 pip_host_pckg_lst:                        # Install Host Specific PIP Packages when ansible is also installed
-  #- docker
+# - docker
 #
 docker3: true                                    # Install Docker
 #
@@ -60,7 +61,7 @@ dckr_dpl_uptmkm: false
 dckr_dpl_n8n: false                 # add n8n to this list and set it to true to have it deployed on the target host
 #
 apt_hst_strt_srvc_lst:                          # Ensure Host Specific Services are running.
-  #- isc-dhcp-server
+# - isc-dhcp-server
 #
 odoo_keep_alive: false                                 # Install Odoo keep alive cronjob
 #
@@ -68,7 +69,7 @@ odoo_keep_alive: false                                 # Install Odoo keep alive
 #
 instl_dhcp_srvc: false
 dsbl_dhcpvsx: false                               # Disable dhcp v6 in DHCP
-#dsbl_dhcpvsx_regx: INTERFACESv4='eno1'          # text that should change goes here eg. INTERFACESv4='ens18'
+# dsbl_dhcpvsx_regx: INTERFACESv4='eno1'          # text that should change goes here eg. INTERFACESv4='ens18'
 #
 copy_iptables: false                                   # Copy iptables to /root folder
 strt_myiptbls_at_boot: false

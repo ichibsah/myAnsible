@@ -1,11 +1,12 @@
+---
 hostname_additional_hosts:
   - ip_address: 212.227.151.179
     hostname: de-jump.imsawadogo.com
     hostname_short: de-jump
-  # - ip_address: 5.6.7.8
-  #   hostname: b.example.com
-  #   hostname_short: b
-  #
+    # - ip_address: 5.6.7.8
+    #   hostname: b.example.com
+    #   hostname_short: b
+    #
 #
 ansible_become_pass: '{{ deb12_01_become_pass }}'
 #
@@ -17,7 +18,7 @@ dkr_copy_def_files: false                   # Copy default docker files to targe
 dkr_copy_etx_files: false                   # # Copy extended docker files to target host
 #
 dckr_fldr_lst:                            # Docker folder list that will be copied when set in the host variable
-- { fldr: "de-jump" }
+  - {fldr: "de-jump"}
 #
 crntb_activate_cronjobs: false
 #

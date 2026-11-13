@@ -1,3 +1,4 @@
+---
 # https://docs.ansible.com/ansible/latest/collections/community/docker/docker_stack_module.html
 # $ curl -L https://downloads.portainer.io/ee2-19/portainer-agent-stack.yml -o portainer-agent-stack.yml
 # $ docker stack deploy -c portainer-agent-stack.yml portainer
@@ -7,7 +8,7 @@
     state: present
     name: mystack
     compose:
-      - #/opt/docker-compose.yml
+      -  # /opt/docker-compose.yml
       - portainer-agent-stack.yml
 
 # - name: Deploy stack from base compose file and override the web service

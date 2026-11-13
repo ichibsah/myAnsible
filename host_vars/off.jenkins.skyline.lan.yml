@@ -1,9 +1,10 @@
+---
 hostname_additional_hosts:
   - ip_address: 192.168.14.223
     hostname: jenkins.skyline.lan
     hostname_short: jenkins
 #
-#ansible_become_pass: '{{ jenkins_become_pass }}'
+# ansible_become_pass: '{{ jenkins_become_pass }}'
 ansible_become_pass: '{{ localhost_become_pass }}'
 #
 ### PRVS | CONFIG ###

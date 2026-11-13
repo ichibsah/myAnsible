@@ -1,3 +1,4 @@
+---
 # Installing/Starting the image
 # To fetch/use these images, run the following:
 # docker pull ixsystems/truecommand
@@ -8,7 +9,7 @@
 # docker run --detach -v "[hostdirectory]:/data" -p [portnumber]:80 -p [sslportnumber]:443 ixsystems/truecommand
 
 
-#- name: create new volume
+# - name: create new volume
 #  community.docker.docker_volume:
 #    name: portainer-data
 #
@@ -29,4 +30,3 @@
   when: instl_docker_pckg and dckr_dpl_trcmmnd
   tags:
     - assert
-

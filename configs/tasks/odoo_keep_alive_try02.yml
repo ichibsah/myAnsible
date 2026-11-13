@@ -2,9 +2,9 @@
 - name: Iterate over URLs and submit form login
   vars:
     site_targets:
-      - { url: 'https://boboconsult.odoo.com/odoo/web/login', username: 'website@opendotsolutions.com', password: 'Qwertzuiop123', login_path: '/post' }
-      - { url: 'https://httpbin.org', username: 'bob', password: 'secret2', login_path: '/post' }
-    #site_targets: "{{ site_targets | default([]) }}"
+      - {url: 'https://boboconsult.odoo.com/odoo/web/login', username: 'website@opendotsolutions.com', password: 'Qwertzuiop123', login_path: '/post'}
+      - {url: 'https://httpbin.org', username: 'bob', password: 'secret2', login_path: '/post'}
+    # site_targets: "{{ site_targets | default([]) }}"
     # Global defaults (can be overridden per target)
     form_login_path: "/login"
     username_field: "login"

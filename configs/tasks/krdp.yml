@@ -32,7 +32,7 @@
 
 - name: Check the desktop session type
   become: true
-  #become_user: "{{ krdp_user }}"
+  # become_user: "{{ krdp_user }}"
   become_user: "{{ krdp_user | default('root') }}"
   ansible.builtin.shell: |
     if [ -r "/proc/{{ krdp_uid }}/environ" ]; then
@@ -54,7 +54,7 @@
 
 - name: Create KRdp data directory
   become: true
-  #become_user: "{{ krdp_user }}"
+  # become_user: "{{ krdp_user }}"
   become_user: "{{ krdp_user | default('root') }}"
   ansible.builtin.file:
     path: "{{ krdp_data_directory }}"
@@ -65,7 +65,7 @@
 
 - name: Generate KRdp private key and certificate
   become: true
-  #become_user: "{{ krdp_user }}"
+  # become_user: "{{ krdp_user }}"
   become_user: "{{ krdp_user | default('root') }}"
   ansible.builtin.command:
     cmd: >
@@ -96,7 +96,7 @@
 
 - name: Configure KRdp
   become: true
-  #become_user: "{{ krdp_user }}"
+  # become_user: "{{ krdp_user }}"
   become_user: "{{ krdp_user | default('root') }}"
   ansible.builtin.template:
     src: krdpserverrc.j2
@@ -108,7 +108,7 @@
 
 - name: Check whether the user systemd instance is available
   become: true
-  #become_user: "{{ krdp_user }}" 
+  # become_user: "{{ krdp_user }}"
   become_user: "{{ krdp_user | default('root') }}"
   ansible.builtin.command:
     cmd: systemctl --user is-system-running
@@ -121,7 +121,7 @@
 
 - name: Enable and start KRdp user service
   become: true
-  # become_user: "{{ krdp_user }}" 
+  # become_user: "{{ krdp_user }}"
   become_user: "{{ krdp_user | default('root') }}"
   ansible.builtin.systemd:
     name: "{{ krdp_service_name }}"

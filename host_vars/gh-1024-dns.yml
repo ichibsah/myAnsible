@@ -1,11 +1,12 @@
+---
 hostname_additional_hosts:
   - ip_address: 10.3.0.136
     hostname: gh-1024-dns.skyline.lan
     hostname_short: gh-1024-dns
-  
-  #
-#virthost01.skyline.lan: 
-#ansible_connection: local # this will overwrite any other type of connections. its needed here.
+
+    #
+# virthost01.skyline.lan:
+# ansible_connection: local # this will overwrite any other type of connections. its needed here.
 ansible_become_pass: '{{ localhost_become_pass }}'
 #
 ### PRVS | CONFIG ###

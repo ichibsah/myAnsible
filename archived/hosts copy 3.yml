@@ -6,35 +6,35 @@ all:
         d86df44.imsawadogo.com:
         112e275.imsawadogo.com:
         a35a0d3.imsawadogo.com:
-        #b0235ee.imsawadogo.com:
+        # b0235ee.imsawadogo.com:
         de-1011-vps.imsawadogo.com:
       children:
         provision:
-          hosts: 
+          hosts:
             msvr02.skyline.lan:
             d86df44.imsawadogo.com:
             112e275.imsawadogo.com:
             a35a0d3.imsawadogo.com:
-            #b0235ee.imsawadogo.com: 
-              #ansible_become_pass: '{{ b0235ee_become_pass }}'
-              #ansible_ssh_user: root
+            # b0235ee.imsawadogo.com:
+            # ansible_become_pass: '{{ b0235ee_become_pass }}'
+            # ansible_ssh_user: root
             de-1011-vps.imsawadogo.com:
           vars:
-            #ansible_user: root
-            #ansible_ssh_user: root
+          # ansible_user: root
+          # ansible_ssh_user: root
         cloud:
           hosts:
             d86df44.imsawadogo.com:
             112e275.imsawadogo.com:
             a35a0d3.imsawadogo.com:
-            #b0235ee.imsawadogo.com:
+            # b0235ee.imsawadogo.com:
         allservers:
           hosts:
             msvr02.skyline.lan:
             d86df44.imsawadogo.com:
             112e275.imsawadogo.com:
             a35a0d3.imsawadogo.com:
-            #b0235ee.imsawadogo.com:
+            # b0235ee.imsawadogo.com:
           vars:
             ansible_user: root
             ansible_ssh_user: ibrahim
@@ -43,28 +43,28 @@ all:
             112e275.imsawadogo.com:
             d86df44.imsawadogo.com:
             a35a0d3.imsawadogo.com:
-            #b0235ee.imsawadogo.com:
+            # b0235ee.imsawadogo.com:
             de-1011-vps.imsawadogo.com:
-            #virthost01.skyline.lan:
-            #msvr02.skyline.lan:
+            # virthost01.skyline.lan:
+            # msvr02.skyline.lan:
             #  #ansible_become_method: su
             #  ansible_become_pass: '{{ localhost_become_pass }}'
-######
+      ######
       vars:
         ansible_user: ibrahim
         ansible_ssh_user: ibrahim
         ansible_become: true
         ansible_become_method: sudo
-        #ansible_become_user=root # this will affect the root home user eg. .bashrc -> dont use it
-        #ansible_become=yes # this will set it globally, which afftect de-1011-vps
-        #ansible_become_method=sudo
-####      
+        # ansible_become_user=root # this will affect the root home user eg. .bashrc -> dont use it
+        # ansible_become=yes # this will set it globally, which afftect de-1011-vps
+        # ansible_become_method=sudo
+    ####
     local:
       hosts:
-        localhost 
+        localhost
       vars:
-        ansible_user: ibrahim 
-        #ansible_become_user: ibrahim
+        ansible_user: ibrahim
+        # ansible_become_user: ibrahim
         ansible_become: true
         ansible_become_method: sudo
         ansible_become_pass: '{{ localhost_become_pass }}'

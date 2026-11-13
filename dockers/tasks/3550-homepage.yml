@@ -1,4 +1,5 @@
-#- name: create new volume
+---
+# - name: create new volume
 #  community.docker.docker_volume:
 #    name: portainer-data
 #
@@ -7,11 +8,11 @@
 # https://docs.ansible.com/ansible/latest/collections/community/docker/docker_compose_module.html
 - name: Job 00 | Deploy Homepage
   community.docker.docker_compose:
-    #working_dir: "/opt/docker/homepage-3550/"
-    #remove_images: all
-    #remove_volumes: True
-    #stopped: True
-    #state: absent
+    # working_dir: "/opt/docker/homepage-3550/"
+    # remove_images: all
+    # remove_volumes: True
+    # stopped: True
+    # state: absent
     #
     project_name: Homepage
     definition:
@@ -21,11 +22,11 @@
           hostname: homepage-3550
           container_name: Homepage
           image: ghcr.io/gethomepage/homepage:latest
-          #image: ghcr.io/benphelps/homepage:latest
+          # image: ghcr.io/benphelps/homepage:latest
           ports:
             - 3550:3000
           restart: always
-          #network_mode: host
+          # network_mode: host
           user: "${UID}:${GID}"
           volumes:
             - /opt/docker/homepage-3550/homepage:/app/config
@@ -34,23 +35,23 @@
   register: output
   tags:
     - assert
-    - #test
-  #
-  # for debug purpose only - disabled in the meantime
+    -  # test
+    #
+    # for debug purpose only - disabled in the meantime
 # - name: Show results
 #   ansible.builtin.debug:
 #     var: output
 #   #tags: test
-  #
+#
 - name: Verify that gravity is running
   ansible.builtin.assert:
     that:
       - "output.services.homepage.Homepage.state.running"
-      - #"output.services.mysql.ansiblemysql.state.running"
+      -  # "output.services.mysql.ansiblemysql.state.running"
   when: instl_docker_pckg and dckr_dpl_homepage
   tags:
     - assert
-    - #test
+    -  # test
 
 # # https://mariushosting.com/how-to-install-gravity-on-your-synology-nas/
 

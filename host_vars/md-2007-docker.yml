@@ -1,11 +1,12 @@
+---
 hostname_additional_hosts:
   - ip_address: 10.3.0.137
     hostname: md-2007-docker.md-shop.local
     hostname_short: home-2007-vm-docker
-  
+
 #
-#virthost01.skyline.lan: 
-#ansible_connection: local # this will overwrite any other type of connections. its needed here.
+# virthost01.skyline.lan:
+# ansible_connection: local # this will overwrite any other type of connections. its needed here.
 ansible_become_pass: '{{ localhost_become_pass }}'
 #
 ### PRVS | CONFIG ###
@@ -26,7 +27,7 @@ instl_docker_pckg: true                    # Install Docker package (apt_docker_
 #
 apt_host_pckg_lst:                        # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
   - qemu-guest-agent
-#  
+#
 pip_host_pckg_lst:                        # Install Host Specific PIP Packages when ansible is also installed
 
 apt_hst_strt_srvc_lst:                        # Ensure Host Specific Services are running.

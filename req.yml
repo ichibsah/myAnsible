@@ -1,4 +1,4 @@
-# ansible-galaxy collection install -r 
+# ansible-galaxy collection install -r
 ---
 collections:
   - name: community.healthchecksio  # ansible-galaxy collection install community.healthchecksio

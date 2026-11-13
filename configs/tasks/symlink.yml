@@ -12,7 +12,7 @@
     follow: false
     state: link
   loop:
-    - { src: /mnt, dest: /home/ibrahim/mnt }
-    - { src: /opt, dest: /home/ibrahim/opt }
-    - { src: /net, dest: /home/ibrahim/net }
-  #tags: test
+    - {src: /mnt, dest: /home/ibrahim/mnt}
+    - {src: /opt, dest: /home/ibrahim/opt}
+    - {src: /net, dest: /home/ibrahim/net}
+    # tags: test

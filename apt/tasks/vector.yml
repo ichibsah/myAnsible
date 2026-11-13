@@ -21,7 +21,7 @@
 #   when: instl_filebot_pckg
 #   tags:
 #     - #test
-# 
+#
 ## --break-system-packages
 # - name: Job 02 | Install FileBot
 #   package:
@@ -30,7 +30,7 @@
 #   with_items:
 #   - filebot
 #   - ffmpeg
-#   - libavcodec-extra 
+#   - libavcodec-extra
 #   - x264
 #   - default-jdk
 #   - #openjdk17-headless
@@ -41,11 +41,11 @@
 #
 - name: Job 00 | curl vector
   ansible.builtin.shell:
-    cmd:  bash -c "$(curl -L https://setup.vector.dev)"
+    cmd: bash -c "$(curl -L https://setup.vector.dev)"
 #
 - name: Job 01 | Install Vector
   package:
-    name: 
+    name:
       - vector
       - auditd
       - syslog-ng
@@ -70,8 +70,7 @@
 - name: Job 04 | start as a demon
   systemd:
     name: vector
-      #- audit
-    state: started # not required. choices: reloaded;restarted;started;stopped. C(started)/C(stopped) are idempotent actions that will not run commands unless necessary. C(restarted) will always bounce the service. C(reloaded) will always reload.
-    enabled:  yes
-    scope: system # not required. choices: system;user;global. run systemctl within a given service manager scope, either as the default system scope (system), the current user's scope (user), or the scope of all users (global). For systemd to work with 'user', the executing user must have its own instance of dbus started (systemd requirement). The user dbus process is normally started during normal login, but not during the run of Ansible tasks. Otherwise you will probably get a 'Failed to connect to bus: no such file or directory' error.
-    
+    # - audit
+    state: started  # not required. choices: reloaded;restarted;started;stopped. C(started)/C(stopped) are idempotent actions that will not run commands unless necessary. C(restarted) will always bounce the service. C(reloaded) will always reload.
+    enabled: yes
+    scope: system  # not required. choices: system;user;global. run systemctl within a given service manager scope, either as the default system scope (system), the current user's scope (user), or the scope of all users (global). For systemd to work with 'user', the executing user must have its own instance of dbus started (systemd requirement). The user dbus process is normally started during normal login, but not during the run of Ansible tasks. Otherwise you will probably get a 'Failed to connect to bus: no such file or directory' error.

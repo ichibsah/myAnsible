@@ -1,4 +1,5 @@
-#- name: create new volume
+---
+# - name: create new volume
 #  community.docker.docker_volume:
 #    name: portainer-data
 #
@@ -7,15 +8,15 @@
 # https://docs.ansible.com/ansible/latest/collections/community/docker/docker_compose_module.html
 - name: Job 00 | Deploy semaphore
   community.docker.docker_compose:
-  #community.docker.docker_compose_v2:
-    #working_dir: "/opt/docker/semaphore-3002/"
+    # community.docker.docker_compose_v2:
+    # working_dir: "/opt/docker/semaphore-3002/"
     project_name: semaphore
     definition:
       version: "2"
       services:
         mysql:
           container_name: ansiblemysql
-          #image: mysql:8.0
+          # image: mysql:8.0
           image: mysql:latest
           hostname: mysql
           volumes:
@@ -58,8 +59,8 @@
   register: output
   tags:
     - assert
-    - #test
-  #
+    -  # test
+    #
 - name: Verify that semaphore and db services are running
   ansible.builtin.assert:
     that:
@@ -68,7 +69,7 @@
   when: instl_docker_pckg and dckr_dpl_semaphore
   tags:
     - assert
-    - #test
+    -  # test
 
 # # https://mariushosting.com/docker/
 

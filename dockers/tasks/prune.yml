@@ -1,3 +1,4 @@
+---
 - name: Job 99.1 | Prune containers older than 24h
   community.docker.docker_prune:
     containers: true

@@ -1,11 +1,12 @@
+---
 - name: Create a new primary partition
   parted:
-    device: "{{item.dvc}}" #/dev/sdb
-    label: "{{item.lbl}}" # backup
+    device: "{{item.dvc}}"  # /dev/sdb
+    label: "{{item.lbl}}"  # backup
     number: 1
     state: present
-    part_start: "{{item.strt}}" #0%
-    part_end: "{{item.end}}" #100%
+    part_start: "{{item.strt}}"  # 0%
+    part_end: "{{item.end}}"  # 100%
   loop: "{{ prtd }}"
 
 # - name: Remove partition number 1

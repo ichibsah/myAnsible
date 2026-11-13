@@ -1,4 +1,4 @@
-
+---
 # Improved and commented Ansible inventory
 all:
   children:
@@ -46,10 +46,10 @@ all:
           ansible_host: 85.215.157.19
         gh-dev-xl:
           ansible_host: 194.164.62.97
-        # de-debian13-vps:
-        #   ansible_host: 217.154.243.72 #217.154.243.72
-          #ansible_ssh_user: root
-          #ansible_ssh_pass: '{{localhost_become_pass}}'
+          # de-debian13-vps:
+          #   ansible_host: 217.154.243.72 #217.154.243.72
+      # ansible_ssh_user: root
+      # ansible_ssh_pass: '{{localhost_become_pass}}'
       vars:
         ansible_ssh_common_args: '-o ProxyCommand="ssh -p 22 -W %h:%p -q ibrahim@212.227.191.142"'
     swarm_nodes:
@@ -76,28 +76,28 @@ all:
         ansible_ssh_pass: '{{localhost_become_pass}}'
     firstimeonly:
       hosts:
-        # debian13:
-        #   ansible_host: 10.1.0.245
-        #   ansible_ssh_user: ibrahim           
-        #   ansible_ssh_pass: '{{localhost_become_pass}}'
-        # de-1011-vps:
-        #   ansible_host: 212.227.191.142
-        #   ansible_ssh_user: root           
-        #   ansible_ssh_pass: '{{fistimede-1011-vps}}'
-        # de-debian13-vps:
-        #   ansible_host: 217.154.243.72
-        #   ansible_ssh_pass: '{{de_debian13_vps_become_pass}}'
-        #   ansible_ssh_user: root            
-        #   #ansible_ssh_pass: '{{localhost_become_pass}}'
+      # debian13:
+      #   ansible_host: 10.1.0.245
+      #   ansible_ssh_user: ibrahim
+      #   ansible_ssh_pass: '{{localhost_become_pass}}'
+      # de-1011-vps:
+      #   ansible_host: 212.227.191.142
+      #   ansible_ssh_user: root
+      #   ansible_ssh_pass: '{{fistimede-1011-vps}}'
+      # de-debian13-vps:
+      #   ansible_host: 217.154.243.72
+      #   ansible_ssh_pass: '{{de_debian13_vps_become_pass}}'
+      #   ansible_ssh_user: root
+      #   #ansible_ssh_pass: '{{localhost_become_pass}}'
       vars:
-        # ansible_ssh_pass: '{{de_debian13_vps_become_pass}}'
-        # ansible_ssh_user: root
+      # ansible_ssh_pass: '{{de_debian13_vps_become_pass}}'
+      # ansible_ssh_user: root
     localhost:
       hosts:
         localhost:
-          #ansible_host: 127.0.0.1
+          # ansible_host: 127.0.0.1
           ansible_connection: local
-#
+          #
     allservers:
       children:
         ionos:
@@ -142,7 +142,7 @@ all:
         de_debian13_kde:
           ansible_host: 10.1.0.225
           ansible_user: ibrahim
-        #de-debian13-VM:
-          #ansible_host: 10.1.0.208
+        # de-debian13-VM:
+        # ansible_host: 10.1.0.208
         debian13:
           ansible_host: 10.1.0.245

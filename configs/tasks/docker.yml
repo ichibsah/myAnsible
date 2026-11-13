@@ -95,7 +95,7 @@
 #
 #
 #
-#You can paste this before any container deployment:
+# You can paste this before any container deployment:
 
 - name: Docker pre-flight check block
   block:

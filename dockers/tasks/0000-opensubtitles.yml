@@ -13,17 +13,17 @@
 #       state: ephemeral
 #   when: instl_docker_pckg and dckr_dpl_plex
 #   # become: false
-#   # become_user: ibrahim    
+#   # become_user: ibrahim
 #   tags:
 #     - test
 # #
 - name: Job 00 | Deploy Opensubtitles
   community.docker.docker_compose:
-    #working_dir: "/opt/opensubtitles-0000/"
-    #remove_images: all
-    #remove_volumes: True
-    #stopped: True
-    #state: absent
+    # working_dir: "/opt/opensubtitles-0000/"
+    # remove_images: all
+    # remove_volumes: True
+    # stopped: True
+    # state: absent
     #
     project_name: Opensubtitles
     definition:
@@ -38,9 +38,9 @@
           restart: always
           environment:
             - TZ=Europe/Berlin
-            #- USERNAME='{{os_username}}'
-            #- PASSWORD='{{os_password}}'
-          user: "0:0" # root
+            # - USERNAME='{{os_username}}'
+            # - PASSWORD='{{os_password}}'
+          user: "0:0"  # root
           volumes:
             - /net/mediafiles/mediaFiles/Movies:/movies
             - /net/mediafiles/mediaFiles/TV-Shows:/series
@@ -50,23 +50,23 @@
   register: output
   tags:
     - assert
-    - #test
-  #
-  # for debug purpose only - disabled in the meantime
+    -  # test
+    #
+    # for debug purpose only - disabled in the meantime
 # - name: Show results
 #   ansible.builtin.debug:
 #     var: output
 #   #tags: test
-  #
+#
 - name: Verify that opensubtitles is running
   ansible.builtin.assert:
     that:
       - "output.services.opensubtitles.opensubtitles_con.state.running"
-      - #"output.services.mysql.ansiblemysql.state.running"
+      -  # "output.services.mysql.ansiblemysql.state.running"
   when: instl_docker_pckg and dckr_dpl_opnsbttls
   tags:
     - assert
-    - #test
+    -  # test
 
 # # https://mariushosting.com/how-to-install-gravity-on-your-synology-nas/
 
@@ -90,7 +90,7 @@
 #       - UID=1000
 #       - GID=1000
 #       - USERNAME='my opensubtitle username'
-#       - PASSWORD='my opensubtitle password      
+#       - PASSWORD='my opensubtitle password
 
 
 # https://hub.docker.com/r/fredrickbacker/opensubtitles

@@ -21,6 +21,10 @@
   ansible.builtin.import_tasks:
     file: docker.yml
 
+- name: Import Docker for Debian 13 tasks
+  ansible.builtin.import_tasks:
+    file: dockerdeb13.yml
+
 - name: Import Filebot tasks
   ansible.builtin.import_tasks:
     file: filebot.yml

@@ -24,7 +24,7 @@
   ansible.windows.win_updates:
     category_names: '*'
     reboot: false
-    #state: install
+    # state: install
     reboot_timeout: 3600
     log_path: "{{logpath}}\\job-1003-{{filename}}"
 
@@ -56,7 +56,7 @@
 #   set_fact:
 #     cron_process: "{{ processes | selectattr('Name', 'equalto', 'cron') | list }}"
 #   register: stdout, stderr_lines
-    
+
 # - name: Log cron object
 #   debug:
 #     msg: "{{ cron_process }}"
@@ -126,9 +126,6 @@
 #   ansible.windows.win_shell: '$string = [Console]::In.ReadToEnd(); Write-Output $string.Trim()'
 #   args:
 #     stdin: Input message
-
-
-
 
 
 # - name: Install all security, critical, and rollup updates without a scheduled task

@@ -2,8 +2,8 @@
 - name: Iterate targets (each with distinct creds)
   vars:
     site_targets:
-      - { url: 'https://boboconsult.odoo.com/odoo', username: 'website@opendotsolutions.com', password: 'Qwertzuiop123', login_path: '/post' }
-      - { url: 'https://httpbin.org', username: 'bob', password: 'secret2', login_path: '/post' }
+      - {url: 'https://boboconsult.odoo.com/odoo', username: 'website@opendotsolutions.com', password: 'Qwertzuiop123', login_path: '/post'}
+      - {url: 'https://httpbin.org', username: 'bob', password: 'secret2', login_path: '/post'}
     # site_targets: "{{ site_targets | default([]) }}"
     path_prefix: "/odoo"          # your instance prefix
     login_path: "/web/login"      # Odoo's login endpoint

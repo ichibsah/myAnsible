@@ -1,3 +1,4 @@
+---
 hostname_additional_hosts:
   - ip_address: 127.0.0.1
     hostname: localhost.localdomain
@@ -5,10 +6,10 @@ hostname_additional_hosts:
   - ip_address: 192.168.77.99
     hostname: mgmt.skyline.lan
     hostname_short: mgmt
-  
-  #
-#virthost01.skyline.lan: 
-#ansible_connection: local # this will overwrite any other type of connections. its needed here.
+
+    #
+# virthost01.skyline.lan:
+# ansible_connection: local # this will overwrite any other type of connections. its needed here.
 ansible_become_pass: '{{ localhost_become_pass }}'
 #
 #

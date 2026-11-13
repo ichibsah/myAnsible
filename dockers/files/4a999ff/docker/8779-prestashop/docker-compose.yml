@@ -1,7 +1,8 @@
+---
 version: "3.9"
 services:
   db:
-    image: mariadb:jammy 
+    image: mariadb:jammy
     container_name: PrestaShop-DB
     hostname: prestashop-db
     mem_limit: 1g

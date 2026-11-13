@@ -5,7 +5,7 @@
     file: ssh.yml
   when: ssh
   tags:
-#    - test
+    #    - test
     - ssh
 #
 - name: Job 02 | import task config
@@ -13,5 +13,5 @@
     file: config.yml
   when: config
   tags:
-#    - test
+    #    - test
     - config

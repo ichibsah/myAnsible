@@ -6,17 +6,17 @@ dkr_copy_def_files: true                   # Copy default docker files to target
 dkr_copy_etx_files: no                    # Copy extended docker files to target host
 #
 dckr_fldr_lst:                            # Docker folder list that will be copied when set in the host variable
-  - { fldr: "none" }
+  - {fldr: "none"}
 #
-dsbl_dhcpvsx: no                             # Disable dhcp v6  
+dsbl_dhcpvsx: no                             # Disable dhcp v6
 #
 dckr_dpl_emby_gh: no
 #
 # /*******/
 # find a way to declare them in the same file where they are needed
-working_dir: "{{dckr_bs_pth}}/meryem-8090/" 
-working_dir_skyline: "{{dckr_bs_pth}}/skyline-8094/" 
-log_dir: "{{ working_dir}}logs" 
+working_dir: "{{dckr_bs_pth}}/meryem-8090/"
+working_dir_skyline: "{{dckr_bs_pth}}/skyline-8094/"
+log_dir: "{{ working_dir}}logs"
 # /*******/
 dckr_dmain_nme_pstfx: home.sawadogo.xyz
 #

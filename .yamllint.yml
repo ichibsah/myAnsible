@@ -1,9 +1,16 @@
+---
+ignore: |
+  .venv/
+  **/ansible-vault.yml
+  myNotes.txt.yml
+
 extends: default
 
 rules:
   line-length: disable
   indentation:
     spaces: 2
+    indent-sequences: whatever
   trailing-spaces: enable
   truthy:
     allowed-values: ["true", "false", "yes", "no"]

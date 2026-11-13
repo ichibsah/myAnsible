@@ -8,21 +8,21 @@
 #   - ca-certificates
 #   - python3-docker
 #   - lsb-release gnupg2 apt-transport-https ca-certificates curl software-properties-common
-# 
+#
 # apt reinstall docker docker-compose docker-compose-plugin
 #
 - name: Job 20.01 | Add Docker-ce Repo
   apt_repository:
     repo: deb [arch={{ [ansible_architecture] | map('extract', deb_architecture) | first }}] https://download.docker.com/{{ ansible_system | lower }}/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable
-    #repo: "deb [arch=amd64] https://download.docker.com/linux/debian bullseye stable" # TODO use facts variables
-    state: present # not required. choices: absent;present. A source string state.
-    mode: 0644 # not required. The octal mode for newly created files in sources.list.d
-    update_cache: true # not required. Run the equivalent of C(apt-get update) when a change occurs.  Cache updates are run after making changes.
+    # repo: "deb [arch=amd64] https://download.docker.com/linux/debian bullseye stable" # TODO use facts variables
+    state: present  # not required. choices: absent;present. A source string state.
+    mode: 0644  # not required. The octal mode for newly created files in sources.list.d
+    update_cache: true  # not required. Run the equivalent of C(apt-get update) when a change occurs.  Cache updates are run after making changes.
     validate_certs: true
-  # the when here is no longer requred.  
-  #when: instl_docker_pckg and (ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] < "12") #bullseye    
-  #when: instl_docker_pckg and (ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] < "12") #bullseye    
-  #tags: test
+    # the when here is no longer requred.
+    # when: instl_docker_pckg and (ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] < "12") #bullseye
+    # when: instl_docker_pckg and (ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] < "12") #bullseye
+    # tags: test
 #
 # this has been disabled after finding a universal repo: for all releases.
 # https://stackoverflow.com/questions/58169348/how-is-the-architecture-fact-called-in-ansible
@@ -36,7 +36,7 @@
 #     validate_certs: true
 #   when: instl_docker_pckg and (ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] >= "12") #bookworm
 #   tags: test
-# 
+#
 # --break-system-packages
 - name: Job 20.03 | Global Install - Python3 and pip
   apt:
@@ -48,7 +48,7 @@
   - python3-apt
   - python3-pip
   - python3-full
-  #when: instl_docker_pckg
+  # when: instl_docker_pckg
   # tags: test #TODO
 #
 - name: Job 20.04 | Install Docker Package
@@ -56,15 +56,15 @@
     pkg: "{{apt_docker_pckg_lst}}"
     state: present
   when: instl_docker_pckg
-  #tags: test
+  # tags: test
 #
 - name: Job 20.05 | Install Docker Module in Python
   pip:
     name: "{{pip_dckr_pckg_lst}}"
     state: present
-    #extra_args: --break-system-packages
+    # extra_args: --break-system-packages
     # when no longer required
-  #when: instl_docker_pckg and (ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] <= "11") #bullseye
+  # when: instl_docker_pckg and (ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] <= "11") #bullseye
   when: instl_docker_pckg
   # tags: test #TODO
 #
@@ -76,13 +76,13 @@
 #   when: instl_docker_pckg and (ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] == "12") #bookworm
 #   # tags: test #TODO
 #
-- name: Job 20.07 | REMOVE Docker Package # REMOVE #
+- name: Job 20.07 | REMOVE Docker Package  # REMOVE #
   apt:
     pkg: "{{apt_docker_pckg_lst}}"
     state: absent
   when: not instl_docker_pckg and not kill_remove
 #
-- name: Job 20.08 | REMOVE Docker Package # REMOVE #
+- name: Job 20.08 | REMOVE Docker Package  # REMOVE #
   pip:
     name: "{{pip_dckr_pckg_lst}}"
     state: absent
@@ -92,14 +92,14 @@
 # Ensure that groups and user append are done last
 - name: Job 21.98 | update user groups
   group:
-    name: docker # required. Name of the group to manage.
+    name: docker  # required. Name of the group to manage.
     gid:  # not required. Optional I(GID) to set for the group.
-    state: present # not required. choices: absent;present. Whether the group should be present or not on the remote host.
+    state: present  # not required. choices: absent;present. Whether the group should be present or not on the remote host.
 
 - name: Job 21.99 | append user to new groups
   user:
-    name: ibrahim # required. Name of the user to create, remove or modify.
-    groups: docker 
+    name: ibrahim  # required. Name of the user to create, remove or modify.
+    groups: docker
     append: true
 
 

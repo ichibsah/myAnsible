@@ -5,32 +5,32 @@
     question: locales/default_environment_locale
     value: en_GB.UTF-8
     vtype: select
-  #when: ansible_distribution == 'Ubuntu'
+    # when: ansible_distribution == 'Ubuntu'
 
 - name: locales | Job 01 | Locales package present "{{ansible_os_family}}"
   ansible.builtin.apt:
     pkg:
       - locales
-  #when: ansible_os_family == 'Ubuntu'
+      # when: ansible_os_family == 'Ubuntu'
 
 - name: locales | Job 01 | set as default locale "{{ansible_os_family}}"
   ansible.builtin.command: localectl set-locale LANG=en_GB.UTF-8
-  #when: ansible_distribution == 'Ubuntu'
+  # when: ansible_distribution == 'Ubuntu'
 
 - name: locales | Job 01 | set as default x11-keymap "{{ansible_os_family}}"
   ansible.builtin.command: localectl --no-convert set-x11-keymap de
-  #when: ansible_distribution == 'Ubuntu'
+  # when: ansible_distribution == 'Ubuntu'
 
 - name: locales | Job 01 | create vconsole.conf for VC Keymap "{{ansible_os_family}}"
   ansible.builtin.copy:
     dest: /etc/vconsole.conf
     content: |
       KEYMAP=de
-  #when: ansible_distribution == 'Ubuntu'
+  # when: ansible_distribution == 'Ubuntu'
 ###########
-- name: locales | Job 01 | Get existing debconf values for locales 
+- name: locales | Job 01 | Get existing debconf values for locales
   ansible.builtin.debconf:
-    name: locales 
+    name: locales
   register: locale_dcnf
 
 - name: locales | Job 01 | Set a variable for the current locales
@@ -38,14 +38,14 @@
     locale_dcnf_locale: "{{ locale_dcnf | community.general.json_query(locale_dcnf_jpq) }}"
   vars:
     locale_dcnf_jpq: 'current.["locales/default_environment_locale"]|[0]'
-  
+
 - name: locales | Job 01 | Debug existing debconf value for locales/default_environment_locale
   ansible.builtin.debug:
     var: locale_dcnf_locale
-  
+
 - name: locales | Job 01 | Debconf set default locale
   ansible.builtin.debconf:
-    name: locales 
+    name: locales
     question: locales/default_environment_locale
     value: "{{ locale_lang }}"
     vtype: select

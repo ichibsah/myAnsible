@@ -1,11 +1,12 @@
+---
 hostname_additional_hosts:
   - ip_address: 192.168.77.213
     hostname: mdsrvr.skyline.lan
     hostname_short: mdsrvr
-  
-  #
-#virthost01.skyline.lan: 
-ansible_connection: local # this will overwrite any other type of connections. its needed here.
+
+    #
+# virthost01.skyline.lan:
+ansible_connection: local  # this will overwrite any other type of connections. its needed here.
 ansible_become_pass: '{{ localhost_become_pass }}'
 #
 ### PRVS | CONFIG ###

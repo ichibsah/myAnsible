@@ -4,19 +4,19 @@
 - name: Job 01 | Import AnyDesk GPG Key
   apt_key:
     url: https://keys.anydesk.com/repos/DEB-GPG-KEY
-    state: present 
+    state: present
     validate_certs: true
   when: instl_anydesk
-#  
+#
 - name: Job 02 | Add AnyDesk Repo
   apt_repository:
     repo: "deb http://deb.anydesk.com/ all main"
-    state: present 
-    mode: 0644 
-    update_cache: true 
-    validate_certs: true 
+    state: present
+    mode: 0644
+    update_cache: true
+    validate_certs: true
   when: instl_anydesk
-#  
+#
 - name: Job 03 | Install AnyDesk Package
   apt:
     pkg: "{{item}}"
@@ -25,7 +25,7 @@
     "{{apt_anydsk_pckg_lst}}"
   when: instl_anydesk
 #
-- name: Job 03(REMOVE) | Install AnyDesk Package # REMOVE
+- name: Job 03(REMOVE) | Install AnyDesk Package  # REMOVE
   apt:
     pkg: "{{item}}"
     state: absent

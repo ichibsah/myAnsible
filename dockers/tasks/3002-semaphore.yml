@@ -22,7 +22,7 @@
     semaphore_container_name: "{{ semaphore_container_name | default('ansiblesemaphore') }}"
     semaphore_port_host: "{{ semaphore_port_host | default(3002) }}"
     semaphore_port_container: "{{ semaphore_port_container | default(3000) }}"
-    #semaphore_run_as_user: "{{ semaphore_run_as_user | default(omit) }}"  # e.g. '1000:1000' if you want to set it
+    # semaphore_run_as_user: "{{ semaphore_run_as_user | default(omit) }}"  # e.g. '1000:1000' if you want to set it
     semaphore_run_as_user: "{{ semaphore_run_as_user | default('1000:1000') }}"  # e.g. '1000:1000' if you want to set it
     semaphore_access_key_encryption: "{{ semaphore_access_key_encryption | default('') }}"
     mysql_db_name: "{{ mysql_db_name | default('semaphore') }}"
@@ -121,9 +121,9 @@
         semaphore:
           container_name: "{{ semaphore_container_name }}"
           image: "{{ semaphore_image }}"
-          #{% if semaphore_run_as_user is defined %}
+          # {% if semaphore_run_as_user is defined %}
           user: "{{ semaphore_run_as_user }}"
-          #{% endif %}
+          # {% endif %}
           ports:
             - "{{ semaphore_port_host }}:{{ semaphore_port_container }}"
           environment:

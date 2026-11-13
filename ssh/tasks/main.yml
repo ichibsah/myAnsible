@@ -5,7 +5,7 @@
     file: lockdown.yml
   tags:
     - localhost
-    #- test  
+    # - test
 #
 - name: Job 02 | import task allowRootLogin
   ansible.builtin.import_tasks:
@@ -14,4 +14,4 @@
   tags:
     - localhost
     - allowrootlogin
-    - #test  
+    -  # test

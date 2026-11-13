@@ -14,7 +14,7 @@ dkr_copy_etx_files: no                    # Copy extended docker files to target
 #
 dckr_fldr_lst:                            # Docker folder list that will be copied when set in the host variable
 #
-dsbl_dhcpvsx: no                          # Disable dhcp v6  
+dsbl_dhcpvsx: no                          # Disable dhcp v6
 #
 instl_dhcp_srvc: no                       # Install DHCP Service
 # /*******/
@@ -23,7 +23,7 @@ instl_dhcp_srvc: no                       # Install DHCP Service
 include: pckg.yml
 
 apt_reset_source_list: no                 # reset the /etc/apt/sources.list to the default
-apt_mirror_url: http://archive.ubuntu.com # the mirror from where to install packages
+apt_mirror_url: http://archive.ubuntu.com  # the mirror from where to install packages
 apt_cache_valid_time: 3600                # Time (in seconds) the apt cache stays valid
 apt_update_gen_conf: no                   # Update the general configuration (/etc/apt/apt.conf.d/10general)
 apt_install_recommends: no                # whether or not to install the "recommended" packages
@@ -71,7 +71,7 @@ prvs_root_passwd: no            # update root passward
 # users:                        # use this to override the default account
 #   - name: root
 #     shell: /bin/bash
-#     groups: 
+#     groups:
 #       - docker
 #     append: True
 #     state: present
@@ -81,7 +81,7 @@ prvs_root_passwd: no            # update root passward
 #     hosts: all
 #   - name: ibrahim
 #     shell: /bin/bash
-#     groups: 
+#     groups:
 #       - adm
 #       - sudo
 #       - docker

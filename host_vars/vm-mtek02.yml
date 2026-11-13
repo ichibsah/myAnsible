@@ -10,7 +10,7 @@ wifiboss_gateway: "10.1.0.254"
 
 wifiboss_dns_servers:
   - "192.168.18.1"
-  #- "8.8.8.8"
+  # - "8.8.8.8"
 
 wifiboss_hotspot_dns_name: "wifiboss.link"
 wifiboss_hotspot_profile: "WiFiBoss-HotSpot-Profile"

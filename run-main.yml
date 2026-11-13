@@ -20,7 +20,7 @@
 - name: 6001 | Play run-otds.yml
   import_playbook: run-otds.yml
 #
-#- name: MAIN | Play run-plesk.yml
+# - name: MAIN | Play run-plesk.yml
 #  import_playbook: run-plesk.yml
 #
 # its important that changes to hostnames should be done last.
@@ -37,7 +37,7 @@
 #   become_user: root
 #   #gather_facts: true
 #   vars_files:
-#     - ansible-vault.yml 
+#     - ansible-vault.yml
 #   roles:
 #    - provisions
 #    - ssh
@@ -50,6 +50,6 @@
 #   become_user: root
 #   #gather_facts: true
 #   vars_files:
-#     - ansible-vault.yml 
+#     - ansible-vault.yml
 #   roles:
 #    #- apt-packages # de-1011-vps should not be part of this hosts

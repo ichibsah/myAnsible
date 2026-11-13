@@ -1,3 +1,4 @@
+---
 npm_container_name: "nginx_proxy_manager"
 npm_image_name: "jc21/nginx-proxy-manager"
 npm_image_tag: "latest"

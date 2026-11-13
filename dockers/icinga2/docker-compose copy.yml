@@ -1,3 +1,4 @@
+---
 version: '3.7'
 
 x-icinga-db-web-config:
@@ -96,7 +97,7 @@ services:
   # The Icinga 2 docker image does not support configuration via env vars at the moment.
   # So, we have to ship some configs with this little init container. Referenced in depends_on of the icinga2 service.
   init-icinga2:
-    command: [ "/config/init-icinga2.sh" ]
+    command: ["/config/init-icinga2.sh"]
     environment: *icinga2-environment
     image: icinga/icinga2
     logging: *default-logging
@@ -107,7 +108,7 @@ services:
       - ./init-icinga2.sh:/config/init-icinga2.sh
 
   icinga2:
-    command: [ "sh", "-c", "sleep 5 ; icinga2 daemon" ]
+    command: ["sh", "-c", "sleep 5 ; icinga2 daemon"]
     depends_on:
       - icingadb-redis
       - init-icinga2
@@ -173,8 +174,8 @@ services:
 
 volumes:
   icinga2:
-  icingaweb: 
-  mysql: 
+  icingaweb:
+  mysql:
 
 
 # $ docker-compose -p icinga-playground up -d

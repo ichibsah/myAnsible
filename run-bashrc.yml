@@ -5,7 +5,7 @@
   ignore_errors: true
   ignore_unreachable: false
   remote_user: ibrahim
-  #become: false
+  # become: false
   become: true
   roles:
     - bashrc

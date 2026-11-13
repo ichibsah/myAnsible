@@ -1,18 +1,17 @@
-
+---
 - name: SSH | Update resolv temp to allow update.
   lineinfile:
     dest: /etc/resolv.conf
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
     state: present
-    create: True
+    create: true
     insertafter: EOF
-    #validate: 'sshd -t -f %s'
+    # validate: 'sshd -t -f %s'
   with_items:
     - regexp: "^nameserver 1.1.1.1"
       line: "nameserver 1.1.1.1"
   when: addresolv
-
 
 
 # lineinfile:

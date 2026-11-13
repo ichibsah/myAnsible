@@ -2,7 +2,7 @@
 #
 - name: Job 00 | Deploy Skylinewebservice - pull from git
   vars:
-    working_dir: "{{dckr_bs_pth}}/prg_name-port/" 
+    working_dir: "{{dckr_bs_pth}}/prg_name-port/"
     log_dir: "{{ working_dir }}logs"
     prg_name: "skylinewebservice_prg_name"
   ansible.builtin.git:
@@ -12,7 +12,7 @@
     clone: true
     update: true
     remote: origin
-    key_file: /home/ibrahim/.ssh/id_rsa # file must exist on remote server
+    key_file: /home/ibrahim/.ssh/id_rsa  # file must exist on remote server
     accept_hostkey: true
   check_mode: false
   register: changes_in_git_pull
@@ -23,7 +23,7 @@
     msg: "Directory is failed"
   when: changes_in_git_pull is failed
 
-- name: Run only if the task that registered the "result" variable succeeds # just the green color
+- name: Run only if the task that registered the "result" variable succeeds  # just the green color
   ansible.builtin.debug:
     msg: "Directory is succeeded"
   when: changes_in_git_pull is succeeded
@@ -45,8 +45,8 @@
     con_name: "{{prg_name}}_con"
   community.docker.docker_compose:
     remove_images: all
-    remove_volumes: True
-    stopped: True
+    remove_volumes: true
+    stopped: true
     state: absent
     project_name: "{{ prg_name }}"
     definition:
@@ -61,14 +61,14 @@
   vars:
     prg_name: "skylinewebservice_prg_name"
   docker_image:
-    name:  "{{ prg_name }}"
-    force_absent: True
+    name: "{{ prg_name }}"
+    force_absent: true
     state: absent
   when: changes_in_git_pull is changed
 #
 - name: Job 02 | Deploy Skylinewebservice - build image
   vars:
-    working_dir: "{{dckr_bs_pth}}/prg_name-port/" 
+    working_dir: "{{dckr_bs_pth}}/prg_name-port/"
     log_dir: "{{ working_dir }}logs"
     prg_name: "skylinewebservice_prg_name"
   community.docker.docker_image:
@@ -85,7 +85,7 @@
 #
 - name: Job 03 | Deploy Skylinewebservice - deploy container
   vars:
-    working_dir: "{{dckr_bs_pth}}/prg_name-port/" 
+    working_dir: "{{dckr_bs_pth}}/prg_name-port/"
     log_dir: "{{ working_dir }}logs"
     prg_name: "skylinewebservice"
     con_name: "{{prg_name}}_con"
@@ -99,17 +99,17 @@
           container_name: "{{con_name}}"
           image: "{{prg_name}}:latest"
           ports:
-            - 8094:8000 
+            - 8094:8000
           restart: always
           environment:
             - TZ=Europe/Berlin
           user: "${UID}:${GID}"
-          #user: "0:0" # root
+          # user: "0:0" # root
           # volumes:
           #   - /opt/docker/emby-8096/emby:/config
           #   - /net/mediafiles/mediaFiles/TV-Shows:/tvshows
           #   - /net/mediafiles/mediaFiles/Movies:/movies
-  #when: changes_in_git_pull is changed or changes_in_git_pull is succeeded
+  # when: changes_in_git_pull is changed or changes_in_git_pull is succeeded
   register: output
   tags:
     - assert
@@ -118,7 +118,7 @@
   ansible.builtin.assert:
     that:
       - "output.services.Skylinewebservice.skylinewebservice_con.state.running"
-      - #"output.services.mysql.ansiblemysql.state.running"
+      -  # "output.services.mysql.ansiblemysql.state.running"
   tags:
     - assert
 #
@@ -211,8 +211,6 @@
 #   archive:  # not required. Specify archive file path with extension. If specified, creates an archive file of the specified format containing the tree structure for the source tree. Allowed archive formats ["zip", "tar.gz", "tar", "tgz"] This will clone and perform git archive from local directory as not all git servers support git archive.
 #   separate_git_dir:  # not required. The path to place the cloned repository. If specified, Git repository can be separated from working tree.
 #   gpg_whitelist: [] # not required. A list of trusted GPG fingerprints to compare to the fingerprint of the GPG-signed commit. Only used when I(verify_commit=yes).
-
-
 
 
 #

@@ -1,3 +1,4 @@
+---
 # sources:
 #   auth_logs:
 #     type: file
@@ -72,7 +73,7 @@ sources:
   app_logs:
     type: "file"
     include:
-      #- "/var/log/logify/app.log"
+      # - "/var/log/logify/app.log"
       - "/var/log/auth.log"
 
 sinks:

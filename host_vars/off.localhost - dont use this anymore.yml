@@ -1,3 +1,4 @@
+---
 hostname_additional_hosts:
   - ip_address: 192.168.14.254
     hostname: virthost01.skyline.lan
@@ -8,7 +9,7 @@ hostname_additional_hosts:
   - ip_address: 192.168.8.254
     hostname: virthost01.skyline.lan
     hostname_short: virthost01
-  #
+    #
 apt_host_packages_list:                   # Install Host Specific Packages
 - rsync
 - pip
@@ -35,5 +36,5 @@ apt_install_utilities_base: true           # Install utilities packages default 
 # ff02::1 ip6-allnodes
 # ff02::2 ip6-allrouters
 #
-#virthost01.skyline.lan: 
-ansible_connection: local # this will overwrite any other type of connections. its needed here.
+# virthost01.skyline.lan:
+ansible_connection: local  # this will overwrite any other type of connections. its needed here.

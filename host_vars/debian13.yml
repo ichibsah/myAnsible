@@ -1,20 +1,21 @@
+---
 hostname_additional_hosts:
   - ip_address: 10.1.0.245
     hostname: debian13.skyline.lan
     hostname_short: debian13
-  # - ip_address: 192.168.77.225
-  #   hostname: debian13.skyline.lan
-  #   hostname_short: debian13
-  # - ip_address: 192.168.0.225
-  #   hostname: debian13.skyline.lan
-  #   hostname_short: debian13
-  #
+    # - ip_address: 192.168.77.225
+    #   hostname: debian13.skyline.lan
+    #   hostname_short: debian13
+    # - ip_address: 192.168.0.225
+    #   hostname: debian13.skyline.lan
+    #   hostname_short: debian13
+    #
 dckr_dmain_nme_pstfx: home.sawadogo.xyz
-#virthost01.skyline.lan: 
-#ansible_connection: local # this will overwrite any other type of connections. its needed here.
+# virthost01.skyline.lan:
+# ansible_connection: local # this will overwrite any other type of connections. its needed here.
 ansible_become_pass: '{{ localhost_become_pass }}'
 #
-#become_user: "{{ krdp_user | default('root') }}"
+# become_user: "{{ krdp_user | default('root') }}"
 krdp_user: ibrahim
 ### PRVS | CONFIG ###
 prvs_copy_home: false                       # Copy default user's home files in place

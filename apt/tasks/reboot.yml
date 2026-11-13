@@ -1,3 +1,4 @@
+---
 # REBOOT #
 - name: Job 99.01 | Check if a reboot is needed for Debian and Ubuntu boxes
   register: reboot_required_file

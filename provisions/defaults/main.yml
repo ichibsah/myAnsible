@@ -10,40 +10,40 @@ prvs_root_passwd: no            # update root passward
 addLocalUser: no                # add a local user to specific host
 instl_gthb_ky: no               # add id_rsa to only ibrahim to allow local server access to git
 # instl_docker_pckg and instl_gthb_ky
-#ansible_become_pass: '{{ localhost_become_pass }}'
+# ansible_become_pass: '{{ localhost_become_pass }}'
 #
 users:
   - name: root
     shell: /bin/bash
-    groups: 
+    groups:
       - docker
-    append: True
+    append: true
     state: present
     key: root.pub
-    create_home: True
-    local: True
+    create_home: true
+    local: true
     hosts: all
   - name: ibrahim
     shell: /bin/bash
-    groups: 
+    groups:
       - adm
       - sudo
       - docker
-    append: True
+    append: true
     state: present
     key: ibrahim.pub
-    create_home: True
-    local: True
+    create_home: true
+    local: true
     hosts: all
 #
 # localusers:
-#   - name: 
+#   - name:
 #     shell:
-#     groups: 
-#       - 
+#     groups:
+#       -
 #     append: True
-#     state: 
-#     key: 
+#     state:
+#     key:
 #     create_home: True
 #     local: True
 #     hosts: de-1005-gw

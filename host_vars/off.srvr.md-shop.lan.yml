@@ -1,9 +1,10 @@
+---
 hostname_additional_hosts:
   - ip_address: 192.168.14.254
     hostname: srvr.md-shop.lan
     hostname_short: srvr
 
-  #
+    #
 #
 ansible_become_pass: '{{ localhost_become_pass }}'
 ansible_connection: local

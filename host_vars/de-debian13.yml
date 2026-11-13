@@ -1,3 +1,4 @@
+---
 hostname_additional_hosts:
   - ip_address: 10.1.0.201
     hostname: de-debian13.skyline.lan
@@ -8,10 +9,10 @@ hostname_additional_hosts:
   - ip_address: 192.168.0.201
     hostname: de-debian13.skyline.lan
     hostname_short: de-debian13
-  #
+    #
 dckr_dmain_nme_pstfx: home.sawadogo.xyz
-#virthost01.skyline.lan: 
-#ansible_connection: local # this will overwrite any other type of connections. its needed here.
+# virthost01.skyline.lan:
+# ansible_connection: local # this will overwrite any other type of connections. its needed here.
 ansible_become_pass: '{{ localhost_become_pass }}'
 #
 ### PRVS | CONFIG ###

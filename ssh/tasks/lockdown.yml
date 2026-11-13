@@ -28,7 +28,7 @@
     - regexp: "^ChallengeResponseAuthentication"
       line: "ChallengeResponseAuthentication no"
     - regexp: "^PermitEmptyPasswords"
-      line: "PermitEmptyPasswords no"    
+      line: "PermitEmptyPasswords no"
     - regexp: "^AllowAgentForwarding"
-      line: "AllowAgentForwarding yes"         
+      line: "AllowAgentForwarding yes"
   notify: restart ssh

@@ -1,12 +1,13 @@
+---
 - name: Synchronize two directories on one remote host.
   ansible.posix.synchronize:
     mode: pull
     src: rsync://194.164.62.97:/home/
     dest: /test/home/
-    checksum: true    
+    checksum: true
     delete: false
-    recursive: true    
-  #delegate_to: "{{ inventory_hostname }}"
+    recursive: true
+    # delegate_to: "{{ inventory_hostname }}"
 #
 # - name: Synchronization of src on the control machine to dest on the remote hosts
 #   ansible.posix.synchronize:

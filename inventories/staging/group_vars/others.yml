@@ -1,3 +1,4 @@
+---
 ansible_os_family: "{{ ansible_facts.os_family | default('Debian') }}"
 #
 dmain_pstfx: .sawadogo.xyz
@@ -8,7 +9,7 @@ dckr_bs_pth: /opt/docker
 #
 paused: false
 #
-apt_util_lst: #  # Install utilities packages
+apt_util_lst:  #  # Install utilities packages
   - ack-grep
   - command-not-found
   - curl
@@ -42,9 +43,9 @@ apt_util_lst: #  # Install utilities packages
   - fish
   - hstr
   - telnetd
-  - telnet # systemctl status inetd
+  - telnet  # systemctl status inetd
 #
-apt_def_pckg_lst: # Install Default Packages on All Host
+apt_def_pckg_lst:  # Install Default Packages on All Host
   - gpg
   - unattended-upgrades
   - chrony
@@ -59,7 +60,7 @@ apt_def_pckg_lst: # Install Default Packages on All Host
   - net-tools
   - rsync
   - resolvconf
-  - bash-completion # https://github.com/cykerway/complete-alias
+  - bash-completion  # https://github.com/cykerway/complete-alias
   - cron
   - net-tools
 #
@@ -76,11 +77,11 @@ apt_ansbl_pckg_lst:
   - ansible-lint
 
 #
-pip_ansbl_pckg_lst: # Install packages using PIP for Ansible
+pip_ansbl_pckg_lst:  # Install packages using PIP for Ansible
   - ansible
   - passlib
 #
-apt_docker_pckg_lst: # Install packages using apt for Docker
+apt_docker_pckg_lst:  # Install packages using apt for Docker
   - rsync
   - docker-ce
   - docker-ce-cli
@@ -95,16 +96,16 @@ apt_docker_pckg_lst: # Install packages using apt for Docker
   - curl
   - software-properties-common
 #
-deb_architecture: { "aarch64": "arm64", "x86_64": "amd64" }
+deb_architecture: {"aarch64": "arm64", "x86_64": "amd64"}
 #
-pip_dckr_pckg_lst: # Install packages using PIP for Docker
+pip_dckr_pckg_lst:  # Install packages using PIP for Docker
   - docker-compose
 #
-postfix_aliases: # https://github.com/Oefenweb/ansible-postfix https://github.com/geerlingguy/ansible-role-postfix
+postfix_aliases:  # https://github.com/Oefenweb/ansible-postfix https://github.com/geerlingguy/ansible-role-postfix
   - user: $USER
     alias: $USER@$HOSTNAME
 #
-apt_strt_srvc_lst: # Ensure Services are running.
+apt_strt_srvc_lst:  # Ensure Services are running.
   - chronyd
   - docker
 #
@@ -114,7 +115,7 @@ apt_default_packages_post20:
 apt_default_packages_pre20:
   - python-apt
 #
-apt_rmv_pckg_lst: # Remove APT package lists
+apt_rmv_pckg_lst:  # Remove APT package lists
   - ansible
 #
 apt_anydsk_pckg_lst:

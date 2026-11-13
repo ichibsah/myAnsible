@@ -2,14 +2,14 @@
 #
 - name: Job 00 | Deploy Meryem - pull from git
   vars:
-    working_dir: "{{dckr_bs_pth}}/meryem-8090/" 
-    log_dir: "{{ working_dir}}logs" 
-    #http://test.katja-meryem-bruegel.de/
+    working_dir: "{{dckr_bs_pth}}/meryem-8090/"
+    log_dir: "{{ working_dir}}logs"
+    # http://test.katja-meryem-bruegel.de/
   ansible.builtin.git:
-    #working_dir: "{{dckr_bs_pth}}/meryem-8090/" 
-    #log_dir: "{{ working_dir}}logs" 
-    #repo: https://github.com/ichibsah/meryem.git
-    #repo: git@github.com:ichibsah/meryem.git
+    # working_dir: "{{dckr_bs_pth}}/meryem-8090/"
+    # log_dir: "{{ working_dir}}logs"
+    # repo: https://github.com/ichibsah/meryem.git
+    # repo: git@github.com:ichibsah/meryem.git
     repo: git@github.com:skylinewebservice/meryem.git
     dest: "{{ working_dir }}"
     force: true
@@ -20,13 +20,13 @@
 - name: Job 01 | Deploy Meryem - build image
   community.docker.docker_image:
     name: meryem
-    #push: true
+    # push: true
     tag: latest
     build:
       path: "{{ working_dir }}"
       args:
         log_volume: "{{ log_dir }}"
-        #listen_port: 8090
+        # listen_port: 8090
     # As 'latest' usually already is present, we need to enable overwriting of existing tags:
     force_tag: true
     force_source: true
@@ -34,12 +34,12 @@
 #
 - name: Job 03 | Deploy Meryem - deploy container
   community.docker.docker_compose:
-    #working_dir: "/opt/docker/meryem-8090/"
-    #working_dir: "{{dckr_bs_pth}}/meryem-8090/"
-    #remove_images: all
-    #remove_volumes: True
-    #stopped: True
-    #state: absent
+    # working_dir: "/opt/docker/meryem-8090/"
+    # working_dir: "{{dckr_bs_pth}}/meryem-8090/"
+    # remove_images: all
+    # remove_volumes: True
+    # stopped: True
+    # state: absent
     #
     project_name: Meryem
     definition:
@@ -50,12 +50,12 @@
           container_name: Meryem_con
           image: meryem:latest
           ports:
-            - 8090:8000 
+            - 8090:8000
           restart: always
           environment:
             - TZ=Europe/Berlin
           user: "${UID}:${GID}"
-          #user: "0:0" # root
+          # user: "0:0" # root
           # volumes:
           #   - /opt/docker/emby-8096/emby:/config
           #   - /net/mediafiles/mediaFiles/TV-Shows:/tvshows
@@ -64,17 +64,17 @@
   register: output
   tags:
     - assert
-    - #test
-  #
+    -  # test
+    #
 - name: Verify that meryem is running
   ansible.builtin.assert:
     that:
       - "output.services.meryem.Meryem_con.state.running"
-      - #"output.services.mysql.ansiblemysql.state.running"
+      -  # "output.services.mysql.ansiblemysql.state.running"
   # when: instl_docker_pckg and dckr_dpl_meryem
   tags:
     - assert
-    - #test
+    -  # test
 
 # # https://mariushosting.com/how-to-install-emby-on-your-synology-nas/
 

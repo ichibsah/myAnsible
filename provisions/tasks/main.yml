@@ -6,7 +6,7 @@
   tags:
     - timezone
     - localhost
-    #- test
+    # - test
 #
 - name: Job 1001-1002 | import task locales
   ansible.builtin.import_tasks:
@@ -15,7 +15,7 @@
   tags:
     - locales
     - localhost
-    #- test#
+    # - test#
 #
 - name: Job 1001-1002 | import task sleepy
   ansible.builtin.import_tasks:
@@ -24,7 +24,7 @@
   tags:
     - locales
     - localhost
-    #- test
+    # - test
 #
 - name: Job 1001-1003 | import task user_mgmt
   ansible.builtin.import_tasks:
@@ -33,7 +33,7 @@
   tags:
     - user_mgmt
     - localhost
-    #- test
+    # - test
 #
 - name: Job 98 | import task github key
   ansible.builtin.import_tasks:
@@ -41,5 +41,5 @@
   when: instl_docker_pckg and instl_gthb_ky
   tags:
     - github_key
-    #- test  
+    # - test
 #

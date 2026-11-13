@@ -12,7 +12,7 @@
   ansible.builtin.debug:
     msg: "{{ interface_check.stdout | join('\n') }}"
 
-- name: INTERFACES - create interface lists and members # TODO: does not work
+- name: INTERFACES - create interface lists and members  # TODO: does not work
   community.routeros.command:
     commands:
       - >
@@ -38,7 +38,7 @@
     'WAN' not in (interface_config.stdout | join(' ')) or
     'LAN' not in (interface_config.stdout | join(' '))
 
-- name: IP ADDRESSES - configure WAN and LAN addresses # TODO: add checks for existing addresses
+- name: IP ADDRESSES - configure WAN and LAN addresses  # TODO: add checks for existing addresses
   community.routeros.command:
     commands:
       - >
@@ -56,7 +56,7 @@
     wifiboss_wan_address not in (address_config.stdout | join(' ')) or
     wifiboss_lan_address not in (address_config.stdout | join(' '))
 
-- name: ROUTING - configure default route # TODO: add checks for existing default route
+- name: ROUTING - configure default route  # TODO: add checks for existing default route
   community.routeros.command:
     commands:
       - >

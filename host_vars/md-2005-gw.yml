@@ -1,3 +1,4 @@
+---
 hostname_additional_hosts:
   - ip_address: 10.3.0.254
     hostname: md-2005-gw.md-shop.local
@@ -5,10 +6,10 @@ hostname_additional_hosts:
   - ip_address: 192.168.0.80
     hostname: md-2005-gw.md-shop.local
     hostname_short: md-2005-gw
-  
-  #
-#virthost01.skyline.lan: 
-#ansible_connection: local # this will overwrite any other type of connections. its needed here.
+
+    #
+# virthost01.skyline.lan:
+# ansible_connection: local # this will overwrite any other type of connections. its needed here.
 ansible_become_pass: '{{ localhost_become_pass }}'
 #
 ### PRVS | CONFIG ###
@@ -34,8 +35,8 @@ apt_host_pckg_lst:                        # Install Host Specific Packages (keep
 - isc-dhcp-common
 - isc-dhcp-server
 - qemu-guest-agent
-#- qemu-system
-#- qemu-user-static
+# - qemu-system
+# - qemu-user-static
 pip_host_pckg_lst:                              # Install Host Specific PIP Packages when ansible is also installed
 
 apt_hst_strt_srvc_lst:                          # Ensure Host Specific Services are running.
@@ -51,4 +52,4 @@ dsbl_dhcpvsx_regx: INTERFACESv4='ens18'         # text that should change goes h
 interfaces:
   - iface: eth1
 #
-strt_myiptbls_at_boot: true  
+strt_myiptbls_at_boot: true

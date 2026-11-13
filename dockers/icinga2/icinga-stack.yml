@@ -1,3 +1,4 @@
+---
 version: '3.7'
 
 x-icinga-db-web-config:
@@ -89,19 +90,19 @@ services:
     entrypoint: []
     logging: *default-logging
     image: icinga/icingaweb2
-    #restart: on-failure
+    # restart: on-failure
     volumes:
       - icingaweb:/data
-#
+      #
     deploy:
       mode: global
       placement:
-        constraints: [node.platform.os == linux]    
+        constraints: [node.platform.os == linux]
 
   # The Icinga 2 docker image does not support configuration via env vars at the moment.
   # So, we have to ship some configs with this little init container. Referenced in depends_on of the icinga2 service.
   init-icinga2:
-    command: [ "/config/init-icinga2.sh" ]
+    command: ["/config/init-icinga2.sh"]
     environment: *icinga2-environment
     image: icinga/icinga2
     logging: *default-logging
@@ -110,14 +111,14 @@ services:
       - ./icingadb.conf:/config/icingadb.conf
       - ./icingaweb-api-user.conf:/config/icingaweb-api-user.conf
       - ./init-icinga2.sh:/config/init-icinga2.sh
-#
+      #
     deploy:
       mode: global
       placement:
         constraints: [node.platform.os == linux]
 
   icinga2:
-    command: [ "sh", "-c", "sleep 5 ; icinga2 daemon" ]
+    command: ["sh", "-c", "sleep 5 ; icinga2 daemon"]
     depends_on:
       - icingadb-redis
       - init-icinga2
@@ -129,7 +130,7 @@ services:
     volumes:
       - icinga2:/data
       - ./icinga2.conf.d:/custom_data/custom.conf.d
-#
+      #
     deploy:
       mode: global
       placement:
@@ -149,7 +150,7 @@ services:
       - icingadb-redis
     image: icinga/icingadb
     logging: *default-logging
-#
+    #
     deploy:
       mode: replicated
       replicas: 1
@@ -159,7 +160,7 @@ services:
   icingadb-redis:
     image: redis
     logging: *default-logging
-#
+    #
     deploy:
       mode: global
       placement:
@@ -177,10 +178,10 @@ services:
       - 8080:8080
     # Restart Icinga Web container automatically since we have to wait for the database to be ready.
     # Please note that this needs a more sophisticated solution.
-    #restart: on-failure
+    # restart: on-failure
     volumes:
       - icingaweb:/data
-#
+      #
     deploy:
       mode: global
       placement:
@@ -198,7 +199,7 @@ services:
     volumes:
       - mysql:/var/lib/mysql
       - ./env/mysql/:/docker-entrypoint-initdb.d/
-#
+      #
     deploy:
       mode: replicated
       replicas: 1
@@ -207,8 +208,8 @@ services:
 
 volumes:
   icinga2:
-  icingaweb: 
-  mysql: 
+  icingaweb:
+  mysql:
 
 
 # $ docker-compose -p icinga-playground up -d

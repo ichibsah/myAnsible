@@ -1,3 +1,4 @@
+---
 - name: Ensure the system can use the HTTPS transport for APT.
   stat:
     path: /usr/lib/apt/methods/https
@@ -12,7 +13,7 @@
 
 - name: Install basic packages
   package:
-    name: ['vim','aptitude','bash-completion','tmux','tree','htop','wget','unzip','curl','git']
+    name: ['vim', 'aptitude', 'bash-completion', 'tmux', 'tree', 'htop', 'wget', 'unzip', 'curl', 'git']
     state: present
     update_cache: true
 
@@ -76,7 +77,7 @@
 
 - name: Allow access to Manager and Host Manager apps from any IP
   template:
-    src: context.xml.j2 
+    src: context.xml.j2
     dest: "{{ item }}"
   with_items:
     - /usr/share/tomcat/webapps/host-manager/META-INF/context.xml

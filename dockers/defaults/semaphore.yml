@@ -1,13 +1,14 @@
+---
 # Resolve UID/GID from current Ansible SSH user; fallback to 1000 if missing
 semaphore_user_uid: "{{ ansible_user_uid | default(1000) }}"
 semaphore_user_gid: "{{ ansible_user_gid | default(1000) }}"
 emaphore_user_uid: "{{ semaphore_user_uid }}"
 #
-#semaphore_user_gid: "{{ semaphore_user_gid }}"
+# semaphore_user_gid: "{{ semaphore_user_gid }}"
 semaphore_db_password: "{{ vault_semaphore_db_password }}"
 semaphore_admin_password: "{{ vault_semaphore_admin_password }}"
-#semaphore_access_key_encryption: "{{ vault_semaphore_access_key_encryption }}"
-#no_log: true
+# semaphore_access_key_encryption: "{{ vault_semaphore_access_key_encryption }}"
+# no_log: true
 #
 #
 # Where the Semaphore stack lives

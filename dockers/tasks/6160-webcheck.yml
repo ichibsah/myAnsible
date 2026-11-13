@@ -2,7 +2,7 @@
 #
 - name: Job 03 | Deploy webcheck | deploy container
   vars:
-    working_dir: "{{dckr_bs_pth}}/webcheck-6160/" 
+    working_dir: "{{dckr_bs_pth}}/webcheck-6160/"
     log_dir: "{{ working_dir }}logs"
     prg_name: webcheck
     con_name: "{{prg_name}}_con"
@@ -28,16 +28,15 @@
   register: output
   tags:
     - assert
-    - #test
+    -  # test
 - name: Verify that blingbody is running
   ansible.builtin.assert:
     that:
       - "output.services.webcheck.webcheck_con.state.running"
-      - #"output.services.mysql.ansiblemysql.state.running"
+      -  # "output.services.mysql.ansiblemysql.state.running"
   tags:
     - assert
 #
 #
 #
 # # https://mariushosting.com/how-to-install-emby-on-your-synology-nas/
-

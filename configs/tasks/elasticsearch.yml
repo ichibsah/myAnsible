@@ -1,5 +1,6 @@
-- name: Find healthcheck URLs #(https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-elasticsearch-on-ubuntu-14-04)
-  
+---
+- name: Find healthcheck URLs  # (https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-elasticsearch-on-ubuntu-14-04)
+
   block:
     - name: Get checks
       ansible.builtin.uri:
@@ -17,9 +18,9 @@
 
     - name: Set check variables if check exists
       ansible.builtin.set_fact:
-        #healthcheck_io_pause_url: "{{ all_checks.json | community.general.json_query(pause_url_query) | last }}"
+        # healthcheck_io_pause_url: "{{ all_checks.json | community.general.json_query(pause_url_query) | last }}"
         healthcheck_io_pause_url: "{{ all_checks.json | community.general.json_query(pause_url_query) }}"
-        #healthcheck_io_resume_url: "{{ all_checks.json | community.general.json_query(resume_url_query) | last }}"
+        # healthcheck_io_resume_url: "{{ all_checks.json | community.general.json_query(resume_url_query) | last }}"
         healthcheck_io_resume_url: "{{ all_checks.json | community.general.json_query(resume_url_query) }}"
       vars:
         pause_url_query: "checks[?name=='{{inventory_hostname}}-uptime'].pause_url"
@@ -46,7 +47,7 @@
         body:
           name: "{{ inventory_hostname }}-uptime"
           timeout: 300
-        status_code: 
+        status_code:
           - 200
           - 201
       delegate_to: localhost
@@ -80,10 +81,10 @@
     - name: Reboot host
       debug:
         msg: "Reboot Host {{inventory_hostname}}"
-      #ansible.builtin.reboot:
-      #  connect_timeout: 30
-      #  reboot_timeout: 30
-      #timeout: 30
+        # ansible.builtin.reboot:
+        #  connect_timeout: 30
+        #  reboot_timeout: 30
+        # timeout: 30
 
   always:
     - name: Enable healthcheck

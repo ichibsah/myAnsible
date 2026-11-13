@@ -1,1 +1,2 @@
+---
 ansible_os_family: "{{ ansible_facts.os_family | default('Debian') }}"

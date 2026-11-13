@@ -1,3 +1,4 @@
+---
 hostname_additional_hosts:
   - ip_address: 10.0.0.137
     hostname: de-1007-docker.skyline.lan
@@ -5,10 +6,10 @@ hostname_additional_hosts:
   - ip_address: 10.0.0.137
     hostname: de-1007-docker.home.sawadogo.xyz
     hostname_short: de-1007-docker
-  
-  ##
-#virthost01.skyline.lan: 
-#ansible_connection: local # this will overwrite any other type of connections. its needed here.
+
+    ##
+# virthost01.skyline.lan:
+# ansible_connection: local # this will overwrite any other type of connections. its needed here.
 ansible_become_pass: '{{ localhost_become_pass }}'
 #
 ### PRVS | CONFIG ###
@@ -34,7 +35,6 @@ apt_host_pckg_lst:                        # Install Host Specific Packages (keep
   - nfs4-acl-tools
 
 
-
 pip_host_pckg_lst:                        # Install Host Specific PIP Packages when ansible is also installed
 #
 apt_hst_strt_srvc_lst:                    # Ensure Host Specific Services are running.
@@ -50,7 +50,7 @@ dckr_dpl_tautulli: true
 dckr_dpl_overseerr: true
 dckr_dpl_emby: true
 dckr_dpl_invdus: true
-dckr_dpl_rsume: true 
+dckr_dpl_rsume: true
 dckr_dpl_webpdf: true
 dckr_dpl_spotube: true
 dckr_dpl_gpt: true

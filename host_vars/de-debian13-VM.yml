@@ -1,3 +1,4 @@
+---
 hostname_additional_hosts:
   - ip_address: 10.1.0.208
     hostname: de-debian13-VM.skyline.lan
@@ -8,7 +9,7 @@ hostname_additional_hosts:
   - ip_address: 192.168.0.208
     hostname: de-debian13-VM.skyline.lan
     hostname_short: de-debian13-VM
-  #
+    #
 dckr_dmain_nme_pstfx: home.sawadogo.xyz
 # virthost01.skyline.lan:
 # ansible_connection: local # this will overwrite any other type of connections. its needed here.

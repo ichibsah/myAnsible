@@ -1,11 +1,12 @@
+---
 hostname_additional_hosts:
   - ip_address: 217.160.100.209
     hostname: a35a0d3.imsawadogo.com
     hostname_short: "a35a0d3"
-  # - ip_address: 5.6.7.8
-  #   hostname: b.example.com
-  #   hostname_short: b 
-  #
+    # - ip_address: 5.6.7.8
+    #   hostname: b.example.com
+    #   hostname_short: b
+    #
 #
 ### PRVS | CONFIG ###
 prvs_copy_home: true                       # Copy default user's home files in place
@@ -32,5 +33,5 @@ instl_swrm_mstr: true                                 # Install Docker swarm Ser
 #
 dckr_dpl_npxymgmt: true                    # install nginx-proxy-manager
 #
-dckr_dpl_rsume: true           
+dckr_dpl_rsume: true
 #

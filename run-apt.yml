@@ -1,3 +1,4 @@
+---
 - name: APT | STARTING run-apt.yml
   hosts: allservers
   gather_facts: true

@@ -1,3 +1,4 @@
+---
 - name: Install required packages
   apt:
     name:
@@ -100,4 +101,3 @@
 #     line: "auth required pam_succeed_if.so user != root"
 
 # #
-

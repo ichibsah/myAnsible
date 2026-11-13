@@ -1,11 +1,12 @@
+---
 - name: Job 00 | Deploy Resume
   community.docker.docker_compose:
-    #working_dir: "/opt/docker/rxresume-8662/"
-    #working_dir: "{{dckr_bs_pth}}/rxresume-8662/"
-    #remove_images: all
-    #remove_volumes: True
-    #stopped: True
-    #state: absent
+    # working_dir: "/opt/docker/rxresume-8662/"
+    # working_dir: "{{dckr_bs_pth}}/rxresume-8662/"
+    # remove_images: all
+    # remove_volumes: True
+    # stopped: True
+    # state: absent
     #
     project_name: Resume
     definition:
@@ -22,10 +23,10 @@
   when: instl_docker_pckg and dckr_dpl_rsume
   tags:
     - assert
-    - #test           
+    -  # test
 #
 #
-#  
+#
 # docker run -d --name=reactive_resume \
 # -p 5050:80 \
 # --restart always \

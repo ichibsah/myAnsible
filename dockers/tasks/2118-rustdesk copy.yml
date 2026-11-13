@@ -1,15 +1,16 @@
+---
 - name: Job 03 | Deploy rustdesk | deploy container
   vars:
-    working_dir: "{{dckr_bs_pth}}/rustdesk-21118/" 
+    working_dir: "{{dckr_bs_pth}}/rustdesk-21118/"
     log_dir: "{{ working_dir }}logs"
     prg_name: "rustdesk-21118"
     con_name: "{{prg_name}}_con"
   community.docker.docker_compose:
-    #working_dir: "/opt/docker/invidious-7601/"
-    #remove_images: all
-    #remove_volumes: True
-    #stopped: True
-    #state: absent
+    # working_dir: "/opt/docker/invidious-7601/"
+    # remove_images: all
+    # remove_volumes: True
+    # stopped: True
+    # state: absent
     #
     project_name: "{{prg_name}}"
     definition:
@@ -23,7 +24,7 @@
           command: hbbs
           volumes:
             - "{{working_dir}}/data:/root"
-            #- ./data:/root
+            # - ./data:/root
           network_mode: "host"
 
           depends_on:
@@ -36,7 +37,7 @@
           command: hbbr
           volumes:
             - "{{working_dir}}/data:/root"
-            #- ./data:/root
+            # - ./data:/root
           network_mode: "host"
           restart: unless-stopped
   register: output
@@ -46,7 +47,7 @@
     that:
       - "output.services.hbbs.hbbs.state.running"
       - "output.services.hbbr.hbbr.state.running"
-      #- #"output.services.mysql.ansiblemysql.state.running"
+      # - #"output.services.mysql.ansiblemysql.state.running"
   tags:
     - assert
 

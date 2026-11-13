@@ -1,14 +1,14 @@
+---
 # file: apt/tasks/main.yml
 # TODA: add this to the auto upgrade
 # pip3 install agent360 --upgrade
 #
-#- include_vars: pckg.yml # see global_var folder for update
+# - include_vars: pckg.yml # see global_var folder for update
 # TODO: challenge - make this dynamic - disabled in the meantime
 #
 - name: Job 00 | import task resolv
   ansible.builtin.import_tasks:
     file: resolv.yml
-  
 
 
 - name: Job 01 | Reset the sources list (/etc/apt/sources.list)
@@ -24,8 +24,8 @@
 - name: Job 02 | Update the apt cache
   apt:
     update_cache: true
-    upgrade: safe #
-    force_apt_get: true #
+    upgrade: safe  #
+    force_apt_get: true  #
     cache_valid_time: "{{apt_cache_valid_time}}"
   when: ansible_os_family == "Debian"
 #
@@ -33,8 +33,8 @@
   dnf:
     update_cache: true
   when: ansible_os_family != "Debian"
-  tags: 
-    - #test
+  tags:
+    -  # test
 #
 # TODO: avoid using shell here - disabled in the meantime
 # - name: Job 03 | Check for cached .deb files
@@ -67,15 +67,15 @@
   ansible.builtin.import_tasks:
     file: resolv.yml
 
-#TODO: find out why others fail here (d86df44 de-jump deb1202 112e275)
+# TODO: find out why others fail here (d86df44 de-jump deb1202 112e275)
 - name: Job 05 | INSTALL default packages
   package:
     name: "{{apt_def_pckg_lst}}"
     state: present
-  #when: instl_def_pckg
+  # when: instl_def_pckg
   when: instl_def_pckg
   tags:
-    - #test
+    -  # test
 #
 #
 # TODO: run below when above fails
@@ -88,7 +88,7 @@
 #     "{{apt_def_pckg_lst}}"
 #   when: instl_def_pckg
 #
-- name: Job 06 | REMOVE default packages # REMOVE #
+- name: Job 06 | REMOVE default packages  # REMOVE #
   ansible.builtin.package:
     autoremove: true
     autoclean: true
@@ -98,8 +98,8 @@
 
 - name: Job 07 | Import Docker-ce GPG Key
   apt_key:
-    url: https://download.docker.com/linux/debian/gpg # not required. The URL to retrieve key from.
-    state: present # not required. choices: absent;present. Ensures that the key is present (added) or absent (revoked).
+    url: https://download.docker.com/linux/debian/gpg  # not required. The URL to retrieve key from.
+    state: present  # not required. choices: absent;present. Ensures that the key is present (added) or absent (revoked).
     validate_certs: no
   when: ansible_os_family == "Debian"
 #
@@ -115,9 +115,9 @@
   loop:
     "{{apt_host_pckg_lst}}"
   when: apt_host_pckg_lst.0 is defined
-  #when: ansible_os_family == "Debian" and instl_def_pckg
-  tags: 
-    - #test
+  # when: ansible_os_family == "Debian" and instl_def_pckg
+  tags:
+    -  # test
 #
 - name: Job 00 | import task resolv
   ansible.builtin.import_tasks:
@@ -126,14 +126,14 @@
 #  09.1.1 and  09.1.2 is not wrking properly.
 - name: Job 09.1.1 | Install Utilities Packages (method once)
   ansible.builtin.package:
-    name: "{{apt_util_lst}}" 
+    name: "{{apt_util_lst}}"
     state: present
   register: result
   when: ansible_os_family == "Debian"
-  #failed_when: "'FAILED' in result"
-  #failed_when: "'no package' in result"
-  #when: result is succeeded and instl_utl_pckg
-  #tags: test
+  # failed_when: "'FAILED' in result"
+  # failed_when: "'no package' in result"
+  # when: result is succeeded and instl_utl_pckg
+  # tags: test
 #
 - name: Job 00 | import task resolv
   ansible.builtin.import_tasks:
@@ -146,9 +146,9 @@
   loop:
     "{{apt_util_lst}}"
   when: result is failed
-  #tags: test
+  # tags: test
 #
-- name: Job 10 | REMOVE Utilities Packages # REMOVE #
+- name: Job 10 | REMOVE Utilities Packages  # REMOVE #
   ansible.builtin.package:
     name: "{{apt_util_lst}}"
     state: absent
@@ -156,21 +156,21 @@
 #
 - name: Job 11 | Install host "{{ansible_hostname}}" specific package using pip
   pip:
-    name:  
+    name:
       "{{pip_host_pckg_lst}}"
     state: present
   when: instl_ansbl_pckg
 #
-- name: Job 12 | REMOVE ansible package using pip # REMOVE #
+- name: Job 12 | REMOVE ansible package using pip  # REMOVE #
   pip:
-    name:  
+    name:
       "{{pip_ansbl_pckg_lst}}"
     state: absent
   when: not instl_ansbl_pckg and not kill_remove
 
-- name: Job 13 | REMOVE ansible package using apt # REMOVE #
+- name: Job 13 | REMOVE ansible package using apt  # REMOVE #
   ansible.builtin.package:
-    name:  
+    name:
       "{{apt_ansbl_pckg_lst}}"
     state: absent
   when: not instl_ansbl_pckg and not kill_remove
@@ -193,41 +193,41 @@
   when: apt_autoclean
 #
 - name: Job 17 | Ensure Services are running.
-  systemd: 
+  systemd:
     name: "{{ item }}"
     state: started
     enabled: true
-  with_items: 
+  with_items:
     "{{apt_strt_srvc_lst}}"
   when: sysd_strt_srvc
 #
 # name changed. see job 18
 # - name: Job 17 | Ensure Services are running.
-#   systemd: 
+#   systemd:
 #     name: "{{ item }}"
 #     state: started
 #     enabled: true
-#   with_items: 
+#   with_items:
 #     "{{apt_started_services_list}}"
 #   when: apt_started_services_list.0 is define
-#   tags: 
+#   tags:
 #     - test
 #
 - name: Job 18 | Ensure host specific Services are running.
-  systemd: 
+  systemd:
     name: "{{ item }}"
     state: started
     enabled: true
-  with_items: 
+  with_items:
     "{{apt_hst_strt_srvc_lst}}"
   when: apt_hst_strt_srvc_lst.0 is defined
 #
-- name: Job 19 | STOP running Services. # REMOVE #
-  systemd: 
+- name: Job 19 | STOP running Services.  # REMOVE #
+  systemd:
     name: "{{ item }}"
     state: stopped
     enabled: no
-  with_items: 
+  with_items:
     "{{apt_strt_srvc_lst}}"
   when: not sysd_strt_srvc and not kill_remove
 #
@@ -239,17 +239,17 @@
 - name: Job 21 | import task ansible
   ansible.builtin.import_tasks:
     file: ansible.yml
-  
+
 #
 - name: Job 21 | import task filebot
   ansible.builtin.import_tasks:
     file: filebot.yml
-  
+
 #
 - name: Job 22 | import task vector
   ansible.builtin.import_tasks:
     file: vector.yml
-  
+
   when: instl_def_pckg and instl_vctr
 #
 # REBOOT #
@@ -257,5 +257,3 @@
 - name: Job 99 | import task reboot
   ansible.builtin.import_tasks:
     file: reboot.yml
-  
-

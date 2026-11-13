@@ -1,11 +1,12 @@
+---
 - name: Job 00 | Deploy stirling-pdf
   community.docker.docker_compose:
-    #working_dir: "/opt/docker/stirling-pdf-25568/"
-    #working_dir: "{{dckr_bs_pth}}/stirling-pdf-25568/"
-    #remove_images: all
-    #remove_volumes: True
-    #stopped: True
-    #state: absent
+    # working_dir: "/opt/docker/stirling-pdf-25568/"
+    # working_dir: "{{dckr_bs_pth}}/stirling-pdf-25568/"
+    # remove_images: all
+    # remove_volumes: True
+    # stopped: True
+    # state: absent
     #
     project_name: stirling
     definition:
@@ -15,24 +16,24 @@
           image: frooodle/s-pdf:latest
           container_name: stirling-pdf_con
           volumes:
-            - "{{dckr_bs_pth}}/stirling-pdf-25568/trainingData:/usr/share/tesseract-ocr/4.00/tessdata" #Required for extra OCR languages
+            - "{{dckr_bs_pth}}/stirling-pdf-25568/trainingData:/usr/share/tesseract-ocr/4.00/tessdata"  # Required for extra OCR languages
             - "{{dckr_bs_pth}}/stirling-pdf-25568/extraConfigs:/configs"
             - "{{dckr_bs_pth}}/stirling-pdf-25568/customFiles:/customFiles/"
           ports:
             - 25568:8080
-          #user: "${UID}:${GID}"
+          # user: "${UID}:${GID}"
           restart: always
           environment:
             - TZ=Europe/Berlin
             - PUID=${UID}
             - PGID=${GID}
-            - DOCKER_ENABLE_SECURITY=false          
+            - DOCKER_ENABLE_SECURITY=false
   when: instl_docker_pckg and dckr_dpl_webpdf
   tags:
-    - #test              
+    -  # test
 #
 #
-#  
+#
 # https://github.com/ichibsah/Stirling-PDF
 
 

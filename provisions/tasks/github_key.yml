@@ -1,9 +1,9 @@
 ---
 - name: Job 00 | copy .ssh/id_rsa file to ~/ibrahim/.ssh
   copy:
-    #src: "{{ lookup('file', '/home/ibrahim/.ssh/id_rsa')}}"
+    # src: "{{ lookup('file', '/home/ibrahim/.ssh/id_rsa')}}"
     content: "{{ lookup('file', '/home/ibrahim/.ssh/id_rsa')}}"
-    remote_src: True
+    remote_src: true
     dest: "/home/ibrahim/.ssh/id_rsa"
     owner: root
     group: root

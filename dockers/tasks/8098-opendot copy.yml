@@ -2,13 +2,13 @@
 #
 - name: Job 00 | Deploy opendot - pull from git
   vars:
-    working_dir2: "{{dckr_bs_pth}}/opendot-8098/" 
-    log_dir: "{{ working_dir2 }}logs" 
-    #http://test.opendot.de
+    working_dir2: "{{dckr_bs_pth}}/opendot-8098/"
+    log_dir: "{{ working_dir2 }}logs"
+    # http://test.opendot.de
   ansible.builtin.git:
-    #working_dir: "{{dckr_bs_pth}}/opendot-8098/" 
-    #log_dir: "{{ working_dir}}logs" 
-    #repo: https://github.com/skylinewebservice/opendot.git
+    # working_dir: "{{dckr_bs_pth}}/opendot-8098/"
+    # log_dir: "{{ working_dir}}logs"
+    # repo: https://github.com/skylinewebservice/opendot.git
     repo: https://github.com/skylinewebservice/opendot.git
     dest: "{{ working_dir2 }}"
     force: true
@@ -19,7 +19,7 @@
   register: changes_in_git_pull
   # when: instl_docker_pckg and dckr_dpl_opendot
   tags:
-    - #test
+    -  # test
 #
 - name: Run only if the task that registered the "result" variable fails
   ansible.builtin.debug:
@@ -43,36 +43,36 @@
 #
 - name: Job 01 | Deploy opendot - build image
   vars:
-    working_dir1: "{{dckr_bs_pth}}/opendot-8098/" 
-    log_dir: "{{ working_dir1}}logs" 
+    working_dir1: "{{dckr_bs_pth}}/opendot-8098/"
+    log_dir: "{{ working_dir1}}logs"
   community.docker.docker_image:
     name: opendot
-    #push: true
+    # push: true
     tag: latest
     build:
       path: "{{ working_dir1 }}"
       args:
         log_volume: "{{ log_dir }}"
-        #listen_port: 8098
+        # listen_port: 8098
     # As 'latest' usually already is present, we need to enable overwriting of existing tags:
     force_tag: true
     force_source: true
     source: build
-  # when: instl_docker_pckg and dckr_dpl_opendot    
-  # tags:
-  #   - #test    
+    # when: instl_docker_pckg and dckr_dpl_opendot
+    # tags:
+    #   - #test
 #
-#- name: Job 02 | Deploy opendot - remove old image
+# - name: Job 02 | Deploy opendot - remove old image
 #  community.docker.docker_image:
 #
 - name: Job 03 | Deploy opendot - deploy container
   community.docker.docker_compose:
-    #working_dir: "/opt/docker/opendot-8098/"
-    #working_dir: "{{dckr_bs_pth}}/opendot-8098/"
-    #remove_images: all
-    #remove_volumes: True
-    #stopped: True
-    #state: absent
+    # working_dir: "/opt/docker/opendot-8098/"
+    # working_dir: "{{dckr_bs_pth}}/opendot-8098/"
+    # remove_images: all
+    # remove_volumes: True
+    # stopped: True
+    # state: absent
     #
     project_name: opendot
     definition:
@@ -83,12 +83,12 @@
           container_name: opendot_con
           image: opendot:latest
           ports:
-            - 8098:8000 
+            - 8098:8000
           restart: always
           environment:
             - TZ=Europe/Berlin
           user: "${UID}:${GID}"
-          #user: "0:0" # root
+          # user: "0:0" # root
           # volumes:
           #   - /opt/docker/emby-8096/emby:/config
           #   - /net/mediafiles/mediaFiles/TV-Shows:/tvshows
@@ -101,16 +101,16 @@
 #   ansible.builtin.debug:
 #     var: output
 #   #tags: test
-  #
+#
 - name: Verify that opendot is running
   ansible.builtin.assert:
     that:
       - "output.services.opendot.opendot_con.state.running"
-      - #"output.services.mysql.ansiblemysql.state.running"
+      -  # "output.services.mysql.ansiblemysql.state.running"
   # when: instl_docker_pckg and dckr_dpl_opendot
   tags:
     - assert
-    - #test
+    -  # test
 
 # # https://mariushosting.com/how-to-install-emby-on-your-synology-nas/
 

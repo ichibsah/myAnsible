@@ -1,5 +1,5 @@
 clear
-# docker build -t docker-agent-ansible:latest . 
+# docker build -t docker-agent-ansible:latest .
 # docker image tag docker-agent-ansible:latest docker.io/michibsah/docker-agent-ansible:latest
 # docker login -u michibsah
 # docker push docker.io/michibsah/docker-agent-ansible:latest
@@ -29,6 +29,6 @@ else
     ansible-playbook -v -i 'inventories/production/hosts.yml' run-main.yml # else run this by default
 fi
 
-yamllint "$LOGFILE"
-yamlfmt -w "$LOGFILE"
-ansible-lint "$LOGFILE"
+yamllint .
+# yamlfmt -w .
+# ansible-lint .

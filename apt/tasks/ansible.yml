@@ -1,4 +1,4 @@
-
+---
 - name: Job 12 | Install ansible package using apt
   apt:
     name: "{{item}}"
@@ -6,14 +6,13 @@
   loop:
     "{{apt_ansbl_pckg_lst}}"
   when: instl_ansbl_pckg
-  #tags: test
+  # tags: test
 #
 - name: Job 13 | Install ansible package using pip
   ansible.builtin.pip:
-    name: "{{item}}"  
+    name: "{{item}}"
     state: present
   loop:
     "{{pip_ansbl_pckg_lst}}"
   when: instl_ansbl_pckg
-  #tags: test
-
+  # tags: test

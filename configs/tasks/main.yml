@@ -25,7 +25,7 @@
 - name: Job 06 | import task bind
   ansible.builtin.import_tasks:
     file: bind.yml
-#  when: apt_host_pckg_lst | contains bind9
+    #  when: apt_host_pckg_lst | contains bind9
   tags:
     - dns
 
@@ -68,12 +68,12 @@
     - config
 #   - test
 
-  
+
 #
 - name: Job 11 | import task myiptable
   ansible.builtin.import_tasks:
     file: myiptable.yml
-  
+
   tags:
     - localhost
 #
@@ -83,14 +83,14 @@
   when: instl_grafana
   tags:
     - grafana
-    #- #test
+    # - #test
 #
 - name: Job 13 | import task docker swarm - master
   ansible.builtin.import_tasks:
     file: swarm_master.yml
   when: instl_swrm_mstr
   tags:
-    #- #test
+    # - #test
     - swarm
 #
 - name: Job 14 | import task docker swarm - node
@@ -98,16 +98,16 @@
     file: swarm_node.yml
   when: instl_swrm_node
   tags:
-    #- test
+    # - test
     - swarm
 #
 - name: Job 15 | import task fail2ban
   ansible.builtin.import_tasks:
     file: fail2ban.yml
-  #when: fail2ban_whitelist
+  # when: fail2ban_whitelist
   tags:
     - fail2ban
-    #- test
+    # - test
 #
 - name: Job 16 | import task parted
   ansible.builtin.import_tasks:
@@ -115,30 +115,30 @@
   when: start_prtd
   tags:
     - parted
-    #- test
+    # - test
 #
 - name: Job 17 | import task rsync
   ansible.builtin.import_tasks:
-    file: rsync.yml # work in progress. reman to 
+    file: rsync.yml  # work in progress. reman to
   when: start_rsync and paused
   tags:
-    #- test
+    # - test
     - rsync
 ##
 - name: Job 18 | import task healthcheck_io
   ansible.builtin.import_tasks:
     file: healthcheck_io.yml
-  #when: start_rsync and paused
+  # when: start_rsync and paused
   tags:
-    #- test
+    # - test
     - healthcheck
 #
 - name: Job 19 | import task healthcheck_io_v2
   ansible.builtin.import_tasks:
     file: healthcheck_io_v2.yml
-#  when: start_rsync and paused
+    #  when: start_rsync and paused
   tags:
-#    - test
+    #    - test
     - healthcheck
 #
 - name: Job 20 | import task getflix_cronjob
@@ -146,7 +146,7 @@
     file: getflix_cronjob.yml
   when: getflix_cronjob
   tags:
-#    - test
+    #    - test
     - getflix_cronjob
 #
 # - name: Job 21 | import task odoo_keep_alive
@@ -162,7 +162,7 @@
     file: wol.yml
   when: wol
   tags:
-#   - test
+    #   - test
     - wol
 #
 - name: Job 23 | import task teams
@@ -170,7 +170,7 @@
     file: teams.yml
   when: teams
   tags:
-#    - test
+    #    - test
     - teams
 #
 - name: Job 24 | import task vscode
@@ -178,7 +178,7 @@
     file: vscode.yml
   when: vscode
   tags:
-#   - test
+    #   - test
     - vscode
 #
 - name: Job 25 | import task gnomerdp
@@ -186,7 +186,7 @@
     file: gnomerdp.yml
   when: gnomerdp
   tags:
-#   - test
+    #   - test
     - gnomerdp
 #
 - name: Job 25.1 | import task gnomerdp
@@ -194,7 +194,7 @@
     file: gnomerdpv1.2.yml
   when: gnomerdp
   tags:
-#   - test
+    #   - test
     - gnomerdp
 #
 - name: Job 25.3 | import task xrdp
@@ -202,16 +202,16 @@
     file: xrdp1.3.yml
   when: xrdp
   tags:
-#   - test
+    #   - test
     - xrdp
 #
 - name: Job 25.4 | import task xrdp-netdata
   ansible.builtin.import_tasks:
-#    file: xrdp.yml
+    #    file: xrdp.yml
     file: xrdp-netdata.yml
   when: xrdp
   tags:
-#   - test
+    #   - test
     - xrdp
 #
 - name: Job 26 | import task docker
@@ -220,7 +220,7 @@
     file: docker.yml
   when: docker3
   tags:
-#    - test
+    #    - test
     - docker
 #
 #
@@ -238,7 +238,7 @@
     file: krdp.yml
   when: krdp
   tags:
-#   - test
+    #   - test
     - krdp
 #
 #
@@ -254,7 +254,7 @@
     file: backups.yml
   when: backup_home
   tags:
-    #- test
+    # - test
     - backup
 #
 - name: Job 99 | import task server clean up
@@ -263,4 +263,4 @@
   when: servercleanup
   tags:
     - servercleanup
-    #- test
+    # - test

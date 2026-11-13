@@ -1,9 +1,10 @@
+---
 hostname_additional_hosts:
   - ip_address: 192.168.77.213
     hostname: gitlab.skyline.lan
     hostname_short: gitlab
 
-#first time init
+# first time init
 # ansible_remote_user: vagrant
 # ansible_ssh_user: vagrant
 # ansible_ssh_password: '{{ jenkins_become_pass }}'
@@ -22,7 +23,7 @@ crntb_activate_cronjobs: false
 #
 #
 dckr_fldr_lst:                            # Docker folder list that will be copied when set in the host variable
-- { fldr: "gitlab" }
+  - {fldr: "gitlab"}
 
 apt_hst_strt_srvc_lst:                        # Ensure Host Specific Services are running.
 

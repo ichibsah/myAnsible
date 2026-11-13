@@ -7,15 +7,15 @@
   ignore_unreachable: false       # https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_error_handling.html
 
   vars_files:
-  - ansible-vault.yml
+    - ansible-vault.yml
 
   roles:
-  - provisions
-  - ssh
-  - ansible
-  - apt-packages
-  - bashrc
-  - dockers
-  - update
-  #
+    - provisions
+    - ssh
+    - ansible
+    - apt-packages
+    - bashrc
+    - dockers
+    - update
+#
 # complete and not tested.

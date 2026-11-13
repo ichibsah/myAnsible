@@ -1,3 +1,4 @@
+---
 - name: Job 00 | Copy bind folder to target host that matches "ansible_hostname"
   copy:
     src: "files/{{ansible_hostname}}/etc/bind"
@@ -5,7 +6,6 @@
     owner: root
     group: bind
     mode: 0644
-  #when: ansible_hostname != 'virthost01'
+  # when: ansible_hostname != 'virthost01'
   notify: Restart bind9
-  #tags: test
-
+  # tags: test

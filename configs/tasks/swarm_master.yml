@@ -1,3 +1,4 @@
+---
 # https://docs.ansible.com/ansible/latest/collections/community/docker/docker_swarm_module.html
 #
 - name: Init a new swarm with default parameters
@@ -9,10 +10,10 @@
 #     state: inspect
 #   register: swarm_info
 # #
-# - name: Show results 
+# - name: Show results
 #   debug:
 #     var:  swarm_info
-#     verbosity: 3 
+#     verbosity: 3
 #
 # #
 # docker swarm in to master
@@ -28,36 +29,36 @@
 - name: Allow source IPs defined in ipset "swarm_nodes" on port 7946 (tcp)
   ansible.builtin.iptables:
     state: present
-    #state: absent
-    #action: append
+    # state: absent
+    # action: append
     chain: INPUT
     source: "{{ item }}"
     protocol: tcp
     destination_ports:
       - 7946
     jump: ACCEPT
-    #policy: ACCEPT
-  loop: 
+    # policy: ACCEPT
+  loop:
     "{{ ipsets[0].set }}"
-  tags: 
-    - #test
+  tags:
+    -  # test
 #
 - name: Allow source IPs defined in ipset "swarm_nodes" on port 7946 (udp)
   ansible.builtin.iptables:
     state: present
-    #state: absent
-    #action: append
+    # state: absent
+    # action: append
     chain: INPUT
     source: "{{ item }}"
     protocol: udp
     destination_ports:
       - 7946
     jump: ACCEPT
-    #policy: ACCEPT
-  loop: 
+    # policy: ACCEPT
+  loop:
     "{{ ipsets[0].set }}"
-  tags: 
-    - #test
+  tags:
+    -  # test
 #
 - name: Allow source IPs defined in ipset "swarm_nodes" on port 4789
   ansible.builtin.iptables:
@@ -68,11 +69,11 @@
     destination_ports:
       - 4789
     jump: ACCEPT
-    #policy: ACCEPT
-  loop: 
+    # policy: ACCEPT
+  loop:
     "{{ ipsets[0].set }}"
-  tags: 
-    - #test
+  tags:
+    -  # test
 #
 # This will apply to all loaded/active IPv4 tables.
 - name: Save current state of the firewall in system file

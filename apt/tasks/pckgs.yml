@@ -79,7 +79,7 @@
       - "Error: {{ item.msg | default('Unknown error') }}"
   loop: "{{ pkg_results.results | default([]) }}"
   when: item.failed | default(false)
-  
+
 - name: Package installation summary
   ansible.builtin.debug:
     msg:

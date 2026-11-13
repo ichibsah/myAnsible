@@ -1,11 +1,11 @@
 ---
 - name: Job 00 | Deploy Tautulli
   community.docker.docker_compose:
-    #working_dir: "/opt/docker/tautulli-8181/"
-    #remove_images: all
-    #remove_volumes: True
-    #stopped: True
-    #state: absent
+    # working_dir: "/opt/docker/tautulli-8181/"
+    # remove_images: all
+    # remove_volumes: True
+    # stopped: True
+    # state: absent
     #
     project_name: Tautulli
     definition:
@@ -21,31 +21,31 @@
           environment:
             - TZ=Europe/Berlin
           user: "${UID}:${GID}"
-          #user: "0:0" # root
-          #user: "1354601103:1354600513" # ibrahim@skyline
+          # user: "0:0" # root
+          # user: "1354601103:1354600513" # ibrahim@skyline
           volumes:
             - /opt/docker/tautulli-8181/config:/config
   when: instl_docker_pckg and dckr_dpl_tautulli
   register: output
   tags:
     - assert
-    - #test
-  #
-  # for debug purpose only - disabled in the meantime
+    -  # test
+    #
+    # for debug purpose only - disabled in the meantime
 # - name: Show results
 #   ansible.builtin.debug:
 #     var: output
 #   #tags: test
-  #
+#
 - name: Verify that tautulli is running
   ansible.builtin.assert:
     that:
       - "output.services.tautulli.tautulli_con.state.running"
-      - #"output.services.mysql.ansiblemysql.state.running"
+      -  # "output.services.mysql.ansiblemysql.state.running"
   when: instl_docker_pckg and dckr_dpl_tautulli
   tags:
     - assert
-    - #test
+    -  # test
 
 # # https://mariushosting.com/how-to-install-gravity-on-your-synology-nas/
 

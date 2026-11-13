@@ -1,3 +1,4 @@
+---
 # https://blog.swmansion.com/limiting-failed-ssh-login-attempts-with-fail2ban-7da15a2313b
 #
 - name: Job 00 | upload fail2ban configuration
@@ -6,8 +7,8 @@
     dest: /etc/fail2ban/jail.local
   notify: Restart fail2ban
   when: upld_fail2bn_cfg
-  tags: 
-    #- test
+  tags:
+    # - test
     - fail2ban
 
 # commands to use:
@@ -21,7 +22,7 @@
     url: "{{ public_ip_service_url }}"
     return_content: true
   delegate_to: localhost
-  #run_once: true
+  # run_once: true
   register: detected_ip
 
 - name: Show detected public IP
@@ -31,7 +32,7 @@
 - name: Set controller IP fact
   ansible.builtin.set_fact:
     controller_public_ip: "{{ detected_ip.content | trim }}"
-  #run_once: true
+    # run_once: true
 
 - name: Get Fail2Ban status
   ansible.builtin.command: fail2ban-client status
@@ -84,8 +85,8 @@
 #
 #
 #
-#How to Verify After Running
-#$ fail2ban-client get sshd ignoreip
-#sudo fail2ban-client status 
-#fail2ban-client set <jail> unbanip YOUR.IP.ADDRESS
+# How to Verify After Running
+# $ fail2ban-client get sshd ignoreip
+# sudo fail2ban-client status
+# fail2ban-client set <jail> unbanip YOUR.IP.ADDRESS
 #

@@ -1,3 +1,4 @@
+---
 # https://docs.ansible.com/ansible/latest/collections/ansible/builtin/uri_module.html
 # https://www.redhat.com/en/blog/deploying-static-website-ansible
 #
@@ -41,9 +42,9 @@
     method: POST
     body_format: form-urlencoded
     body:
-    - [ name, your_username ]
-    - [ password, your_password ]
-    - [ enter, Sign in ]
+      - [name, your_username]
+      - [password, your_password]
+      - [enter, Sign in]
     status_code: 302
   register: login
 
@@ -115,8 +116,8 @@
     method: GET
   register: _result
   until: _result.status == 200
-  retries: 720 # 720 * 5 seconds = 1hour (60*60/5)
-  delay: 5 # Every 5 seconds
+  retries: 720  # 720 * 5 seconds = 1hour (60*60/5)
+  delay: 5  # Every 5 seconds
 
 - name: Provide SSL/TLS ciphers as a list
   uri:
@@ -138,18 +139,15 @@
     url: https://example.org
     ciphers: '@SECLEVEL=2:ECDH+AESGCM:ECDH+CHACHA20:ECDH+AES:DHE+AES:!aNULL:!eNULL:!aDSS:!SHA1:!AESCCM'
 
-######
-webserver_static_sites:
-  - name: site1.example.com
-    root: /usr/share/nginx/site1.example.com
-
-  - name: site2.example.com
-    root: /usr/share/nginx/site2.example.com
-
-  - name: site3.example.com
-    root: /usr/share/nginx/site3.example.com    
-
 - name: Copy site contents
+  vars:
+    webserver_static_sites:
+      - name: site1.example.com
+        root: /usr/share/nginx/site1.example.com
+      - name: site2.example.com
+        root: /usr/share/nginx/site2.example.com
+      - name: site3.example.com
+        root: /usr/share/nginx/site3.example.com
   copy:
     dest: "{{ item.root }}/"
     src: "usr/share/nginx/{{ item.name }}/"

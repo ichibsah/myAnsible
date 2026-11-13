@@ -1,3 +1,4 @@
+---
 - name: Ensure GNOME remote desktop is installed
   ansible.builtin.apt:
     name: "{{ gnome_packages }}"

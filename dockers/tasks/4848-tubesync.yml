@@ -1,10 +1,11 @@
+---
 - name: Job 00 | Deploy Tubesync
   community.docker.docker_compose:
-    #working_dir: "/opt/docker/tubesync-4848/"
-    #remove_images: all
-    #remove_volumes: True
-    #stopped: True
-    #state: absent
+    # working_dir: "/opt/docker/tubesync-4848/"
+    # remove_images: all
+    # remove_volumes: True
+    # stopped: True
+    # state: absent
     #
     project_name: Tubesync
     definition:
@@ -30,17 +31,17 @@
   register: output
   tags:
     - assert
-    - #test
+    -  # test
 #
 - name: Verify that tubesync is running
   ansible.builtin.assert:
     that:
       - "output.services.tubesync.Tubesync_con.state.running"
-      - #"output.services.mysql.ansiblemysql.state.running"
+      -  # "output.services.mysql.ansiblemysql.state.running"
   when: instl_docker_pckg and dckr_dpl_tubesync
   tags:
     - assert
-    - #test
+    -  # test
 
 # # https://mariushosting.com/how-to-install-tubesync-on-your-synology-nas/
 

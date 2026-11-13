@@ -1,3 +1,4 @@
+---
 - name: Disable system sleep, suspend, hibernate, and hybrid-sleep
   ansible.builtin.systemd:
     name: "{{ item }}"
@@ -10,7 +11,7 @@
     - hybrid-sleep.target
 
 
-#defensive measure to prevent accidental sleep, suspend, hibernate, and hybrid-sleep
+# defensive measure to prevent accidental sleep, suspend, hibernate, and hybrid-sleep
 - name: Stop and mask all sleep-related systemd targets
   ansible.builtin.systemd:
     name: "{{ item }}"

@@ -1,11 +1,12 @@
+---
 hostname_additional_hosts:
   - ip_address: 212.227.166.233
     hostname: deb1202.imsawadogo.com
     hostname_short: deb1202
-  # - ip_address: 5.6.7.8
-  #   hostname: b.example.com
-  #   hostname_short: b
-  #
+    # - ip_address: 5.6.7.8
+    #   hostname: b.example.com
+    #   hostname_short: b
+    #
 #
 ansible_become_pass: '{{ deb12_02_become_pass }}'
 #
@@ -17,7 +18,7 @@ dkr_copy_def_files: true                   # Copy default docker files to target
 dkr_copy_etx_files: false                   # # Copy extended docker files to target host
 #
 dckr_fldr_lst:                            # Docker folder list that will be copied when set in the host variable
-- { fldr: "deb1202" }
+  - {fldr: "deb1202"}
 
 #
 crntb_activate_cronjobs: false
@@ -43,12 +44,12 @@ localusers:
   - name: joe
     shell: /bin/bash
     group: joe
-    groups: 
+    groups:
       - sudo
-    append: True
+    append: true
     state: absent
     key: joe.pub
-    create_home: True
-    local: True
+    create_home: true
+    local: true
     hosts: deb1202
     bashrc: /home/ibrahim/sandbox/myAnsible/configs/files/home/ibrahim/.bashrc

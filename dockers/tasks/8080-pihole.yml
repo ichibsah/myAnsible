@@ -1,3 +1,4 @@
+---
 # Job 00 | Pi-hole — rolling update, recreate only when the image changes
 # Requires: community.docker collection
 
@@ -45,9 +46,9 @@
 
     env:
       TZ: "Europe/Berlin"
-      #VIRTUAL_HOST: "pihole.skyline.lan"
-      #VIRTUAL_HOST: "{{ hostname_additional_hosts[0].hostname }}"
-      #PROXY_LOCATION: "{{ hostname_additional_hosts[0].hostname }}"
+      # VIRTUAL_HOST: "pihole.skyline.lan"
+      # VIRTUAL_HOST: "{{ hostname_additional_hosts[0].hostname }}"
+      # PROXY_LOCATION: "{{ hostname_additional_hosts[0].hostname }}"
       ServerIP: "{{ hostname_additional_hosts[0].ip_address }}"
       dns: "1.1.1.1"
       WEBPASSWORD: "{{ ansible_become_pass }}"   # change if needed

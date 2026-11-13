@@ -87,10 +87,10 @@
 - name: run postfix fix script
   command: /usr/local/bin/fix-postfix.sh
 
-#/***/
+# /***/
 - name: Restart KRdp user service
   become: true
-  #become_user: "{{ krdp_user }}" 
+  # become_user: "{{ krdp_user }}"
   become_user: "{{ krdp_user | default('root') }}"
   environment:
     XDG_RUNTIME_DIR: "/run/user/{{ krdp_uid }}"
@@ -101,7 +101,7 @@
     enabled: "{{ krdp_enable_service }}"
     scope: user
     daemon_reload: true
-#/***/
+# /***/
 
 
 #

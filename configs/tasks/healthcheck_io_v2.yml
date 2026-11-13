@@ -1,5 +1,6 @@
+---
 # - name: Find healthcheck URLs
-  
+
 # - name: Get the project badges
 #   community.healthchecksio.badges_info:
 #     state: present
@@ -40,9 +41,9 @@
 - name: Set check variables if check exists
   ansible.builtin.set_fact:
     healthcheck_io_pause_url: "{{ all_checks.json | community.general.json_query(pause_url_query) | last }}"
-    #healthcheck_io_pause_url: "{{ all_checks.json | community.general.json_query(pause_url_query) }}"
+    # healthcheck_io_pause_url: "{{ all_checks.json | community.general.json_query(pause_url_query) }}"
     healthcheck_io_resume_url: "{{ all_checks.json | community.general.json_query(resume_url_query) | last }}"
-    #healthcheck_io_resume_url: "{{ all_checks.json | community.general.json_query(resume_url_query) }}"
+    # healthcheck_io_resume_url: "{{ all_checks.json | community.general.json_query(resume_url_query) }}"
     healthcheck_io_ping_url: "{{ all_checks.json | community.general.json_query(ping_url_query) | last }}"
     healthcheck_io_check_uuid: "{{ all_checks.json | community.general.json_query(uuid_query) | last }}"
   vars:

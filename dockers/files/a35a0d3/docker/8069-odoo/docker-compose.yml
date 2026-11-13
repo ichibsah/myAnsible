@@ -1,3 +1,4 @@
+---
 version: '3'
 services:
   web:
@@ -9,9 +10,9 @@ services:
     ports:
       - 8069:8069
     volumes:
-    - ./docker/odoo/web-data:/var/lib/odoo
-    - ./docker/odoo/config:/etc/odoo
-    - ./docker/odoo/addons:/mnt/extra-addons
+      - ./docker/odoo/web-data:/var/lib/odoo
+      - ./docker/odoo/config:/etc/odoo
+      - ./docker/odoo/addons:/mnt/extra-addons
   db:
     image: postgres:latest
     container_name: Odoo-DB

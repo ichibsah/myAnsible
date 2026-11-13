@@ -1,3 +1,4 @@
+---
 - name: Install GNOME remote desktop
   ansible.builtin.apt:
     name: gnome-remote-desktop

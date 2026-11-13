@@ -5,15 +5,15 @@
 
 - name: Iterate over URLs and capture login status codes
   vars:
-        # Example with HTTP Basic Auth against httpbin (change to your URLs/creds)
+    # Example with HTTP Basic Auth against httpbin (change to your URLs/creds)
     site_targets:
-      - { url: 'https://boboconsult.odoo.com/odoo', username: 'website@opendotsolutions.com', password: 'Qwertzuiop123' }
-      - { url: 'https://httpbin.org/basic-auth/bob/secret2',   username: 'bob',   password: 'secret2' }
+      - {url: 'https://boboconsult.odoo.com/odoo', username: 'website@opendotsolutions.com', password: 'Qwertzuiop123'}
+      - {url: 'https://httpbin.org/basic-auth/bob/secret2', username: 'bob', password: 'secret2'}
 
     login_method: basic          # or 'form' (see the form settings below)
     validate_certs: true
     connection_timeout: 10
-    expected_status_codes: [200] # OK only
+    expected_status_codes: [200]  # OK only
 
     # Optional reporting
     write_report: true
@@ -27,7 +27,7 @@
     # form_extra_fields: { csrf_token: "..." }
     #
     # Inline variables (override these from your play or via --extra-vars)
-#
+    #
     # site_targets: "{{ site_targets | default([
     #   # Example entries — replace with your real endpoints & credentials or override via extra_vars.
     #   # { url: 'https://example1.test/protected', username: 'alice', password: 'secret1' },
@@ -44,7 +44,7 @@
     form_extra_fields: "{{ form_extra_fields | default({}) }}"
 
     # Acceptable HTTP status codes (tune as needed)
-#    expected_status_codes: "{{ expected_status_codes | default([200, 301, 302, 401, 403]) }}"
+  #    expected_status_codes: "{{ expected_status_codes | default([200, 301, 302, 401, 403]) }}"
   block:
 
     - name: "Sanity check | Ensure we have at least one site to test"

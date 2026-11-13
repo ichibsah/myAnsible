@@ -1,9 +1,10 @@
+---
 - name: Job 00 | Deploy Rxresume
   community.docker.docker_compose:
-    #working_dir: "/opt/docker/rxresume-8662/"
+    # working_dir: "/opt/docker/rxresume-8662/"
     remove_images: all
-    remove_volumes: True
-    stopped: True
+    remove_volumes: true
+    stopped: true
     state: absent
     #
     project_name: Rxresume
@@ -90,7 +91,7 @@
               condition: service_healthy
   when: instl_docker_pckg and dckr_dpl_rxrsum
   tags:
-    - #test              
+    -  # test
 #
 #
 #         youtubedl:

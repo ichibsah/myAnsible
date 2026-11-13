@@ -1,3 +1,4 @@
+---
 hostname_additional_hosts:
   - ip_address: 10.1.0.254
     hostname: de-1005-gw.skyline.lan
@@ -8,37 +9,37 @@ hostname_additional_hosts:
   - ip_address: 192.168.0.80
     hostname: de-1005-gw.skyline.lan
     hostname_short: de-1005-gw
-  #
+    #
 dckr_dmain_nme_pstfx: home.sawadogo.xyz
 # virthost01.skyline.lan:
 # ansible_connection: local  # this will overwrite any other type of connections. its needed here.
 ansible_become_pass: "{{ localhost_become_pass }}"
 #
 #  ## PRVS | CONFIG  ###
-prvs_copy_home: no # Copy default user's home files in place
-prvs_root_passwd: no # update root passward
+prvs_copy_home: no  # Copy default user's home files in place
+prvs_root_passwd: no  # update root passward
 #
-dkr_copy_def_files: no # Copy default docker files to target server
+dkr_copy_def_files: no  # Copy default docker files to target server
 #
 crntb_activate_cronjobs: no
 #
-addLocalUser: true # add a local user to specific host
+addLocalUser: true  # add a local user to specific host
 #
 #
 #  ## APT | PACKAGES INSTALL  ###
-instl_def_pckg: true # Install complete packages. A 'no' will remove it from the host (apt_def_pckg_lst)
-instl_utl_pckg: true # Install complete packages. A 'no' will remove it from the host (apt_util_lst)
-sysd_strt_srvc: true # Start services
-instl_ansbl_pckg: true # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
-instl_docker_pckg: true # Install Docker package (apt_docker_pckg_lst)
-apt_host_pckg_lst: # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
+instl_def_pckg: true  # Install complete packages. A 'no' will remove it from the host (apt_def_pckg_lst)
+instl_utl_pckg: true  # Install complete packages. A 'no' will remove it from the host (apt_util_lst)
+sysd_strt_srvc: true  # Start services
+instl_ansbl_pckg: true  # Install ansible using PIP (pip_ansbl_pckg_lst apt_ansbl_pckg_lst)
+instl_docker_pckg: true  # Install Docker package (apt_docker_pckg_lst)
+apt_host_pckg_lst:  # Install Host Specific Packages (keep this empty. use host_var to overwrite it)
   - cifs-utils
   - isc-dhcp-common
   - isc-dhcp-server
   - kubectx
 #
 #
-pip_host_pckg_lst: # Install Host Specific PIP Packages when ansible is also installed
+pip_host_pckg_lst:  # Install Host Specific PIP Packages when ansible is also installed
 #
 #
 # docker containers
@@ -53,18 +54,18 @@ dckr_dpl_wud: true
 dckr_dpl_webcheck: true
 dckr_dpl_uptmkm: true
 #
-apt_hst_strt_srvc_lst: # Ensure Host Specific Services are running.
+apt_hst_strt_srvc_lst:  # Ensure Host Specific Services are running.
   - isc-dhcp-server
 #
-odoo_keep_alive: true # Install Odoo keep alive cronjob
+odoo_keep_alive: true  # Install Odoo keep alive cronjob
 #
 #
 #
 instl_dhcp_srvc: true
-dsbl_dhcpvsx: true # Disable dhcp v6 in DHCP
-dsbl_dhcpvsx_regx: INTERFACESv4='eno1' # text that should change goes here eg. INTERFACESv4='ens18'
+dsbl_dhcpvsx: true  # Disable dhcp v6 in DHCP
+dsbl_dhcpvsx_regx: INTERFACESv4='eno1'  # text that should change goes here eg. INTERFACESv4='ens18'
 #
-copy_iptables: true # Copy iptables to /root folder
+copy_iptables: true  # Copy iptables to /root folder
 strt_myiptbls_at_boot: true
 #
 # interfaces:

@@ -1,3 +1,4 @@
+---
 # Step A: Get default route
 - name: Gather default route info
   command: ip route show default

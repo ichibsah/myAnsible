@@ -1,3 +1,4 @@
+---
 # - name: Mount mediafiles (NFS volume)
 #   ansible.posix.mount:
 #     src: 10.0.0.131:/mnt/Pool03-Data/mediafiles
@@ -12,10 +13,10 @@
 # #
 - name: add user to group
   user:
-    name: ibrahim@skyline 
-    groups:  sudo, docker 
+    name: ibrahim@skyline
+    groups: sudo, docker
   tags:
-    - #test  
+    -  # test
 #
 - name: Mount ephemeral SMB volume
   block:
@@ -23,17 +24,17 @@
     ansible.posix.mount:
       src: //10.0.0.131/mediafiles
       path: /net/mediafiles
-      #opts: "rw,vers=3,file_mode=0640,dir_mode=0740,dom=skyline,username=ibrahim,password={{ localhost_become_pass }}"
+      # opts: "rw,vers=3,file_mode=0640,dir_mode=0740,dom=skyline,username=ibrahim,password={{ localhost_become_pass }}"
       opts: "rw,vers=3,file_mode=0777,dir_mode=0777,username=ibrahim@skyline,password={{ localhost_become_pass }}"
-      #opts: "rw,vers=3,file_mode=0644,dir_mode=0744,username=root,password={{ localhost_become_pass }}"
+      # opts: "rw,vers=3,file_mode=0644,dir_mode=0744,username=root,password={{ localhost_become_pass }}"
       fstype: cifs
-      #state: present
+      # state: present
       state: ephemeral
   when: instl_docker_pckg and dckr_dpl_plex
   # become: false
-  # become_user: ibrahim    
+  # become_user: ibrahim
   tags:
-    - #test
+    -  # test
 #
 #
 - name: Mount ephemeral SMB volume
@@ -42,25 +43,25 @@
     ansible.posix.mount:
       src: //10.1.0.131/users/plex
       path: /net/plex
-      #opts: "rw,vers=3,file_mode=0640,dir_mode=0740,dom=skyline,username=ibrahim,password={{ localhost_become_pass }}"
+      # opts: "rw,vers=3,file_mode=0640,dir_mode=0740,dom=skyline,username=ibrahim,password={{ localhost_become_pass }}"
       opts: "rw,vers=3,file_mode=0777,dir_mode=0777,username=ibrahim@skyline,password={{ localhost_become_pass }}"
-      #opts: "rw,vers=3,file_mode=0644,dir_mode=0744,username=root,password={{ localhost_become_pass }}"
+      # opts: "rw,vers=3,file_mode=0644,dir_mode=0744,username=root,password={{ localhost_become_pass }}"
       fstype: cifs
-      #state: present
+      # state: present
       state: ephemeral
-  #when: instl_docker_pckg and dckr_dpl_plex
+  # when: instl_docker_pckg and dckr_dpl_plex
   # become: false
-  # become_user: ibrahim    
+  # become_user: ibrahim
   tags:
-    - #test
+    -  # test
 #
 - name: Job 00 | Deploy Plex
   community.docker.docker_compose:
-    #working_dir: "/opt/docker/plex-32400/"
-    #remove_images: all
-    #remove_volumes: True
-    #stopped: True
-    #state: absent
+    # working_dir: "/opt/docker/plex-32400/"
+    # remove_images: all
+    # remove_volumes: True
+    # stopped: True
+    # state: absent
     #
     project_name: Plex
     definition:
@@ -84,34 +85,34 @@
             - TZ=Europe/Berlin
             - PLEX_CLAIM={{plex_claim}}
             - ADVERTISE_IP=http://10.0.0.137:32400/
-          #user: "${UID}:${GID}"
-          user: "0:0" # root
-          #user: "1354601103:1354600513" # ibrahim@skyline
+          # user: "${UID}:${GID}"
+          user: "0:0"  # root
+          # user: "1354601103:1354600513" # ibrahim@skyline
           volumes:
             - /opt/docker/plex-32400/database:/config
             - /opt/docker/plex-32400/transcode:/transcode
             - /net/mediafiles:/data
-  #when: instl_docker_pckg and dckr_dpl_plex
+  # when: instl_docker_pckg and dckr_dpl_plex
   register: output
   tags:
     - assert
-    - #test
-  #
-  # for debug purpose only - disabled in the meantime
+    -  # test
+    #
+    # for debug purpose only - disabled in the meantime
 # - name: Show results
 #   ansible.builtin.debug:
 #     var: output
 #   #tags: test
-  #
+#
 - name: Verify that plex is running
   ansible.builtin.assert:
     that:
       - "output.services.plex.Plex_container.state.running"
-      - #"output.services.mysql.ansiblemysql.state.running"
-  #when: instl_docker_pckg and dckr_dpl_plex
+      -  # "output.services.mysql.ansiblemysql.state.running"
+  # when: instl_docker_pckg and dckr_dpl_plex
   tags:
     - assert
-    - #test
+    -  # test
 
 # # https://mariushosting.com/how-to-install-gravity-on-your-synology-nas/
 

@@ -1,10 +1,11 @@
+---
 - name: Job 00 | Deploy webpdf
   community.docker.docker_compose:
-    #working_dir: "/opt/docker/webpdf-25568/"
-    #working_dir: "{{dckr_bs_pth}}/webpdf-25568/"
+    # working_dir: "/opt/docker/webpdf-25568/"
+    # working_dir: "{{dckr_bs_pth}}/webpdf-25568/"
     remove_images: all
-    remove_volumes: True
-    stopped: True
+    remove_volumes: true
+    stopped: true
     state: absent
     #
     project_name: webpdf
@@ -19,18 +20,18 @@
             - "{{dckr_bs_pth}}/webpdf-25568/webpdf:/tmp/pdf"
           ports:
             - 25568:80
-          #user: "${UID}:${GID}"
+          # user: "${UID}:${GID}"
           restart: always
           environment:
             - TZ=Europe/Berlin
             - PUID=${UID}
-            - PGID=${GID}          
+            - PGID=${GID}
   when: instl_docker_pckg and dckr_dpl_webpdf
   tags:
-    - #test              
+    -  # test
 #
 #
-#  
+#
 # https://mariushosting.com/how-to-install-web-pdf-on-your-synology-nas/
 
 

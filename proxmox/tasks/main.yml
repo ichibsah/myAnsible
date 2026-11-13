@@ -3,7 +3,7 @@
 
 - name: Job-001 PCKG | Install ansible package using apt
   apt:
-    name:  
+    name:
       - python3
       - pip
       - pipx

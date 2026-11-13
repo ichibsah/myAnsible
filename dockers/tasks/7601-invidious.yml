@@ -1,10 +1,11 @@
+---
 - name: Job 00 | Deploy Invidious
   community.docker.docker_compose:
-    #working_dir: "/opt/docker/invidious-7601/"
-    #remove_images: all
-    #remove_volumes: True
-    #stopped: True
-    #state: absent
+    # working_dir: "/opt/docker/invidious-7601/"
+    # remove_images: all
+    # remove_volumes: True
+    # stopped: True
+    # state: absent
     #
     project_name: Invidious
     definition:
@@ -68,7 +69,7 @@
   when: instl_docker_pckg and dckr_dpl_invdus
   tags:
     - assert
-    - #test           
+    -  # test
 #
 #
 #         youtubedl:
